@@ -8,13 +8,17 @@ import { SignInComponent } from './sign-in/sign-in.component';
 import { CodeInputModule } from 'angular-code-input';
 import { HomeComponent } from './home/home.component';
 import {MatButtonModule} from '@angular/material/button';
+import { RentComponent } from './rent/rent.component';
+import { BringBackComponent } from './bring-back/bring-back.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     SignInComponent,
-    HomeComponent
+    HomeComponent,
+    RentComponent,
+    BringBackComponent
   ],
   imports: [
     BrowserModule,
