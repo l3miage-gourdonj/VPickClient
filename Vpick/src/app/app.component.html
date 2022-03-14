@@ -1,6 +1,10 @@
 <mat-toolbar>
-    <span routerLink="">Vépick</span>
+    <span class="brand" routerLink="">Vépick</span>
+    <div class="sign-in-container">
+        <span (click)="openConnect()" class="connect">Se connecter</span>
+    </div>
 </mat-toolbar>
+
 <router-outlet></router-outlet>
 
 

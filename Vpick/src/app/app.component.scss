@@ -1,2 +1,36 @@
-@import '~@angular/material/theming';
-@include mat-core();
+.brand{
+    font-family: "Inter";
+    font-weight: 800;
+}
+
+.connect{
+    justify-content: end;
+    text-align: end;
+    justify-items: end;
+    float: right;
+    font-size: 15px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    border-radius: 13px;
+    &:hover{
+        background-color: #0E0E10;
+        color: white;
+    }
+
+}
+
+
+.sign-in-container{
+    width: 100%;
+    display: block;
+    align-items: flex-end;
+
+}
+
+.mat-toolbar {
+    background: #fff;
+}
+
+

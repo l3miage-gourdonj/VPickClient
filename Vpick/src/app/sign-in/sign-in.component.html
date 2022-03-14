@@ -1,7 +1,8 @@
-<input placeholder="Carte bancaire">
-<input placeholder="Code secret">
-<code-input [isCodeHidden]="true"
-[codeLength]="6">
-</code-input>
 
-<button mat-button>Sign In</button>
+<h1>Abonné? Connect-toi!</h1>
+<p>Votre numéro cb</p>
+<input placeholder="1234 1234 1234 1234" pattern="[0-9]{13,16}" type="tel">
+<p>Votre code secret:</p>
+<code-input [isCodeHidden]="false" [codeLength]="5"> </code-input>
+
+<button mat-button>Se connecter</button>
