@@ -1,6 +1,16 @@
 .brand{
     font-family: "Inter";
     font-weight: 800;
+
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+#logo {
+    height: 39px;
+    width: auto;
+    margin-right: 15px;
 }
 
 .connect{
@@ -9,16 +19,15 @@
     justify-items: end;
     float: right;
     font-size: 15px;
-    padding-left: 20px;
-    padding-right: 20px;
-    padding-bottom: 10px;
-    padding-top: 10px;
+    
+    padding: 10px 20px;
     border-radius: 13px;
-    &:hover{
-        background-color: #0E0E10;
-        color: white;
-    }
 
+    &:hover{
+        transition: 0.4s;
+        background-color: #e4e4e4;
+        cursor: pointer;
+    }
 }
 
 

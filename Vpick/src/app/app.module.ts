@@ -3,15 +3,16 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import {MatToolbarModule} from '@angular/material/toolbar';
+import { MatToolbarModule } from '@angular/material/toolbar';
 import { SignInComponent } from './sign-in/sign-in.component';
 import { CodeInputModule } from 'angular-code-input';
 import { HomeComponent } from './home/home.component';
-import {MatButtonModule} from '@angular/material/button';
+import { MatButtonModule} from '@angular/material/button';
 import { RentComponent } from './rent/rent.component';
 import { BringBackComponent } from './bring-back/bring-back.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {MatDialogModule} from '@angular/material/dialog';
+import { MatDialogModule } from '@angular/material/dialog';
+import { HttpClientModule } from '@angular/common/http';
 
 
 @NgModule({
@@ -24,12 +25,13 @@ import {MatDialogModule} from '@angular/material/dialog';
   ],
   imports: [
     BrowserModule,
+    HttpClientModule,
     AppRoutingModule,
     MatToolbarModule,
     CodeInputModule.forRoot({
-      codeLength: 6,
+      codeLength: 5,
       isCharsCode: true,
-      code: 'abcdef'
+      code: ''
     }),
     MatButtonModule,
     BrowserAnimationsModule,

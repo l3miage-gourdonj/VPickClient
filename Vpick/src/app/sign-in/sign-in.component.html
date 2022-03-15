@@ -1,8 +1,14 @@
 
-<h1>Abonné? Connect-toi!</h1>
-<p>Votre numéro cb</p>
-<input placeholder="1234 1234 1234 1234" pattern="[0-9]{13,16}" type="tel">
-<p>Votre code secret:</p>
-<code-input [isCodeHidden]="false" [codeLength]="5"> </code-input>
+<h1>Connexion Abonné</h1>
 
-<button mat-button>Se connecter</button>
+<div id="content">
+    <p>Votre numéro cb :</p>
+    <input (keyup)="CB_format(card)" #card placeholder="1234 1234 1234 1234" type="tel">
+
+    <p>Votre code secret :</p>
+    <code-input #codeSecret [isCodeHidden]="false" [codeLength]="5" (codeCompleted)="sauvCodeSecret($event);Connexion(card)"> </code-input>
+</div>
+
+<div id="content-btn">
+    <button mat-button (click)="Connexion(card)">Se connecter</button>
+</div>

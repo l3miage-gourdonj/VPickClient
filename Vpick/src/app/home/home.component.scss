@@ -8,7 +8,7 @@ li{
     align-items: center; /* align vertical */
     margin-bottom: 10px;
     padding-left: 20px;
-    cursor:grab;
+    cursor: pointer;
     -webkit-transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
     transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
     &::after{
@@ -40,7 +40,7 @@ h1{
     font-weight: 800;
     padding-left: 20px;
 
-
+    text-align: center;
 }
 h2{
     margin-top: -20px;
@@ -48,6 +48,7 @@ h2{
     text-size-adjust: 24px;
     padding-left: 20px;
 
+    text-align: center;
 }
 
 .home-img{
@@ -60,3 +61,4 @@ h2{
     justify-content: center;
     align-items: center;
 }
+
