@@ -1,8 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ViewChild, ElementRef } from '@angular/core';
-import { CodeInputComponent } from 'angular-code-input';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
 
 
 
