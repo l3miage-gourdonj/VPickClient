@@ -42,6 +42,7 @@ h1{
 
     text-align: center;
 }
+
 h2{
     margin-top: -20px;
     font-family: "Inter";
@@ -53,10 +54,14 @@ h2{
 
 .home-img{
     width: 30%;
-    margin-left: 30%;
+    margin-left: 20%;
 }
+
 .container{
-    width: 100%;
+    width: 80%;
+    margin: auto;
+    margin-top: 100px;
+
     display: flex;
     justify-content: center;
     align-items: center;
