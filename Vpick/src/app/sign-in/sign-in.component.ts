@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ViewChild, ElementRef } from '@angular/core';
 import { CodeInputComponent } from 'angular-code-input';
 import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 
 
@@ -13,14 +14,11 @@ import { HttpClient } from '@angular/common/http';
 export class SignInComponent implements OnInit {
   private codeS!:string;
   private codeResultat!:string;
-  private ConnectionUrl = 'https:/localhost:9000/GET/...';
-
+  private ConnectionUrl = 'https:/localhost:9000/GET/';
 
   constructor(private httpClient: HttpClient) { }
 
-  ngOnInit(): void {
-
-  }
+  ngOnInit(): void { }
 
   sauvCodeSecret(codeS: string) {
     this.codeS = codeS;
@@ -33,6 +31,9 @@ export class SignInComponent implements OnInit {
       console.log("Num CB: "+numCB);
       console.log("Code Secret: "+this.codeS);
       
+      // Générer la requete / URL :
+      this.ConnectionUrl = 'https:/localhost:9000/GET/.../cb='+numCB+'&codeSecret='+this.codeS;
+
       // Faire une requete GET :
       this.httpClient.get(this.ConnectionUrl).subscribe(
           data => { console.log(data), console.log(data.toString); },
