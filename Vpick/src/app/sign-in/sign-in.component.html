@@ -2,12 +2,24 @@
 
 <div id="content">
     <p>Votre numéro cb :</p>
-    <input (keyup)="CB_format(card)" #card placeholder="1234 1234 1234 1234" type="tel">
+    <input 
+        #card 
+        (ngModelChange)="CB_format(card)" 
+        [maxlength]="19" 
+        [ngModel]="creditCard" 
+        placeholder="1234 1234 1234 1234" 
+        type="tel">
 
     <p>Votre code secret :</p>
-    <code-input #codeSecret [isCodeHidden]="false" [codeLength]="5" (codeCompleted)="sauvCodeSecret($event);Connexion(card)"> </code-input>
+    <code-input 
+        #codeSecret 
+        [isCodeHidden]="false" 
+        [codeLength]="5" 
+        (codeChanged)="resetCodeDone()"
+        (codeCompleted)="sauvCodeSecret($event)"> 
+    </code-input>
 </div>
 
 <div id="content-btn">
-    <button mat-button (click)="Connexion(card)">Se connecter</button>
+    <button mat-button (click)="Connexion(card)" [disabled]="!codeDone">Se connecter</button>
 </div>
