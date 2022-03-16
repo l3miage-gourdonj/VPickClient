@@ -9,58 +9,54 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./sign-in.component.scss']
 })
 export class SignInComponent implements OnInit {
-  private codeS!:string;
-  private codeResultat!:string;
-  private ConnectionUrl = 'https:/localhost:9000/GET/';
+    private codeS!:string;
+    private ConnectionUrl = 'http://localhost:9000/api/vpick';
+        
+    constructor(private httpClient: HttpClient) { }
+    ngOnInit(): void { }
 
-  constructor(private httpClient: HttpClient) { }
+    sauvCodeSecret(codeS: string) {
+        this.codeS = codeS;
+    }
 
-  ngOnInit(): void { }
+    Connexion(CB:HTMLInputElement) {
+        let numCB:number = Number(CB.value.replace(/\s/g, ""));
 
-  sauvCodeSecret(codeS: string) {
-    this.codeS = codeS;
-  }
+        console.log("String CB: "+CB.value);
+        console.log("Num CB: "+numCB);
+        console.log("Code Secret: "+this.codeS);
 
-  Connexion(CB:HTMLInputElement) {
-      let numCB:number = Number(CB.value.replace(/\s/g, ""));
+        // Générer la requete / URL :
+        this.ConnectionUrl += '/abo/cb/'+CB.value+'/code/'+this.codeS;
 
-      console.log("String CB: "+CB.value);
-      console.log("Num CB: "+numCB);
-      console.log("Code Secret: "+this.codeS);
+        // Faire une requete GET :
+        this.httpClient.get(this.ConnectionUrl).subscribe(
+            data => { console.log(data); },
+            error => { console.error('Connexion error!', error); }
+        );
+    }
 
-      // Générer la requete / URL :
-      this.ConnectionUrl = 'http://localhost:9000/api/vpick/abo/cb/'+CB.value+'/code/'+this.codeS;
+    CB_format(CB: HTMLInputElement) {
+        let creditCard:string = CB.value;
+        // console.log("Num CB: "+creditCard);
 
-      // Faire une requete GET :
-      this.httpClient.get(this.ConnectionUrl).subscribe(
-          data => { console.log(data), console.log(data.toString); },
-          error => { console.error('Connexion error!', error); }
-      );
+        if(creditCard !== null) {
+            let matches = creditCard.replace(/\s+/g, '').replace(/[^0-9]/gi, '').match(/\d{4,16}/g);
+            let match = matches && matches[0] || '';
+            let parts = [];
 
-      console.log("Return: "+this.codeResultat);
-  }
+            for (let i = 0; i < match.length; i+=4) {
+                parts.push(match.substring(i, i+4));
+            }
 
-  CB_format(CB: HTMLInputElement) {
-      let creditCard:string = CB.value;
-      // console.log("Num CB: "+creditCard);
+            console.log("Part: "+parts);
 
-      if(creditCard !== null) {
-          let matches = creditCard.replace(/\s+/g, '').replace(/[^0-9]/gi, '').match(/\d{4,16}/g);
-          let match = matches && matches[0] || '';
-          let parts = [];
-
-          for (let i = 0; i < match.length; i+=4) {
-              parts.push(match.substring(i, i+4));
-          }
-
-          console.log("Part: "+parts);
-
-          for (let i = 0; i < parts.length; i++) {
-              if(i === 0)
-                  CB.value = parts[i];
-              else
-                  CB.value += " " + parts[i];
-          }
-      }
-  }
+            for (let i = 0; i < parts.length; i++) {
+                if(i === 0)
+                    CB.value = parts[i];
+                else
+                    CB.value += " " + parts[i];
+            }
+        }
+    }
 }

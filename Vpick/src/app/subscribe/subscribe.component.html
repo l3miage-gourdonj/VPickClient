@@ -1,45 +1,35 @@
 <h1>Inscription Vépick</h1>
 
-<form #toDoForm="ngForm" (submit)="Inscription(nom,prenom,adresse,card)">
+<form #toDoForm="ngForm" (submit)="Inscription(nom,prenom,dateN,adresse,sexe,card)">
     <input type="text" #nom placeholder="Michel"/>
     <input type="text" #prenom placeholder="Dupont"/>
 
     <mat-form-field appearance="fill">
         <mat-label>Date naissance</mat-label>
-        <input matInput [matDatepicker]="picker">
+        <input matInput #dateN [matDatepicker]="picker">
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
 
     <input type="text" #adresse placeholder="5 rue victor hugo"/>
 
-    <mat-radio-group aria-label="Votre Sexe" [(ngModel)]="sexe">
-        <mat-radio-button value="H"> Homme </mat-radio-button>
-        <mat-radio-button value="F"> Femme </mat-radio-button>
+    <mat-radio-group aria-label="Votre Sexe">
+        <mat-radio-button #sexe value="homme"> Homme </mat-radio-button>
+        <mat-radio-button value="femme"> Femme </mat-radio-button>
     </mat-radio-group>
-    <p> Select : {{ sexe }} </p>
+
     <div id="content">
         <p>Votre numéro cb :</p>
         <input (keyup)="CB_format(card)" #card placeholder="1234 1234 1234 1234" type="tel">
         
         <p>Votre code secret :</p>
-        <!-- <code-input #codeSecret [isCodeHidden]="false" [codeLength]="5" (codeCompleted)="sauvCodeSecret($event);Connexion(card)"> </code-input> -->
     </div>
 </form>
 
 <div id="content-btn">
-    <button mat-button (click)="Inscription(nom,prenom,adresse,card)">Se connecter</button>
+    <button mat-button (click)="Inscription(nom,prenom,dateN,adresse,sexe,card)">Se connecter</button>
 </div>
 
 <!--
-    private String nom;
-    private String prenom;
-    private Date dateNaissance;
-    private String adresse;
-    private Sexe sexe;
-    private String codeSecret;
-
-
     nom,prenom,adresse,card
 -->
-
