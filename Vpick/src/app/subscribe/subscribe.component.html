@@ -1,41 +1,57 @@
 <h1>Inscription Vépick</h1>
 
-<form #toDoForm="ngForm" (ngSubmit)="onSubmit(nom,prenom,dateN,adresse,sexe,card)">
-    <input type="text" #nom placeholder="Michel"/>
-    <input type="text" #prenom placeholder="Dupont"/>
+<div id="bodyContent">
+    <form id="Content" #toDoForm="ngForm" (ngSubmit)="onSubmit(lastName,firstName,dateB,adresse,sexe,card)">
+        <div class="NameContent">
+            <input type="text" #firstName placeholder="Michel"/>
+            <input type="text" #lastName placeholder="Dupont"/>
+        </div>
+        
+        <div id="AdresseSexeContent">
+            <div id="AdresseContent">
+                <input type="text" #adresse placeholder="5 rue victor hugo"/>
+            </div>
 
-    <mat-form-field appearance="fill">
-        <mat-label>Date naissance</mat-label>
-        <input matInput #dateN [matDatepicker]="picker">
-        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-datepicker #picker></mat-datepicker>
-    </mat-form-field>
+            <mat-radio-group id="SexeContent" aria-label="Votre Sexe">
+                <mat-radio-button #sexe checked value="homme"> Homme </mat-radio-button>
+                <mat-radio-button value="femme"> Femme </mat-radio-button>
+            </mat-radio-group>
+        </div>
 
-    <input type="text" #adresse placeholder="5 rue victor hugo"/>
+        <div id="DateBContent">
+            <p>Votre date de naissance :</p>
+            <mat-form-field id="DateB" >
+                <input id="content-date-input" placeholder="01/01/1980" matInput #dateB [matDatepicker]="picker">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+        </div>
 
-    <mat-radio-group aria-label="Votre Sexe">
-        <mat-radio-button #sexe value="homme"> Homme </mat-radio-button>
-        <mat-radio-button value="femme"> Femme </mat-radio-button>
-    </mat-radio-group>
+        <div id="creditCardContent">
+            <p>Votre numéro cb :</p>
+            <input #card name="creditCardInput" 
+                [ngModel]="creditCard" 
+                (ngModelChange)="CB_format(card)"
+                placeholder="1234 1234 1234 1234" type="tel" [maxlength]="19">
+            <div *ngIf="isCreditCardInvalid()" id="cbWrong">Numéro de carte éronnée</div>
+        </div>
 
-    <div id="content">
-        <p>Votre numéro cb :</p>
-        <input #card name="creditCardInput" 
-            [ngModel]="creditCard" 
-            (ngModelChange)="CB_format(card)"
-            placeholder="1234 1234 1234 1234" type="tel" [maxlength]="19">
-        <div *ngIf="isCreditCardInvalid()">Wrong</div>
+        <div id="secretCodeContent">
+            <p class="secretCodeText">Votre code secret :</p>
+            <code-input #codeSecret name="secretCodeInput" 
+                [isCodeHidden]="false" 
+                [codeLength]="5"
+                (codeChanged)="saveSecretCode($event)">
+            </code-input>
+        </div>
 
-        <p>Votre code secret :</p>
-        <code-input #codeSecret name="secretCodeInput" 
-            [isCodeHidden]="false" 
-            [codeLength]="5"
-            (codeChanged)="saveSecretCode($event)">
-        </code-input>
-    </div>
+        <div id="ValidFormContent">
+            <button mat-button type="submit" [disabled]="!isFormValid(firstName.value, lastName.value, dateB.value, adresse.value)">S'inscrire</button>
+        </div>
+    </form>
 
-    <div id="content-btn">
-        <button mat-button type="submit" [disabled]="!isFormValid()">S'inscrire</button>
-    </div>
-</form>
+    <hr>
+
+    <div id="imgContent"> <img src="../../assets/dayflow.png" alt=""> </div>
+</div>
 

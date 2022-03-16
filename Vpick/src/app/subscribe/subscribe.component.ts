@@ -84,8 +84,13 @@ export class SubscribeComponent implements OnInit {
         return this.creditCard.length === 19 && !this.regex.test(this.creditCard);
     }
 
-    isFormValid() {
-        return this.regex.test(this.creditCard) && this.secretCode.replace(/\s+/g, '').length === 5;
+    isFormValid(firstN:string, lastN:string, dateB:string, adresse:string) {
+        return this.regex.test(this.creditCard) && 
+               this.secretCode.replace(/\s+/g, '').length === 5 &&
+               firstN.length > 0 &&
+               lastN.length > 0 &&
+               dateB.length >= "1/1/2022".length && dateB.length <= "12/12/2022".length && // compris entre 8 et 10 inclus
+               adresse.length > 0; 
     }
 
     CB_format(CB: HTMLInputElement) {

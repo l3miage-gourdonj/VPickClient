@@ -39,6 +39,7 @@ export class SignInComponent implements OnInit {
     }
 
     isFormValid() {
+        document.getElementById
         return this.regex.test(this.creditCard) && this.secretCode.replace(/\s+/g, '').length === 5;
     }
 

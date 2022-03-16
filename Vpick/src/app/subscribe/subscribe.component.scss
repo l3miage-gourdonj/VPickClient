@@ -1,0 +1,155 @@
+h1{
+    font-family: "Inter";
+    font-weight: 800;
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+input{
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+
+    margin-left: 20px;
+
+    font-family: "Inter";
+    border-radius: 8px;
+
+    height: 16px;
+}
+
+p{
+    font-family: "Inter";
+    margin-top: 5px;
+    font-size: 1.2em;
+    text-align: left;
+}
+
+button{
+    margin-top: 40px;
+
+    padding: 10px 20px;
+    border-radius: 13px;
+    font-size: 15px;
+
+    &:hover{
+        transition: 0.4s;
+        background-color: #e4e4e4;
+        cursor: pointer;
+    }
+}
+
+div {
+    margin-bottom: 25px;
+}
+
+code-input {
+    --item-spacing: 10px;
+    --item-height: 3em;
+    --item-border: none;
+    --item-border-bottom: 2px solid #dddddd;
+    --item-border-has-value: none;
+    --item-border-bottom-has-value: 2px solid #888888;
+    --item-border-focused: none;
+    --item-border-bottom-focused: 2px solid #464745;
+    --item-shadow-focused: none;
+    --item-border-radius: 0px;
+}
+
+hr {
+    margin: 0px;
+}
+
+
+
+
+
+#bodyContent {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 100px;
+}
+
+#Content {
+    width: 510px;
+    margin-left: 0px 10%;
+    text-align: center;
+}
+
+#content-date-input {
+    margin: 0px;
+    padding: 0px 20px;
+}
+
+#DateBContent > #DateB {
+    margin-left: 20px;
+}
+
+#AdresseSexeContent {
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
+}
+
+#AdresseContent {
+    margin-bottom: 0px;
+}
+
+#SexeContent {
+    margin-left: 20px;
+    width: 221px;
+}
+
+#SexeContent > mat-radio-button {
+    margin-right: 20px;
+}
+
+.secretCodeText {
+    padding-bottom: 0px;
+    margin-bottom: 0px;
+}
+
+#creditCardContent, #secretCodeContent, #DateBContent {
+    width: 265px;
+    display: inline-block;
+    justify-content: center;
+}
+
+#ValidFormContent > button {
+    margin-top: 25px;
+}
+
+#imgContent {
+    display: flex;
+    vertical-align: middle;
+    align-items: center;
+    margin-right: 0px 10%;
+}
+
+#imgContent > img {
+    max-width: 400px;
+    height: auto;
+}
+
+#cbWrong {
+    color: #db6767;
+}
+
+
+
+
+
+@media screen and (max-width: 940px) {
+    #bodyContent {
+        display: inline;
+    }
+
+    #Content {
+        margin: auto;
+    }
+
+    hr, #imgContent {
+        display: none;
+    }
+}
