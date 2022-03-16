@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject } from 'rxjs';
-import { CodeInputComponent } from 'angular-code-input';
+import { Personne } from '../vepickDefinitions'
 
 
 @Component({
@@ -52,5 +51,9 @@ export class SignInComponent implements OnInit {
                 cpt += 5;
             }
         }
+    }
+
+    saveClientLS(client: Personne) {
+        
     }
 }

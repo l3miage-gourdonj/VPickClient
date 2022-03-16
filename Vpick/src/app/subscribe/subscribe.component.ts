@@ -1,25 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { MatRadioButton } from '@angular/material/radio';
-import { getLocaleFirstDayOfWeek } from '@angular/common';
+import { Personne, Sexe } from '../vepickDefinitions'
 
-
-interface Personne {
-    nom: string, 
-    prenom: string, 
-    dateNaissance: Date, 
-    adresse: string, 
-    sexe: Sexe, 
-    codeSecret: string,
-    carteBanquaire: string,
-    dateDebut: Date,
-    dateFin: Date
-}
-
-enum Sexe {
-    HOMME = "HOMME", 
-    FEMME = "FEMME"
-}
 
 @Component({
   selector: 'app-subscribe',
