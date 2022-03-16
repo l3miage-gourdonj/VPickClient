@@ -28,15 +28,19 @@ enum Sexe {
 })
 export class SubscribeComponent implements OnInit {
     public sexe!: Sexe;
-    private codeS!:string;
-    private dateN!:Date;
+    private dateN!: Date;
+    public creditCard: string = "";
+    private secretCode: string = "";
     private ConnectionUrl = 'http://localhost:9000/api/vpick';
+    private regex = new RegExp("\\d{4} \\d{4} \\d{4} \\d{4}");
 
     ngOnInit(): void { }
 
     constructor(private httpClient: HttpClient) { }
 
-    Inscription(nom:HTMLInputElement, prenom:HTMLInputElement, dateN:HTMLInputElement, adresse:HTMLInputElement, sexe: MatRadioButton,CB:HTMLInputElement) {
+    onSubmit(nom:HTMLInputElement, prenom:HTMLInputElement, dateN:HTMLInputElement, adresse:HTMLInputElement, sexe: MatRadioButton,CB:HTMLInputElement) {
+        // Envoie une requete POST pour générer un abonné en BD
+
         if(sexe.checked) {
             this.sexe = Sexe.HOMME;
         } else {
@@ -55,7 +59,7 @@ export class SubscribeComponent implements OnInit {
             dateNaissance: this.dateN, 
             adresse: adresse.value.toLowerCase(), 
             sexe: this.sexe,
-            codeSecret: this.codeS,
+            codeSecret: this.secretCode,
             carteBanquaire: CB.value,
             dateDebut: dateDebut,
             dateFin: dateFin
@@ -72,30 +76,25 @@ export class SubscribeComponent implements OnInit {
         });
     }
 
-    sauvCodeSecret(codeS: string) {
-        this.codeS = codeS;
+    saveSecretCode(codeS: string) {
+        this.secretCode = codeS;
+    }
+
+    isCreditCardInvalid() {
+        return this.creditCard.length === 19 && !this.regex.test(this.creditCard);
+    }
+
+    isFormValid() {
+        return this.regex.test(this.creditCard) && this.secretCode.replace(/\s+/g, '').length === 5;
     }
 
     CB_format(CB: HTMLInputElement) {
-        let creditCard:string = CB.value;
-        // console.log("Num CB: "+creditCard);
-        
-        if(creditCard !== null) {
-            let matches = creditCard.replace(/\s+/g, '').replace(/[^0-9]/gi, '').match(/\d{4,16}/g);
-            let match = matches && matches[0] || '';
-            let parts = [];
-
-            for (let i = 0; i < match.length; i+=4) {
-                parts.push(match.substring(i, i+4));
-            }
-            
-            console.log("Part: "+parts);
-            
-            for (let i = 0; i < parts.length; i++) {
-                if(i === 0)
-                    CB.value = parts[i];
-                else 
-                    CB.value += " " + parts[i];
+        this.creditCard = CB.value.replace(/\s+/g, '');
+        if (this.creditCard !== null) {
+            let cpt = 4;
+            while (cpt < this.creditCard.length) {
+                this.creditCard = this.creditCard.slice(0, cpt) + " " + this.creditCard.slice(cpt);
+                cpt += 5;
             }
         }
     }
