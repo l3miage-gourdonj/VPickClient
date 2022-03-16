@@ -4,49 +4,43 @@ import { BehaviorSubject } from 'rxjs';
 import { CodeInputComponent } from 'angular-code-input';
 
 
-
 @Component({
     selector: 'app-sign-in',
     templateUrl: './sign-in.component.html',
     styleUrls: ['./sign-in.component.scss']
 })
 export class SignInComponent implements OnInit {
-    private codeS!: string;
-    codeDone = false;
-    private codeResultat!: string;
     private ConnectionUrl = 'https:/localhost:9000/GET/';
     creditCard = "";
+    secretCode = ""
 
     constructor(private httpClient: HttpClient) { }
 
     ngOnInit(): void { }
 
-    sauvCodeSecret(codeS: string) {
-        this.codeS = codeS;
-        this.codeDone = true;
+    saveSecretCode(codeS: string) {
+        this.secretCode = codeS;
     }
 
-    resetCodeDone(){
-        this.codeDone = false;
+    isCreditCardInvalid(){
+        const regex = new RegExp("\\d{4} \\d{4} \\d{4} \\d{4}");
+        return this.creditCard.length === 19 && !regex.test(this.creditCard);
     }
 
-    Connexion(CB: HTMLInputElement) {
-        let numCB: number = Number(CB.value.replace(/\s/g, ""));
+    isFormValid(){
+        const regex = new RegExp("\\d{4} \\d{4} \\d{4} \\d{4}");
+        return regex.test(this.creditCard) && this.secretCode.replace(/\s+/g, '').length === 5;
+    }
 
-        console.log("String CB: " + CB.value);
-        console.log("Num CB: " + numCB);
-        console.log("Code Secret: " + this.codeS);
-
+    onSubmit() {
         // Générer la requete / URL :
-        this.ConnectionUrl = 'http://localhost:9000/api/vpick/abo/cb/' + CB.value + '/code/' + this.codeS;
+        this.ConnectionUrl = 'http://localhost:9000/api/vpick/abo/cb/' + this.creditCard + '/code/' + this.secretCode;
 
         // Faire une requete GET :
         this.httpClient.get(this.ConnectionUrl).subscribe(
             data => { console.log(data), console.log(data.toString); },
             error => { console.error('Connexion error!', error); }
         );
-
-        console.log("Return: " + this.codeResultat);
     }
 
     CB_format(CB: HTMLInputElement) {
