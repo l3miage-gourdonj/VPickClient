@@ -17,6 +17,7 @@ export class SignInComponent implements OnInit {
     constructor(private httpClient: HttpClient) { }
 
     ngOnInit(): void { 
+        /*
         let cl:Personne = {
             nom: 'GBZ',
             prenom: 'Jerome',
@@ -32,8 +33,9 @@ export class SignInComponent implements OnInit {
 
         console.log(cl);
         
-        // 
-        // getClientLS();
+        
+        console.log( getClientLS() );
+        */
     }
 
     onSubmit() {

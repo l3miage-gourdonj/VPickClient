@@ -1,6 +1,6 @@
 <h1>Connexion Abonné</h1>
 
-<form id="content" (ngSubmit)="onSubmit()">
+<form id="Content" (ngSubmit)="onSubmit()">
     <div id="creditCardContent">
         <p>Votre numéro cb :</p>
         <input #card name="creditCardInput" 
@@ -18,7 +18,7 @@
             (codeChanged)="saveSecretCode($event)">
         </code-input>
     </div>
-    <div id="content-btn">
+    <div id="ValidFormContent">
         <button mat-button type="submit" [disabled]="!isFormValid()">Se connecter</button>
     </div>
 </form>

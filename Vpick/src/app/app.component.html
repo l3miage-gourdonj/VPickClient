@@ -1,7 +1,11 @@
 <mat-toolbar>
     <span class="brand" routerLink=""> <img id="logo" src="../assets/logo.png"> <span> Vépick </span></span>
-    <div class="sign-in-container">
+    <div *ngIf="getClientLS() === null"  class="sign-in-container">
         <span (click)="openConnect()" class="connect">Se connecter</span>
+    </div>
+
+    <div *ngIf="getClientLS() !== null"  class="sign-in-container">
+        <span (click)="disconnect()" class="connect"> {{ this.client?.prenom + " " + this.client?.nom?.toUpperCase() }}  </span>
     </div>
 </mat-toolbar>
 
