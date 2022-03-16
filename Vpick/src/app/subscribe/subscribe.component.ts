@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { MatRadioButton } from '@angular/material/radio';
-import { Personne, Sexe } from '../vepickDefinitions'
+import { Personne, Sexe, setClientLS } from '../vepickDefinitions'
 
 
 @Component({
@@ -45,7 +45,8 @@ export class SubscribeComponent implements OnInit {
             codeSecret: this.secretCode,
             carteBanquaire: CB.value,
             dateDebut: dateDebut,
-            dateFin: dateFin
+            dateFin: dateFin,
+            creditTemps: 0
         }
         console.log(objClient);
 
@@ -53,8 +54,8 @@ export class SubscribeComponent implements OnInit {
         this.ConnectionUrl += '/POST/subscribe/';
 
         // Faire une requete POST :
-        this.httpClient.post<Personne>(this.ConnectionUrl, objClient).subscribe({
-            next: data => { console.log(data); },
+        this.httpClient.post<any>(this.ConnectionUrl, objClient).subscribe({
+            next: data => { if(data as Boolean === true){ setClientLS(objClient) } },
             error: error => { console.error('There was an error!', error); }
         });
     }

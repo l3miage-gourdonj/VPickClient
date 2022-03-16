@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Personne } from '../vepickDefinitions'
+import { Personne, Sexe, setClientLS } from '../vepickDefinitions'
 
 
 @Component({
@@ -16,7 +16,25 @@ export class SignInComponent implements OnInit {
 
     constructor(private httpClient: HttpClient) { }
 
-    ngOnInit(): void { }
+    ngOnInit(): void { 
+        let cl:Personne = {
+            nom: 'GBZ',
+            prenom: 'Jerome',
+            adresse: '25 route de vh',
+            carteBanquaire: '1425 2145 2155 2156',
+            codeSecret: '01234',
+            dateDebut: new Date('01/03/2022'),
+            dateFin: new Date('01/03/2023'),
+            dateNaissance: new Date('01/01/1980'),
+            sexe: Sexe.HOMME,
+            creditTemps: 0
+        }
+
+        console.log(cl);
+        
+        // 
+        // getClientLS();
+    }
 
     onSubmit() {
         // Générer la requete / URL :
@@ -24,7 +42,7 @@ export class SignInComponent implements OnInit {
 
         // Faire une requete GET :
         this.httpClient.get(this.ConnectionUrl).subscribe(
-            data => { console.log(data), console.log(data.toString); },
+            data  => { setClientLS(data as Personne); },
             error => { console.error('Connexion error!', error); }
         );
     }
@@ -51,9 +69,5 @@ export class SignInComponent implements OnInit {
                 cpt += 5;
             }
         }
-    }
-
-    saveClientLS(client: Personne) {
-        
     }
 }
