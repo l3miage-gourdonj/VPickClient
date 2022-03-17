@@ -34,7 +34,7 @@ export class BringBackComponent implements OnInit {
 
       // TEMPO / DELETE PLS
       this.numPrecedent = 1;
-      this.progressBar(1);
+      this.progressBar(0);
     }
 
 
@@ -90,20 +90,37 @@ export class BringBackComponent implements OnInit {
 
         this.numPrecedent = 3;
         this.progressBar(3);
+        this.selectPaiement();
         console.log("Station 01 - Selectionné !");
+    }
+
+    selectPaiement() {
+
     }
 
     
 
     displayContent(stepNum:number) {
-        
-
-        if(stepNum == 1) {
+        if(stepNum == 0) {
+            document.getElementById("connexionContent")?.setAttribute('style',"display:block");
+            document.getElementById("stationContent")?.setAttribute('style',"display:none");
+            document.getElementById("bornetteContent")?.setAttribute('style',"display:none");
+            document.getElementById("paiementContent")?.setAttribute('style',"display:none");
+        } else if(stepNum == 1) {
+            document.getElementById("connexionContent")?.setAttribute('style',"display:none");
             document.getElementById("stationContent")?.setAttribute('style',"display:none");
             document.getElementById("bornetteContent")?.setAttribute('style',"display:block");
+            document.getElementById("paiementContent")?.setAttribute('style',"display:none");
         } else if(stepNum == 2) {
+            document.getElementById("connexionContent")?.setAttribute('style',"display:none");
             document.getElementById("bornetteContent")?.setAttribute('style',"display:none");
             document.getElementById("stationContent")?.setAttribute('style',"display:block");
+            document.getElementById("paiementContent")?.setAttribute('style',"display:none");
+        } else if(stepNum == 3) {
+            document.getElementById("connexionContent")?.setAttribute('style',"display:none");
+            document.getElementById("bornetteContent")?.setAttribute('style',"display:none");
+            document.getElementById("stationContent")?.setAttribute('style',"display:none");
+            document.getElementById("paiementContent")?.setAttribute('style',"display:block");
         }
     }
 
