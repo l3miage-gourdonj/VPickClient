@@ -1,1 +1,73 @@
-<p>bring-back works!</p>
+<div class="container">
+    <div class="progress">
+        <div class="percent" style="width: 0%;"></div>
+    </div>
+    <div class="steps">
+        <div class="step" id="0" class="step selected"></div>
+        <div class="step" id="1"></div>
+        <div class="step" id="2"></div>
+        <div class="step" id="3"></div>
+    </div>
+</div>
+  
+<div class="body"> 
+    <h1> Déposer un/des vélo(s) </h1>
+
+    <div id="Content">
+        <div id="bornetteContent">
+            <h2> Selectionne une bornette : </h2>
+            <ul>
+                <li class="bornette" (click)="selectBornette(bornette)" *ngFor="let bornette of getListBornette()"> <!-- | async --> 
+                    <span> {{ bornette }} </span> 
+                    <img class="arrow" src="../../assets/arrow-right.png" alt=""> 
+                </li> 
+            </ul>
+        </div>
+
+        <div id="stationContent" style="display:none;">
+            <h2> Selectionne une station : </h2>
+            <ul class="stations">
+                <li class="station" *ngFor="let station of getListStation()"> <!-- | async --> 
+                    <span> {{ station }} </span> 
+                    <img class="arrow" src="../../assets/arrow-right.png" alt=""> 
+                </li>  
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!--
+    1.1 - Si connecter client connecter :
+        Va etape 2
+    1.2 - Sinon :
+        Afficher formulaire connexion
+        Va etape 2
+
+    2.1 - Si abo
+        Affihce les locations à rendre
+        (Requette location en cours pour un abo)
+        Va etape 3
+    2.2 - Si non abo
+        Va etape 3
+
+    3.1 - Si location à rendre :
+        (Requette location en cours pour un non abo)
+        (Requette liste bornette dispo)
+        Selectione une bornnete
+        Va etape 4
+    3.2 - pas de loccaton à rendre :
+        Afficher mesage
+
+    4.1 - Afficher liste station
+        (Requette liste station dispo pour une bornnette donnee)
+        Annimation chargement pour deposer le velo automatique à la premiere station
+        2 à 5 seconnde
+        Va etape 5
+
+    5.1 - Paiement :
+        (Requette prix /h pour la location)
+        Reccap du prix à payer (à calculer en typeescript)
+        Boutton payer + message de remerciment
+-->
+
+
