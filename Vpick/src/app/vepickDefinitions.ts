@@ -1,9 +1,9 @@
 export interface Personne {
-    nom: string, 
-    prenom: string, 
-    dateNaissance: Date, 
-    adresse: string, 
-    sexe: Sexe, 
+    nom: string,
+    prenom: string,
+    dateNaissance: Date,
+    adresse: string,
+    sexe: Sexe,
     codeSecret: string,
     carteBanquaire: string,
     dateDebut: Date,
@@ -11,18 +11,29 @@ export interface Personne {
     creditTemps: number
 }
 
+export interface Bornette{
+  numero:number,
+  velo:number|null,
+
+}
+
+export interface Station{
+  id:number,
+  adresse : string
+}
+
 export enum Sexe {
-    HOMME = "HOMME", 
+    HOMME = "HOMME",
     FEMME = "FEMME"
 }
 
-export function toStringPersonne(p:Personne): string {    
+export function toStringPersonne(p:Personne): string {
     return '{}';
 }
 
 export function setClientLS(client: Personne) {
     console.log("sav");
-    
+
     localStorage.setItem("client",JSON.stringify(client));
 }
 
@@ -30,5 +41,5 @@ export function getClientLS() : Personne|null {
     let contentLS = localStorage.getItem('client');
     return contentLS != null ? JSON.parse( contentLS ) : null;
 }
-  
+
 
