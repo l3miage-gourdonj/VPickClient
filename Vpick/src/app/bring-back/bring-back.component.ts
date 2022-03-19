@@ -50,29 +50,46 @@ export class BringBackComponent implements OnInit {
     }
 
 
+    getClient():void {
+        // Générer la requete / URL :
+        this.ConnectionUrl += '/connexion/cb/' + this.creditCard + '/code/' + this.secretCode;
 
+        // Faire une requete GET :
+        this.httpClient.get(this.ConnectionUrl).subscribe(
+            data  => { 
+                setClientLS(data as Personne);
+                this.numPrecedent = 1;
+                this.progressBar(1);
+            },
+            error => { console.error('Connexion error!', error); }
+        );
 
-    getListBornette(id:number){
-      this.httpClient.get("http://localhost:9000/api/vpick/bornette/id="+id).subscribe(
-        data  => { this.bornettes = data as Bornette[]},
-        error => { console.error('Connexion error!', error); }
-      );
-      console.log(this.bornettes)
+        // Delette apres avoir mis la requete
+        this.numPrecedent = 1;
+        this.progressBar(1);
     }
 
-    getListStation(){
-      this.ConnectionUrl += '/station';
-      this.httpClient.get(this.ConnectionUrl).subscribe(
-        data  => { this.stations = data as Station[]},
-        error => { console.error('Connexion error!', error); }
-      );
-      console.log(this.stations)
+    getListBornette(id:number):void {
+        this.httpClient.get("http://localhost:9000/api/vpick/bornette/id="+id).subscribe(
+            data  => { this.bornettes = data as Bornette[] },
+            error => { console.error('Connexion error!', error); }
+        );
+        console.log(this.bornettes)
+    }
+
+    getListStation():void {
+        this.ConnectionUrl += '/station';
+        this.httpClient.get(this.ConnectionUrl).subscribe(
+            data  => { this.stations = data as Station[]; },
+            error => { console.error('Connexion error!', error); }
+        );
+        console.log(this.stations)
     }
 
 
 
 
-
+    
     selectBornette(bornette:string) {
         console.log(bornette);
         /*
@@ -125,26 +142,7 @@ export class BringBackComponent implements OnInit {
 
     }
 
-    selectConnected() {
-        /*
-        // Générer la requete / URL :
-        this.ConnectionUrl += '/connexion/cb/' + this.creditCard + '/code/' + this.secretCode;
-
-        // Faire une requete GET :
-        this.httpClient.get(this.ConnectionUrl).subscribe(
-            data  => { 
-                setClientLS(data as Personne);
-                this.numPrecedent = 1;
-                this.progressBar(1);
-            },
-            error => { console.error('Connexion error!', error); }
-        );
-        */
-
-        // Delette apres avoir mis la requete
-        this.numPrecedent = 1;
-        this.progressBar(1);
-    }
+    
 
     
     isAlreadyConnected(): boolean {

@@ -17,7 +17,7 @@
         <div id="connexionContent" style="display:none;">
             <h2> Connexion client "non abonné" & "abonné" : </h2>
             
-            <form (ngSubmit)="selectConnected()">
+            <form (ngSubmit)="getClient()">
                 <div id="creditCardContent">
                     <p>Votre numéro cb :</p>
                     <input #card name="creditCardInput" 
@@ -63,7 +63,7 @@
             </ul>
         </div>
 
-        
+
         <div id="paiementContent" style="display:none;">
             <h2> Paiement : </h2>
 
