@@ -142,3 +142,58 @@ div#Content {
 #sationSelected {
   background-color: red;
 }
+
+
+button{
+  margin-top: 40px;
+
+  padding: 10px 20px;
+  border-radius: 13px;
+  font-size: 15px;
+
+  &:hover{
+      transition: 0.4s;
+      background-color: #e4e4e4;
+      cursor: pointer;
+  }
+}
+
+input{
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+
+  margin-left: 20px;
+
+  font-family: "Inter";
+  border-radius: 8px;
+}
+
+p{
+  font-family: "Inter";
+  margin-top: 5px;
+  font-size: 1.2em;
+}
+
+code-input {
+  --item-spacing: 10px;
+  --item-height: 3em;
+  --item-border: none;
+  --item-border-bottom: 2px solid #dddddd;
+  --item-border-has-value: none;
+  --item-border-bottom-has-value: 2px solid #888888;
+  --item-border-focused: none;
+  --item-border-bottom-focused: 2px solid #464745;
+  --item-shadow-focused: none;
+  --item-border-radius: 0px;
+}
+
+#ValidFormContent {
+  width: 100%;
+  text-align: center;
+}
+
+#cbWrong {
+  color: #db6767;
+}

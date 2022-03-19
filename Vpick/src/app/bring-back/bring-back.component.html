@@ -15,8 +15,30 @@
 
     <div id="Content">
         <div id="connexionContent" style="display:none;">
-            <h2> Connexion : </h2>
+            <h2> Connexion client "non abonné" & "abonné" : </h2>
             
+            <form (ngSubmit)="selectConnected()">
+                <div id="creditCardContent">
+                    <p>Votre numéro cb :</p>
+                    <input #card name="creditCardInput" 
+                        [ngModel]="creditCard" 
+                        (ngModelChange)="CB_format(card)"
+                        placeholder="1234 1234 1234 1234" type="tel" [maxlength]="19">
+                    <div *ngIf="isCreditCardInvalid()" id="cbWrong">Numéro de carte éronnée</div>
+                </div>
+            
+                <div id="secretCodeContent">
+                    <p>Votre code secret :</p>
+                    <code-input #codeSecret name="secretCodeInput" 
+                        [isCodeHidden]="false" 
+                        [codeLength]="5"
+                        (codeChanged)="saveSecretCode($event)">
+                    </code-input>
+                </div>
+                <div id="ValidFormContent">
+                    <button mat-button type="submit" [disabled]="!isFormValid()">Se connecter</button>
+                </div>
+            </form>
         </div>
 
         <div id="bornetteContent">
@@ -33,9 +55,9 @@
             <h2> Selectionne une station : </h2>
             <ul class="stations">
                 <li class="station" *ngFor="let station of getListStation()"> <!-- | async --> 
-                    <span> {{ station }} </span> 
-                    <img class="arrow" src="../../assets/arrow-right.png" alt=""> 
-                </li>  
+                    <span> {{ station }} </span>
+                    <img class="arrow" src="../../assets/arrow-right.png" alt="">
+                </li>
             </ul>
         </div>
 
