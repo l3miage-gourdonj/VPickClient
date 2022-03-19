@@ -9,8 +9,8 @@
         <div class="step" id="3"></div>
     </div>
 </div>
-  
-<div class="body"> 
+
+<div class="body">
     <h1> Déposer un/des vélo(s) </h1>
 
     <div id="Content">
@@ -41,29 +41,32 @@
             </form>
         </div>
 
-        <div id="bornetteContent">
-            <h2> Selectionne une bornette : </h2>
-            <ul>
-                <li class="bornette" (click)="selectBornette(bornette)" *ngFor="let bornette of getListBornette()"> <!-- | async --> 
-                    <span> {{ bornette }} </span> 
-                    <img class="arrow" src="../../assets/arrow-right.png" alt=""> 
-                </li> 
-            </ul>
-        </div>
 
         <div id="stationContent" style="display:none;">
             <h2> Selectionne une station : </h2>
             <ul class="stations">
-                <li class="station" *ngFor="let station of getListStation()"> <!-- | async --> 
-                    <span> {{ station }} </span>
+                <li class="station" (click)="selectStation(station.id)" *ngFor="let station of this.stations"> <!-- | async -->
+                    <span> {{ station.adresse }} </span>
                     <img class="arrow" src="../../assets/arrow-right.png" alt="">
                 </li>
             </ul>
         </div>
 
+
+        <div id="bornetteContent" style="display:none;">
+            <h2> Selectionne une bornette : </h2>
+            <ul >
+                <li class="bornette" *ngFor="let bornette of this.bornettes"> <!-- | async -->
+                    <span> {{ bornette.numero }} </span>
+                    <img class="arrow" src="../../assets/arrow-right.png" alt="">
+                </li>
+            </ul>
+        </div>
+
+        
         <div id="paiementContent" style="display:none;">
             <h2> Paiement : </h2>
-            
+
         </div>
     </div>
 </div>

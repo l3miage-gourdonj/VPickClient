@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { waitForAsync } from '@angular/core/testing';
 import { fromEvent } from 'rxjs';
 import { Personne, Sexe, setClientLS, getClientLS } from '../vepickDefinitions'
+import {Bornette, Station} from "../vepickDefinitions";
 
 @Component({
   selector: 'app-bring-back',
@@ -13,7 +13,8 @@ export class BringBackComponent implements OnInit {
     public stepsArray:Array<Element> = [];
     public stepsElem!:HTMLCollectionOf<Element>;
     private ConnectionUrl:string = 'http://localhost:9000/api/vpick';
-    public stations:Array<string> = [];
+    public stations:Array<Station> = [];
+    public bornettes:Array<Bornette> = [];
     private numPrecedent: number = 0;
 
     public creditCard:string = "";
@@ -51,22 +52,21 @@ export class BringBackComponent implements OnInit {
 
 
 
-    getListBornette(): Array<string> {
-        /*
-        // Générer la requete / URL :
-        this.ConnectionUrl += '/bornette/list/';
-
-        // Requette GET : liste bornette
-        this.httpClient.get(this.ConnectionUrl).subscribe(
-            data  => { ICI REMPLIR UN TABLEAU DES STRING },
-            error => { console.error('Connexion error!', error); }
-        );
-        */
-        return ["Victor Hugo", "Place de la concorde", "Champ Elysée"];
+    getListBornette(id:number){
+      this.httpClient.get("http://localhost:9000/api/vpick/bornette/id="+id).subscribe(
+        data  => { this.bornettes = data as Bornette[]},
+        error => { console.error('Connexion error!', error); }
+      );
+      console.log(this.bornettes)
     }
-    
-    getListStation() {
-        return this.stations;
+
+    getListStation(){
+      this.ConnectionUrl += '/station';
+      this.httpClient.get(this.ConnectionUrl).subscribe(
+        data  => { this.stations = data as Station[]},
+        error => { console.error('Connexion error!', error); }
+      );
+      console.log(this.stations)
     }
 
 
@@ -101,24 +101,24 @@ export class BringBackComponent implements OnInit {
             );
         });
         */
-        
+
         this.numPrecedent = 2;
         this.progressBar(2);
-        this.stations = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13'];
-        this.selectStation();
+        //this.stations = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13'];
+        //this.selectStation();
     }
 
-    async selectStation() {
+    async selectStation(id:number) {
         // afficher plein de case en couleur pour faire genre on cherche une station dispo
         // pendant 5 secondes puis go
-        console.log(1);
-        await new Promise(resolve => {setTimeout(resolve, 5000),this.colorStation()} ); // 3 sec
-        console.log(2);
+        //console.log(1);
+        //await new Promise(resolve => {setTimeout(resolve, 5000),this.colorStation()} ); // 3 sec
+        //console.log(2);
 
-        this.numPrecedent = 3;
-        this.progressBar(3);
-        this.selectPaiement();
-        console.log("Station 01 - Selectionné !");
+        this.numPrecedent = 2;
+        this.progressBar(2);
+        this.getListBornette(id);
+        console.log("Station ",id," - Selectionné !");
     }
 
     selectPaiement() {
@@ -159,18 +159,18 @@ export class BringBackComponent implements OnInit {
             document.getElementById("paiementContent")?.setAttribute('style',"display:none");
         } else if(stepNum == 1) {
             document.getElementById("connexionContent")?.setAttribute('style',"display:none");
-            document.getElementById("stationContent")?.setAttribute('style',"display:none");
-            document.getElementById("bornetteContent")?.setAttribute('style',"display:block");
+            document.getElementById("stationContent")?.setAttribute('style',"display:block");
+            document.getElementById("bornetteContent")?.setAttribute('style',"display:none");
             document.getElementById("paiementContent")?.setAttribute('style',"display:none");
         } else if(stepNum == 2) {
             document.getElementById("connexionContent")?.setAttribute('style',"display:none");
-            document.getElementById("bornetteContent")?.setAttribute('style',"display:none");
-            document.getElementById("stationContent")?.setAttribute('style',"display:block");
+            document.getElementById("stationContent")?.setAttribute('style',"display:none");
+            document.getElementById("bornetteContent")?.setAttribute('style',"display:block");
             document.getElementById("paiementContent")?.setAttribute('style',"display:none");
         } else if(stepNum == 3) {
             document.getElementById("connexionContent")?.setAttribute('style',"display:none");
-            document.getElementById("bornetteContent")?.setAttribute('style',"display:none");
             document.getElementById("stationContent")?.setAttribute('style',"display:none");
+            document.getElementById("bornetteContent")?.setAttribute('style',"display:none");
             document.getElementById("paiementContent")?.setAttribute('style',"display:block");
         }
     }
@@ -183,7 +183,7 @@ export class BringBackComponent implements OnInit {
 
     progressBar(stepNum:number) {
         console.log("num Prec:"+this.numPrecedent+" num Actu:"+stepNum);
-        
+
         if(this.numPrecedent >= stepNum) {
             let progressStyle = "width:"+String(stepNum * 30)+"%"
             let elem = document.getElementsByClassName('percent')[0] as Element;
