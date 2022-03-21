@@ -8,7 +8,7 @@ import {BringBackComponent} from "./bring-back/bring-back.component";
 const routes: Routes = [
   {path:"", component: HomeComponent},
   {path:"subscribe", component: SubscribeComponent},
-  {path:"rent",component:RentComponent},
+  {path:"rent", component: RentComponent},
   {path:"bringBack",component:BringBackComponent}
 ];
 

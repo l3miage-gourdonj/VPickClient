@@ -1,6 +1,6 @@
 h1{
     font-family: "Inter";
-    font-weight: 800;
+    font-weight: 600;
     text-align: center;
     margin-bottom: 40px;
 }
@@ -10,13 +10,12 @@ input{
     padding-right: 20px;
     padding-top: 10px;
     padding-bottom: 10px;
-
     margin-left: 20px;
-
+    margin-top: 5px;
+    font-size: 15px;
+    background-color:  #f9f9f9 ;
     font-family: "Inter";
     border-radius: 8px;
-
-    height: 16px;
 }
 
 p{
@@ -72,7 +71,7 @@ hr {
 }
 
 #Content {
-    width: 510px;
+    width: 600px;
     margin-left: 0px 10%;
     text-align: center;
 }
@@ -89,7 +88,7 @@ hr {
 #AdresseSexeContent {
     display: flex;
     align-items: center;
-    margin-left: 10px;
+    width: 560px;
 }
 
 #AdresseContent {
@@ -97,13 +96,26 @@ hr {
 }
 
 #SexeContent {
-    margin-left: 20px;
-    width: 221px;
+  width: 280px;
+
 }
 
-#SexeContent > mat-radio-button {
-    margin-right: 20px;
+.sexe-content{
+  display: inline-block;
+  width: 280px;
 }
+
+mat-radio-group{
+  width: 280px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+.second-radio{
+  margin-left: 30px;
+}
+
 
 .secretCodeText {
     padding-bottom: 0px;
