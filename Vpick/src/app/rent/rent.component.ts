@@ -18,13 +18,18 @@ export class RentComponent implements OnInit {
 
     public stations: Array<Station> = [];
     public locations: Array<Location> = [];
+    public listBornSelected: Array<Bornette> = [];
 
     public stationsSelected!: Station;
     
     private secretCode: string = "";
     private ConnectionUrl: string = 'http://localhost:9000/api/vpick';
 
+
+
+  /* Initialisation */  
     constructor(private httpClient: HttpClient, public dialog: MatDialog) { }
+
     ngOnInit(): void {
         this.stepsElem = document.getElementsByClassName('step');
         let len = document.getElementsByClassName('step').length;
@@ -78,7 +83,25 @@ export class RentComponent implements OnInit {
             data => { this.stations = data as Station[]; }
         );
 
-        this.stations = [{ id: 1, adresse: 'Victor Hugo', bornettes: [{ numero: 1, velo: null, etat: 'OK'}]}, { id: 1, adresse: 'Champ Elysée' , bornettes: []}, { id: 1, adresse: 'Concorde' , bornettes: []}];
+        this.stations = [{ 
+                            id: 1, 
+                            adresse: 'Victor Hugo', 
+                            bornettes: [
+                              { numero: 1, velo: { modele: 'btwin', coutHoraire: 2.36, etat: 'OK' }, etat: 'OK'}, 
+                              { numero: 2, velo: { modele: 'btwin', coutHoraire: 2.36, etat: 'OK' }, etat: 'HS'},
+                              { numero: 3, velo: { modele: 'btwin', coutHoraire: 2.36, etat: 'OK' }, etat: 'OK'},
+                              { numero: 4, velo: { modele: 'Trek ', coutHoraire: 4.98, etat: 'OK' }, etat: 'OK'},
+                              { numero: 5, velo: { modele: 'Trek ', coutHoraire: 4.98, etat: 'OK' }, etat: 'HS'},
+                              { numero: 6, velo: { modele: 'Trek ', coutHoraire: 4.98, etat: 'OK' }, etat: 'HS'},
+                              { numero: 7, velo: { modele: 'Trek ', coutHoraire: 4.98, etat: 'OK' }, etat: 'OK'},
+                              { numero: 8, velo: { modele: 'Trek ', coutHoraire: 4.98, etat: 'OK' }, etat: 'OK'},
+                              { numero: 9, velo: { modele: 'Trek ', coutHoraire: 4.98, etat: 'OK' }, etat: 'OK'},
+                              { numero: 10, velo: { modele: 'Decathlon', coutHoraire: 3.54, etat: 'OK' }, etat: 'HS'},
+                              { numero: 11, velo: { modele: 'Decathlon', coutHoraire: 3.54, etat: 'OK' }, etat: 'HS'},
+                              { numero: 12, velo: { modele: 'Decathlon', coutHoraire: 3.54, etat: 'OK' }, etat: 'HS'},
+                              { numero: 13, velo: { modele: 'Decathlon', coutHoraire: 3.54, etat: 'OK' }, etat: 'OK'},
+                            ]}, { id: 1, adresse: 'Champ Elysée' , bornettes: []}, { id: 1, adresse: 'Concorde' , bornettes: []}
+                        ];
         console.log(this.stations);
     }
     
@@ -96,6 +119,33 @@ export class RentComponent implements OnInit {
         this.progressBar(2);
 
         console.log("Station ", station.id, " - Selectionné !");
+    }
+
+    selectBornette(bElem: HTMLLIElement, bObj: Bornette) {
+        if(!bElem.getAttribute('class')?.includes("selectedBornette")) {
+            bElem.setAttribute('class', 'bornette OK selectedBornette');
+            this.listBornSelected.push(bObj);
+        } else {
+            bElem.setAttribute('class', 'bornette OK');            
+            let index = this.listBornSelected.indexOf(bObj);
+            this.listBornSelected.splice(index,index);
+        }
+    }
+
+    validBornette() {
+        console.log( this.listBornSelected );
+        
+        // Générer la requete / URL :
+        this.ConnectionUrl += '/POST/list/bornette/seleted/';
+
+        // Faire une requete POST :
+        this.httpClient.post<any>(this.ConnectionUrl, this.listBornSelected).subscribe({
+            next: data => { console.log(data); },
+            error: error => { console.error('There was an error!', error); }
+        });
+
+        this.numStep = 3;
+        this.progressBar(3);
     }
 
 

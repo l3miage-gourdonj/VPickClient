@@ -168,7 +168,7 @@ opacity: 0;
 
 div#Content {
   // width: fit-content;
-  width: 460px;
+  width: 80%;
   margin: auto;
   border: 2px solid lightgray;
   border-radius: 25px;
@@ -293,4 +293,33 @@ code-input {
 
 #cbWrong {
   color: #db6767;
+}
+
+
+
+
+
+
+.bornette {
+    margin-right: 10px;
+}
+
+.OK {
+    background-color: #93dd8a;
+
+    &:hover {
+        cursor: pointer;
+    }
+}
+
+.HS {
+    background-color: #db6767;
+
+    &:hover {
+        cursor: not-allowed;
+    }
+}
+
+.selectedBornette {
+    border: 2px solid #4B81BD;
 }

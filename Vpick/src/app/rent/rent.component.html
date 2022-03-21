@@ -47,16 +47,23 @@
         <div id="bornetteContent" *ngIf="this.numStep == 2">
             <h2> Selectionne une bornette : </h2>
             <ul class="bornettes">
-                <li class="bornette" *ngFor="let bornette of getBornettesFromStation()">
-                    <span> {{ bornette.numero }} </span>
+                <li class="bornette" 
+                    #b
+                    [ngClass]="bornette.etat" 
+                    (click)="bornette.etat === 'OK' ? selectBornette(b, bornette) : null" 
+                    *ngFor="let bornette of getBornettesFromStation()"
+                >
+                    <span> {{ bornette.numero }}°) {{ bornette.velo?.modele }} - {{ bornette.velo?.coutHoraire }}€/h </span>
                     <img class="arrow" src="../../assets/arrow-right.png" alt="">
                 </li>
             </ul>
+
+            <button mat-button (click)="validBornette()"> Valider </button>
         </div>
 <!--
-        <div id="paiementContent" *ngIf="this.numStep == 3">
-            <h2> Paiement : </h2>
-            <ul class="paiement">
+        <div id="recapContent" *ngIf="this.numStep == 3">
+            <h2> Récapitulatif : </h2>
+            <ul class="recap">
                 <li *ngFor="let velo of this.locationSelected.velos"> {{  velo.modele }} - {{ velo.coutHoraire }}€/h </li>
                 <li> Durée : {{ dureeLocationString(this.locationSelected.dateDebut) }} </li>
                 <li> Prix : {{ getPrixLocation(this.locationSelected.dateDebut) }} €</li>
@@ -71,6 +78,6 @@
 
             <button mat-button (click)="selectPaiement()">Payer</button>
         </div>
-        -->
+-->
     </div>
 </div>
