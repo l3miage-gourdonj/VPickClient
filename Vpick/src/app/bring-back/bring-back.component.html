@@ -16,10 +16,10 @@
     <h1> Déposer un/des vélo(s) </h1>
 
     <div id="Content">
-        <div id="connexionContent" *ngIf="this.numPrecedent == 0">
+        <div id="connexionContent" *ngIf="this.numStep == 0">
             <h2> Connexion client : </h2>
 
-            <form (ngSubmit)="getClient()">
+            <form (ngSubmit)="reqClientNoAbo()">
                 <div id="secretCodeContent">
                     <p>Votre code secret :</p>
                     <code-input #codeSecret name="secretCodeInput" [isCodeHidden]="false" [codeLength]="5"
@@ -35,7 +35,7 @@
         </div>
 
 
-        <div id="locationContent" *ngIf="this.numPrecedent == 1">
+        <div id="locationContent" *ngIf="this.numStep == 1">
             <h2> Location : </h2>
 
             <div id="locations">
@@ -50,7 +50,7 @@
         </div>
 
 
-        <div id="stationContent" *ngIf="this.numPrecedent == 2">
+        <div id="stationContent" *ngIf="this.numStep == 2">
             <h2> Selectionne une station : </h2>
             <ul class="stations">
                 <li *ngFor="let station of this.stations" class="station" (click)="selectStation(station)">
@@ -61,7 +61,7 @@
         </div>
 
 
-        <div id="bornetteContent" *ngIf="this.numPrecedent == 3">
+        <div id="bornetteContent" *ngIf="this.numStep == 3">
             <h2> Selectionne une bornette : </h2>
             <ul class="bornettes">
                 <li class="bornette" *ngFor="let bornette of getBornettesFromStation()">
@@ -72,7 +72,7 @@
         </div>
 
 
-        <div id="veloContent" *ngIf="this.numPrecedent == 4">
+        <div id="veloContent" *ngIf="this.numStep == 4">
             <h2> Déclarer des vélo cassé : </h2>
             <ul class="velos">
                 <li *ngFor="let i = index; let velo of this.locationSelected.velos"> 
@@ -89,7 +89,7 @@
         </div>
 
 
-        <div id="paiementContent" *ngIf="this.numPrecedent == 5">
+        <div id="paiementContent" *ngIf="this.numStep == 5">
             <h2> Paiement : </h2>
             <ul class="paiement">
                 <li *ngFor="let velo of this.locationSelected.velos"> {{  velo.modele }} - {{ velo.coutHoraire }}€/h </li>

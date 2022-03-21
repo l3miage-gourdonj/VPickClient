@@ -16,7 +16,7 @@ export class BringBackComponent implements OnInit {
     public stepsElem!: HTMLCollectionOf<Element>;
     private ConnectionUrl: string = 'http://localhost:9000/api/vpick';
 
-    public numPrecedent: number = 0;
+    public numStep: number = 0;
 
     public stations: Array<Station> = [];
     public bornettes: Array<Bornette> = [];
@@ -45,24 +45,24 @@ export class BringBackComponent implements OnInit {
 
         if (this.isAlreadyConnected()) {
             this.getLocation();
-            this.numPrecedent = 1;
+            this.numStep = 1;
             this.progressBar(1);
         } else {
-            this.numPrecedent = 0;
+            this.numStep = 0;
             this.progressBar(0);
         }
     }
 
 
-    getClient(): void {
+    reqClientNoAbo(): void {
         // Générer la requete / URL :
-        this.ConnectionUrl += '/connexion/cb/' + this.creditCard + '/code/' + this.secretCode;
+        this.ConnectionUrl += '/connexion/code/' + this.secretCode;
 
         // Faire une requete GET :
         this.httpClient.get(this.ConnectionUrl).subscribe(
             data => {
                 setClientLS(data as Personne);
-                this.numPrecedent = 1;
+                this.numStep = 1;
                 this.progressBar(1);
             }
         );
@@ -70,7 +70,7 @@ export class BringBackComponent implements OnInit {
         this.clientAbo = false;
 
         // Delette apres avoir mis la requete
-        this.numPrecedent = 1;
+        this.numStep = 1;
         this.progressBar(1);
     }
 
@@ -106,29 +106,20 @@ export class BringBackComponent implements OnInit {
 
         console.log(this.locations);
     }
-
+/*
     getListBornette(id: number): void {
-        // Générer la requete / URL :
-        this.ConnectionUrl += "/bornette/id/" + id;
-
-        // Requette GET : liste bornette
-        this.httpClient.get(this.ConnectionUrl).subscribe(
-            data => { this.bornettes = data as Bornette[] }
-        );
-
         console.log(this.bornettes);
 
         this.selectBornette(1);
     }
-
+*/
     getListStation(): void {
         // Générer la requete / URL :
         this.ConnectionUrl += '/station/nb/5';
 
         // Requette GET : liste bornette
         this.httpClient.get(this.ConnectionUrl).subscribe(
-            data => { this.stations = data as Station[]; },
-            error => { console.error('Connexion error!', error); }
+            data => { this.stations = data as Station[]; }
         );
 
         this.stations = [{ id: 1, adresse: 'Victor Hugo', bornettes: [{ numero: 1, velo: null, etat: 'OK'}]}, { id: 1, adresse: 'Champ Elysée' , bornettes: []}, { id: 1, adresse: 'Concorde' , bornettes: []}];
@@ -151,16 +142,17 @@ export class BringBackComponent implements OnInit {
     setLocation(loc: Location) {
         this.locationSelected = loc;
 
-        this.numPrecedent = 2;
+        this.numStep = 2;
         this.progressBar(2);
         this.getListStation();
     }
 
     selectStation(station: Station) {
         this.stationsSelected = station;
-        this.numPrecedent = 3;
+        this.numStep = 3;
         this.progressBar(3);
-        this.getListBornette(station.id);
+
+        this.selectBornette(1);
 
         console.log("Station ", station.id, " - Selectionné !");
     }
@@ -168,11 +160,9 @@ export class BringBackComponent implements OnInit {
     async selectBornette(bornette: number) {
         console.log(bornette);
 
-        // afficher plein de case en couleur pour faire genre on cherche une station dispo
-        // pendant 5 secondes puis go
         await new Promise(resolve => { setTimeout(resolve, 3000), this.colorStation() }); // 3 sec
 
-        this.numPrecedent = 4;
+        this.numStep = 4;
         this.progressBar(4);
         // this.getPaiement();
 
@@ -182,7 +172,7 @@ export class BringBackComponent implements OnInit {
         let docVelo = document.getElementsByClassName("etat-content");
         console.log(docVelo);
         
-        this.numPrecedent = 5;
+        this.numStep = 5;
         this.progressBar(5);
         this.getPaiement();
     }
@@ -210,9 +200,9 @@ export class BringBackComponent implements OnInit {
     }
 
     progressBar(stepNum: number) {
-        console.log("num Prec:" + this.numPrecedent + " num Actu:" + stepNum);
+        console.log("num Prec:" + this.numStep + " num Actu:" + stepNum);
 
-        if (this.numPrecedent >= stepNum) {
+        if (this.numStep >= stepNum) {
             let progressStyle = "width:" + String(stepNum * 20) + "%"
             let elem = document.getElementsByClassName('percent')[0] as Element;
             elem.setAttribute('style', progressStyle);
