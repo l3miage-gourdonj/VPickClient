@@ -14,7 +14,7 @@ export class BringBackComponent implements OnInit {
     public stepsElem!: HTMLCollectionOf<Element>;
     private ConnectionUrl: string = 'http://localhost:9000/api/vpick';
 
-    private numPrecedent: number = 0;
+    public numPrecedent: number = 0;
 
     public stations: Array<Station> = [];
     public bornettes: Array<Bornette> = [];

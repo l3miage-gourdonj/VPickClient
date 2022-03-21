@@ -15,7 +15,7 @@
     <h1> Déposer un/des vélo(s) </h1>
 
     <div id="Content">
-        <div id="connexionContent" style="display:none;">
+        <div id="connexionContent" *ngIf="this.numPrecedent == 0">
             <h2> Connexion client "non abonné" & "abonné" : </h2>
             
             <form (ngSubmit)="getClient()">
@@ -43,7 +43,7 @@
         </div>
 
 
-        <div id="locationContent" style="display:none;">
+        <div id="locationContent" *ngIf="this.numPrecedent == 1">
             <h2> Location : </h2>
             
             <div id="locations">
@@ -58,10 +58,10 @@
         </div>
 
 
-        <div id="stationContent" style="display:none;">
+        <div id="stationContent" *ngIf="this.numPrecedent == 2">
             <h2> Selectionne une station : </h2>
             <ul class="stations">
-                <li class="station" (click)="selectStation(station)" *ngFor="let station of this.stations"> <!-- | async -->
+                <li *ngFor="let station of this.stations" class="station" (click)="selectStation(station)" > <!-- | async -->
                     <span> {{ station.adresse }} </span>
                     <img class="arrow" src="../../assets/arrow-right.png" alt="">
                 </li>
@@ -69,7 +69,7 @@
         </div>
 
 
-        <div id="bornetteContent" style="display:none;">
+        <div id="bornetteContent" *ngIf="this.numPrecedent == 3">
             <h2> Selectionne une bornette : </h2>
             <ul *ngIf="stationsSelected !== null" class="bornettes">
                 <li class="bornette" *ngFor="let bornette of getBornettesFromStation()"> <!-- | async -->
@@ -80,7 +80,7 @@
         </div>
 
 
-        <div id="paiementContent" style="display:none;">
+        <div id="paiementContent" *ngIf="this.numPrecedent == 4">
             <h2> Paiement : </h2>
 
         </div>
