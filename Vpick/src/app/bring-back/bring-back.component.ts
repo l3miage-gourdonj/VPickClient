@@ -1,8 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { fromEvent } from 'rxjs';
+import { SignInComponent } from '../sign-in/sign-in.component';
 import { Personne, Sexe, setClientLS, getClientLS } from '../vepickDefinitions'
-import { Bornette, Station, Location } from "../vepickDefinitions";
+import { Bornette, Station, Location, Velo } from "../vepickDefinitions";
 
 @Component({
     selector: 'app-bring-back',
@@ -20,14 +22,14 @@ export class BringBackComponent implements OnInit {
     public bornettes: Array<Bornette> = [];
     public locations: Array<Location> = [];
 
-    private locationSelected!: Location;
+    public locationSelected!: Location;
     public stationsSelected!: Station;
 
     public creditCard: string = "";
     private secretCode: string = "";
     private regex = new RegExp("\\d{4} \\d{4} \\d{4} \\d{4}");
 
-    constructor(private httpClient: HttpClient) { }
+    constructor(private httpClient: HttpClient, public dialog: MatDialog) { }
 
     ngOnInit(): void {
         this.stepsElem = document.getElementsByClassName('step');
@@ -171,7 +173,7 @@ export class BringBackComponent implements OnInit {
         // afficher plein de case en couleur pour faire genre on cherche une station dispo
         // pendant 5 secondes puis go
         //c onsole.log(1);
-        await new Promise(resolve => { setTimeout(resolve, 5000), this.colorStation() }); // 3 sec
+        await new Promise(resolve => { setTimeout(resolve, 1000), this.colorStation() }); // 3 sec
         // console.log(2);
 
         this.numPrecedent = 4;
@@ -183,6 +185,8 @@ export class BringBackComponent implements OnInit {
     selectPaiement() {
 
     }
+
+
 
 
 
@@ -230,10 +234,22 @@ export class BringBackComponent implements OnInit {
         }
     }
 
-    getCalculNbHeures(dateD: Date) {
-        let difDate = new Date().getTime() - dateD.getTime();
-        let heureDif = difDate / (1000 * 3600)
-        return Math.round(heureDif*100)/100;
+    getPrixLocation(dateD: Date): number {
+        let difDate = new Date().getTime() - dateD.getTime();        
+        let minDif = (difDate / (1000 * 3600));
+        let roundHeure = Math.ceil(minDif);    
+        console.log("roundHeure " + roundHeure);
+        
+        let prix = 0;
+        this.locationSelected.velos.forEach((v:Velo) => prix += v.coutHoraire * roundHeure)
+
+        return prix;
+    }
+
+    dureeLocationString(dateD: Date): string{
+        let duree = new Date().getTime() - dateD.getTime();        
+        let nbMinutes = (duree / (1000 * 60));
+        return Math.floor(nbMinutes/60) + "h" + Math.floor(nbMinutes%60) + ", facturé " + Math.ceil(nbMinutes/60) + "h";
     }
 
     saveSecretCode(codeS: string) {
@@ -258,5 +274,13 @@ export class BringBackComponent implements OnInit {
                 cpt += 5;
             }
         }
+    }
+
+    openDialogLogin(){
+
+        this.dialog.open(SignInComponent, {
+            height: '400px',
+            width: '600px',
+        })
     }
 }
