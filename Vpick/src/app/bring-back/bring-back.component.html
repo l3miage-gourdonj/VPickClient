@@ -8,6 +8,7 @@
         <div class="step" id="2"></div>
         <div class="step" id="3"></div>
         <div class="step" id="4"></div>
+        <div class="step" id="5"></div>
     </div>
 </div>
 
@@ -53,7 +54,6 @@
             <h2> Selectionne une station : </h2>
             <ul class="stations">
                 <li *ngFor="let station of this.stations" class="station" (click)="selectStation(station)">
-                    <!-- | async -->
                     <span> {{ station.adresse }} </span>
                     <img class="arrow" src="../../assets/arrow-right.png" alt="">
                 </li>
@@ -65,7 +65,6 @@
             <h2> Selectionne une bornette : </h2>
             <ul class="bornettes">
                 <li class="bornette" *ngFor="let bornette of getBornettesFromStation()">
-                    <!-- | async -->
                     <span> {{ bornette.numero }} </span>
                     <img class="arrow" src="../../assets/arrow-right.png" alt="">
                 </li>
@@ -73,7 +72,24 @@
         </div>
 
 
-        <div id="paiementContent" *ngIf="this.numPrecedent == 4">
+        <div id="veloContent" *ngIf="this.numPrecedent == 4">
+            <h2> Déclarer des vélo cassé : </h2>
+            <ul class="velos">
+                <li *ngFor="let i = index; let velo of this.locationSelected.velos"> 
+                    <p> {{  velo.modele }} </p>
+
+                    <mat-radio-group id="{{ i }}" class="etat-content" aria-label="Etat du vélo">
+                        <mat-radio-button #btnRadio checked value="OK"> OK </mat-radio-button>
+                        <mat-radio-button class="second-radio" value="HS"> HS </mat-radio-button>
+                    </mat-radio-group> 
+                </li>
+            </ul>
+
+            <button mat-button (click)="selectEtatVelo()">Déclarer</button>
+        </div>
+
+
+        <div id="paiementContent" *ngIf="this.numPrecedent == 5">
             <h2> Paiement : </h2>
             <ul class="paiement">
                 <li *ngFor="let velo of this.locationSelected.velos"> {{  velo.modele }} - {{ velo.coutHoraire }}€/h </li>

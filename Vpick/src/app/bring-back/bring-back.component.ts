@@ -64,8 +64,7 @@ export class BringBackComponent implements OnInit {
                 setClientLS(data as Personne);
                 this.numPrecedent = 1;
                 this.progressBar(1);
-            },
-            error => { console.error('Connexion error!', error); }
+            }
         );
 
         this.clientAbo = false;
@@ -171,13 +170,20 @@ export class BringBackComponent implements OnInit {
 
         // afficher plein de case en couleur pour faire genre on cherche une station dispo
         // pendant 5 secondes puis go
-        //c onsole.log(1);
-        await new Promise(resolve => { setTimeout(resolve, 1000), this.colorStation() }); // 3 sec
-        // console.log(2);
+        await new Promise(resolve => { setTimeout(resolve, 3000), this.colorStation() }); // 3 sec
 
         this.numPrecedent = 4;
         this.progressBar(4);
+        // this.getPaiement();
 
+    }
+
+    selectEtatVelo() {
+        let docVelo = document.getElementsByClassName("etat-content");
+        console.log(docVelo);
+        
+        this.numPrecedent = 5;
+        this.progressBar(5);
         this.getPaiement();
     }
 
@@ -207,7 +213,7 @@ export class BringBackComponent implements OnInit {
         console.log("num Prec:" + this.numPrecedent + " num Actu:" + stepNum);
 
         if (this.numPrecedent >= stepNum) {
-            let progressStyle = "width:" + String(stepNum * 25) + "%"
+            let progressStyle = "width:" + String(stepNum * 20) + "%"
             let elem = document.getElementsByClassName('percent')[0] as Element;
             elem.setAttribute('style', progressStyle);
 
@@ -268,7 +274,6 @@ export class BringBackComponent implements OnInit {
     }
 
     openDialogLogin(){
-
         this.dialog.open(SignInComponent, {
             height: '400px',
             width: '600px',

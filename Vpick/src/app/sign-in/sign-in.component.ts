@@ -45,8 +45,7 @@ export class SignInComponent implements OnInit {
 
         // Faire une requete GET :
         this.httpClient.get(this.ConnectionUrl).subscribe(
-            data  => { setClientLS(data as Personne); },
-            error => { console.error('Connexion error!', error); }
+            data  => { setClientLS(data as Personne); }
         );
 
         this.dialog.closeAll();
