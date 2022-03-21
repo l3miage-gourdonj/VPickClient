@@ -137,7 +137,7 @@ export class BringBackComponent implements OnInit {
 
     getBornettesFromStation(): Array<Bornette> {
         console.log(this.stationsSelected);
-        
+
         return this.stationsSelected.bornettes;
     }
 
@@ -187,7 +187,7 @@ export class BringBackComponent implements OnInit {
 
 
 
-    
+
 
     isAlreadyConnected(): boolean {
         return getClientLS() !== null ? true : false;

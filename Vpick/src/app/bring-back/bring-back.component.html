@@ -7,7 +7,7 @@
         <div class="step" id="1"></div>
         <div class="step" id="2"></div>
         <div class="step" id="3"></div>
-        <div class="step" id="4"></div> 
+        <div class="step" id="4"></div>
     </div>
 </div>
 
@@ -17,21 +17,21 @@
     <div id="Content">
         <div id="connexionContent" *ngIf="this.numPrecedent == 0">
             <h2> Connexion client "non abonné" & "abonné" : </h2>
-            
+
             <form (ngSubmit)="getClient()">
                 <div id="creditCardContent">
                     <p>Votre numéro cb :</p>
-                    <input #card name="creditCardInput" 
-                        [ngModel]="creditCard" 
+                    <input #card name="creditCardInput"
+                        [ngModel]="creditCard"
                         (ngModelChange)="CB_format(card)"
                         placeholder="1234 1234 1234 1234" type="tel" [maxlength]="19">
                     <div *ngIf="isCreditCardInvalid()" id="cbWrong">Numéro de carte éronnée</div>
                 </div>
-            
+
                 <div id="secretCodeContent">
                     <p>Votre code secret :</p>
-                    <code-input #codeSecret name="secretCodeInput" 
-                        [isCodeHidden]="false" 
+                    <code-input #codeSecret name="secretCodeInput"
+                        [isCodeHidden]="false"
                         [codeLength]="5"
                         (codeChanged)="saveSecretCode($event)">
                     </code-input>
@@ -45,12 +45,12 @@
 
         <div id="locationContent" *ngIf="this.numPrecedent == 1">
             <h2> Location : </h2>
-            
+
             <div id="locations">
-                <div (click)="setLocation(location)" *ngFor="let location of this.locations">
+                <div class="locations-container" (click)="setLocation(location)" *ngFor="let location of this.locations">
                     <h3> Location {{ location.id  }} </h3>
                     <ul>
-                        <li *ngFor="let velo of this.location.velos"> {{  velo.modele }} - {{ velo.coutHoraire }}€ </li>
+                        <li class="recap" *ngFor="let velo of this.location.velos"> {{  velo.modele }} - {{ velo.coutHoraire }}€ </li>
                         <li> Début il y a : {{ getCalculNbHeures(location.dateDebut) }}h </li>
                     </ul>
                 </div>
@@ -82,7 +82,7 @@
 
         <div id="paiementContent" *ngIf="this.numPrecedent == 4">
             <h2> Paiement : </h2>
-                
+
         </div>
     </div>
 </div>
