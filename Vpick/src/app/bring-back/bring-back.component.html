@@ -38,10 +38,10 @@
             <h2> Location : </h2>
 
             <div id="locations">
-                <div (click)="setLocation(location)" *ngFor="let location of this.locations">
+                <div class="locations-container" (click)="setLocation(location)" *ngFor="let location of this.locations">
                     <h3> Location {{ location.id  }} </h3>
                     <ul>
-                        <li *ngFor="let velo of this.location.velos"> {{  velo.modele }} - {{ velo.coutHoraire }}€/h </li>
+                        <li class="recap" *ngFor="let velo of this.location.velos"> {{  velo.modele }} - {{ velo.coutHoraire }}€/h </li>
                         <li> Début il y a : {{ dureeLocationString(location.dateDebut) }} </li>
                     </ul>
                 </div>

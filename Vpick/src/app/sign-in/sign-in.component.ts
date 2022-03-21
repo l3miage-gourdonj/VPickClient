@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Personne, Sexe, setClientLS } from '../vepickDefinitions'
+import { MatDialog } from '@angular/material/dialog';
 
 
 @Component({
@@ -14,10 +15,10 @@ export class SignInComponent implements OnInit {
     private ConnectionUrl:string = 'http://localhost:9000/api/vpick';
     private regex = new RegExp("\\d{4} \\d{4} \\d{4} \\d{4}");
 
-    constructor(private httpClient: HttpClient) { }
+    constructor(private httpClient: HttpClient, public dialog: MatDialog) { }
 
-    ngOnInit(): void { 
-        
+    ngOnInit(): void {
+
         let cl:Personne = {
             nom: 'GBZ',
             prenom: 'Jerome',
@@ -30,12 +31,12 @@ export class SignInComponent implements OnInit {
             sexe: Sexe.HOMME,
             creditTemps: 0
         }
-
-        console.log(cl);
-        
         setClientLS(cl);
-        // console.log( getClientLS() );
-        
+        console.log(cl);
+
+
+        //console.log( getClientLS() );
+
     }
 
     onSubmit() {
@@ -47,6 +48,8 @@ export class SignInComponent implements OnInit {
             data  => { setClientLS(data as Personne); },
             error => { console.error('Connexion error!', error); }
         );
+
+        this.dialog.closeAll();
     }
 
     saveSecretCode(codeS: string) {
