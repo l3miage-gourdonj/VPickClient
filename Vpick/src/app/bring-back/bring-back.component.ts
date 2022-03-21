@@ -50,7 +50,7 @@ export class BringBackComponent implements OnInit {
         } else {
             this.numStep = 0;
             this.progressBar(0);
-        }
+        }     
     }
 
 

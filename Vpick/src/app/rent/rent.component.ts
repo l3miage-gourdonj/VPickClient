@@ -26,10 +26,19 @@ export class RentComponent implements OnInit {
 
     constructor(private httpClient: HttpClient, public dialog: MatDialog) { }
     ngOnInit(): void {
+        this.stepsElem = document.getElementsByClassName('step');
+        let len = document.getElementsByClassName('step').length;
+        console.log(len);
+
+        for (let i = 0; i < len; i++) {
+            let stepElem: Element = this.stepsElem[i];
+            this.stepsArray.push(stepElem);
+        }
+
         if (this.isAlreadyConnected()) {
-            this.getListStation();
             this.numStep = 1;
             this.progressBar(1);
+            this.getListStation();
         } else {
             this.numStep = 0;
             this.progressBar(0);
@@ -74,8 +83,6 @@ export class RentComponent implements OnInit {
     }
     
     getBornettesFromStation(): Array<Bornette> {
-        console.log(this.stationsSelected);
-
         return this.stationsSelected.bornettes;
     }
 
@@ -85,8 +92,8 @@ export class RentComponent implements OnInit {
   /* ACTION - CHANGEMENT CONTENUE */
     selectStation(station: Station) {
         this.stationsSelected = station;
-        this.numStep = 3;
-        this.progressBar(3);
+        this.numStep = 2;
+        this.progressBar(2);
 
         console.log("Station ", station.id, " - Selectionné !");
     }
@@ -114,7 +121,7 @@ export class RentComponent implements OnInit {
         console.log("num Prec:" + this.numStep + " num Actu:" + stepNum);
 
         if (this.numStep >= stepNum) {
-            let progressStyle = "width:" + String(stepNum * 20) + "%"
+            let progressStyle = "width:" + String(stepNum * 30) + "%"
             let elem = document.getElementsByClassName('percent')[0] as Element;
             elem.setAttribute('style', progressStyle);
 
@@ -135,10 +142,9 @@ export class RentComponent implements OnInit {
 
     displayContent(stepNum: number): void {
         document.getElementById("connexionContent")?.setAttribute('style', (stepNum == 0 ? "display:block" : "display:none"));
-        document.getElementById("locationContent")?.setAttribute('style', (stepNum == 1 ? "display:block" : "display:none"));
-        document.getElementById("stationContent")?.setAttribute('style', (stepNum == 2 ? "display:block" : "display:none"));
-        document.getElementById("bornetteContent")?.setAttribute('style', (stepNum == 3 ? "display:block" : "display:none"));
-        document.getElementById("paiementContent")?.setAttribute('style', (stepNum == 4 ? "display:block" : "display:none"));
+        document.getElementById("stationContent")?.setAttribute('style', (stepNum == 1 ? "display:block" : "display:none"));
+        document.getElementById("bornetteContent")?.setAttribute('style', (stepNum == 2 ? "display:block" : "display:none"));
+        document.getElementById("paiementContent")?.setAttribute('style', (stepNum == 3 ? "display:block" : "display:none"));
     }
     
     isAlreadyConnected(): boolean {
