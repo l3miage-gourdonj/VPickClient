@@ -1,20 +1,21 @@
 <h1>Inscription Vépick</h1>
 
 <div id="bodyContent">
+
     <form id="Content" #toDoForm="ngForm" (ngSubmit)="onSubmit(lastName,firstName,dateB,adresse,sexe,card)">
         <div class="NameContent">
             <input type="text" #firstName placeholder="Michel"/>
             <input type="text" #lastName placeholder="Dupont"/>
         </div>
-        
+
         <div id="AdresseSexeContent">
             <div id="AdresseContent">
                 <input type="text" #adresse placeholder="5 rue victor hugo"/>
             </div>
 
-            <mat-radio-group id="SexeContent" aria-label="Votre Sexe">
+            <mat-radio-group id="SexeContent" class="sexe-content" aria-label="Votre Sexe">
                 <mat-radio-button #sexe checked value="homme"> Homme </mat-radio-button>
-                <mat-radio-button value="femme"> Femme </mat-radio-button>
+                <mat-radio-button class="second-radio" value="femme"> Femme </mat-radio-button>
             </mat-radio-group>
         </div>
 
@@ -29,8 +30,8 @@
 
         <div id="creditCardContent">
             <p>Votre numéro cb :</p>
-            <input #card name="creditCardInput" 
-                [ngModel]="creditCard" 
+            <input #card name="creditCardInput"
+                [ngModel]="creditCard"
                 (ngModelChange)="CB_format(card)"
                 placeholder="1234 1234 1234 1234" type="tel" [maxlength]="19">
             <div *ngIf="isCreditCardInvalid()" id="cbWrong">Numéro de carte éronnée</div>
@@ -38,15 +39,15 @@
 
         <div id="secretCodeContent">
             <p class="secretCodeText">Votre code secret :</p>
-            <code-input #codeSecret name="secretCodeInput" 
-                [isCodeHidden]="false" 
+            <code-input #codeSecret name="secretCodeInput"
+                [isCodeHidden]="false"
                 [codeLength]="5"
                 (codeChanged)="saveSecretCode($event)">
             </code-input>
         </div>
 
         <div id="ValidFormContent">
-            <button mat-button type="submit" [disabled]="!isFormValid(firstName.value, lastName.value, dateB.value, adresse.value)">S'inscrire</button>
+            <button mat-button type="submit" [routerLink]="['/rent']" routerLinkActive="router-link-active"  [disabled]="!isFormValid(firstName.value, lastName.value, dateB.value, adresse.value)">S'inscrire</button>
         </div>
     </form>
 

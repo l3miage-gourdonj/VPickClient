@@ -25,7 +25,7 @@ import { HttpClientModule } from '@angular/common/http';
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import {MaterialExampleModule} from "./material.module";
 
-
+import {MatIconModule} from '@angular/material/icon';
 
 
 @NgModule({
@@ -55,6 +55,7 @@ import {MaterialExampleModule} from "./material.module";
     MatRippleModule,
     MatDatepickerModule,
     MaterialExampleModule,
+    MatIconModule,
 
 
     CodeInputModule.forRoot({
