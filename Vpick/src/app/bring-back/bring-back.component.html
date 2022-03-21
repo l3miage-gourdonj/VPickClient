@@ -71,7 +71,7 @@
 
         <div id="bornetteContent" *ngIf="this.numPrecedent == 3">
             <h2> Selectionne une bornette : </h2>
-            <ul *ngIf="stationsSelected !== null" class="bornettes">
+            <ul class="bornettes">
                 <li class="bornette" *ngFor="let bornette of getBornettesFromStation()"> <!-- | async -->
                     <span> {{ bornette.numero }} </span>
                     <img class="arrow" src="../../assets/arrow-right.png" alt="">
@@ -82,7 +82,7 @@
 
         <div id="paiementContent" *ngIf="this.numPrecedent == 4">
             <h2> Paiement : </h2>
-
+                
         </div>
     </div>
 </div>

@@ -131,11 +131,13 @@ export class BringBackComponent implements OnInit {
             error => { console.error('Connexion error!', error); }
         );
 
-        this.stations = [{ id: 1, adresse: 'Victor Hugo', bornettes: []}, { id: 1, adresse: 'Champ Elysée' , bornettes: []}, { id: 1, adresse: 'Concorde' , bornettes: []}];
+        this.stations = [{ id: 1, adresse: 'Victor Hugo', bornettes: [{ numero: 1, velo: null, etat: 'OK'}]}, { id: 1, adresse: 'Champ Elysée' , bornettes: []}, { id: 1, adresse: 'Concorde' , bornettes: []}];
         console.log(this.stations);
     }
 
     getBornettesFromStation(): Array<Bornette> {
+        console.log(this.stationsSelected);
+        
         return this.stationsSelected.bornettes;
     }
 
