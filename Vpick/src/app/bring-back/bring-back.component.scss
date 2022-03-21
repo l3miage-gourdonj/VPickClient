@@ -125,21 +125,21 @@ div#Content {
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
-.bornette {
+.station {
   display: flex;
   justify-content: space-between;
 }
 
-.station {
+.bornette {
   width: fit-content;
 }
 
-.stations {
+.bornettes {
   display: flex;
   flex-wrap: wrap;
 }
 
-#sationSelected {
+#bornetteSelected {
   background-color: red;
 }
 
