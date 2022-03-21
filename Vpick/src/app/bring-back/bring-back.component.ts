@@ -27,7 +27,9 @@ export class BringBackComponent implements OnInit {
 
     public creditCard: string = "";
     private secretCode: string = "";
-    private regex = new RegExp("\\d{4} \\d{4} \\d{4} \\d{4}");
+    private regex = new RegExp("\\d{4} \\d{4} \\d{4} \\d{4}"); 
+
+    public clientAbo:boolean = true;
 
     constructor(private httpClient: HttpClient, public dialog: MatDialog) { }
 
@@ -39,11 +41,6 @@ export class BringBackComponent implements OnInit {
         for (let i = 0; i < len; i++) {
             let stepElem: Element = this.stepsElem[i];
             this.stepsArray.push(stepElem);
-
-            fromEvent(stepElem, 'click').subscribe((event) => {
-                let step: Element = event.target as Element;
-                this.progressBar(parseInt(step.id));
-            });
         }
 
         if (this.isAlreadyConnected()) {
@@ -70,6 +67,8 @@ export class BringBackComponent implements OnInit {
             },
             error => { console.error('Connexion error!', error); }
         );
+
+        this.clientAbo = false;
 
         // Delette apres avoir mis la requete
         this.numPrecedent = 1;
@@ -186,11 +185,6 @@ export class BringBackComponent implements OnInit {
 
     }
 
-
-
-
-
-
     isAlreadyConnected(): boolean {
         return getClientLS() !== null ? true : false;
     }
@@ -241,7 +235,7 @@ export class BringBackComponent implements OnInit {
         let prix = 0;
         this.locationSelected.velos.forEach((v:Velo) => prix += v.coutHoraire * roundHeure)
 
-        return prix;
+        return Math.round(prix*100)/100;
     }
 
     dureeLocationString(dateD: Date): string{
@@ -259,8 +253,7 @@ export class BringBackComponent implements OnInit {
     }
 
     isFormValid() {
-        document.getElementById
-        return this.regex.test(this.creditCard) && this.secretCode.replace(/\s+/g, '').length === 5;
+        return this.secretCode.replace(/\s+/g, '').length === 5;
     }
 
     CB_format(CB: HTMLInputElement) {

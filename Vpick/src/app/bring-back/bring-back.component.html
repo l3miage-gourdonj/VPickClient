@@ -81,7 +81,7 @@
                 <li> Prix : {{ getPrixLocation(this.locationSelected.dateDebut) }} €</li>
             </ul>
 
-            <div *ngIf="!this.isAlreadyConnected()" id="creditCardContent">
+            <div *ngIf="!this.clientAbo" id="creditCardContent">
                 <p>Votre numéro cb :</p>
                 <input #card name="creditCardInput" [ngModel]="creditCard" (ngModelChange)="CB_format(card)"
                     placeholder="1234 1234 1234 1234" type="tel" [maxlength]="19">
