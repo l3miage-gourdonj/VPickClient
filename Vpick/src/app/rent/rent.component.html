@@ -18,14 +18,8 @@
             <h2> Connexion client : </h2>
 
             <form id="noAbo" *ngIf="this.clientAbo == false" (ngSubmit)="reqClientNoAbo()">
-                <div id="secretCodeContent">
-                    <p>Votre code secret :</p>
-                    <code-input #codeSecret name="secretCodeInput" [isCodeHidden]="false" [codeLength]="5"
-                        (codeChanged)="saveSecretCode($event)">
-                    </code-input>
-                </div>
                 <div id="ValidFormContent">
-                    <button mat-button type="submit" [disabled]="!isFormValid()">Se connecter</button>
+                    <button mat-button type="submit">Commencer</button>
                 </div>
                 
                 <p (click)="openLoginAbo()" class="align"> J'ai déjà un compte </p>

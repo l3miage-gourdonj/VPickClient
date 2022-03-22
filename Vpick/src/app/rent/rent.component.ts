@@ -173,7 +173,7 @@ export class RentComponent implements OnInit {
     }
 
     isFormValid() {
-        return this.secretCode.replace(/\s+/g, '').length === 5;
+        return this.regex.test(this.creditCard) && this.secretCode.replace(/\s+/g, '').length === 5;
     }
 
     openLoginAbo():void {

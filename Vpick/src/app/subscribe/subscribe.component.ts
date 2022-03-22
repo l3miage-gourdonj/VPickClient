@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { MatRadioButton } from '@angular/material/radio';
 import { Personne, Sexe, setClientLS } from '../vepickDefinitions'
-
+import {Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-subscribe',
@@ -18,10 +18,9 @@ export class SubscribeComponent implements OnInit {
     private regex = new RegExp("\\d{4} \\d{4} \\d{4} \\d{4}");
 
     ngOnInit(): void { }
+    constructor(private router: Router, private httpClient: HttpClient) { }
 
-    constructor(private httpClient: HttpClient) { }
-
-    onSubmit(nom:HTMLInputElement, prenom:HTMLInputElement, dateN:HTMLInputElement, adresse:HTMLInputElement, sexe: MatRadioButton,CB:HTMLInputElement) {
+    creationClient(nom:HTMLInputElement, prenom:HTMLInputElement, dateN:HTMLInputElement, adresse:HTMLInputElement, sexe: MatRadioButton,CB:HTMLInputElement) {
         // Envoie une requete POST pour générer un abonné en BD
 
         if(sexe.checked) {
@@ -55,7 +54,7 @@ export class SubscribeComponent implements OnInit {
 
         // Faire une requete POST :
         this.httpClient.post<any>(this.ConnectionUrl, objClient).subscribe({
-            next: data => { if(data as Boolean === true){ setClientLS(objClient) } },
+            next: data => { if(data as Boolean === true) { setClientLS(objClient); this.router.navigate(['/']) } },
             error: error => { console.error('There was an error!', error); }
         });
     }

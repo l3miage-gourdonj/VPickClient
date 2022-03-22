@@ -2,7 +2,7 @@
 
 <div id="bodyContent">
 
-    <form id="Content" #toDoForm="ngForm" (ngSubmit)="onSubmit(lastName,firstName,dateB,adresse,sexe,card)">
+    <form id="Content" #toDoForm="ngForm" (ngSubmit)="creationClient(lastName,firstName,dateB,adresse,sexe,card)">
         <div class="NameContent">
             <input type="text" #firstName placeholder="Michel"/>
             <input type="text" #lastName placeholder="Dupont"/>
@@ -47,7 +47,7 @@
         </div>
 
         <div id="ValidFormContent">
-            <button mat-button type="submit" [routerLink]="['/rent']" routerLinkActive="router-link-active"  [disabled]="!isFormValid(firstName.value, lastName.value, dateB.value, adresse.value)">S'inscrire</button>
+            <button mat-button type="submit" routerLinkActive="router-link-active"  [disabled]="!isFormValid(firstName.value, lastName.value, dateB.value, adresse.value)">S'inscrire</button>
         </div>
     </form>
 
