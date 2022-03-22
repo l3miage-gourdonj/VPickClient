@@ -88,7 +88,7 @@ export class RentComponent implements OnInit {
 
     getListStation(): void {
         // Générer la requete / URL :
-        this.ConnectionUrl += '/station/nb/5';
+        this.ConnectionUrl += '/station/';
 
         // Requette GET : liste bornette
         this.httpClient.get(this.ConnectionUrl).subscribe(
