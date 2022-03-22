@@ -30,6 +30,7 @@ export class BringBackComponent implements OnInit {
     private regex = new RegExp("\\d{4} \\d{4} \\d{4} \\d{4}"); 
 
     public clientAbo:boolean = true;
+    private client: Personne|null = getClientLS();
 
     constructor(private httpClient: HttpClient, public dialog: MatDialog) { }
 
@@ -56,7 +57,7 @@ export class BringBackComponent implements OnInit {
 
     reqClientNoAbo(): void {
         // Générer la requete / URL :
-        this.ConnectionUrl = 'http://localhost:9000/api/vpick/connexion/code/' + this.secretCode;
+        this.ConnectionUrl = 'http://localhost:9000/api/vpick/noabo/code/' + this.secretCode;
 
         // Faire une requete GET :
         this.httpClient.get(this.ConnectionUrl).subscribe(
@@ -68,11 +69,26 @@ export class BringBackComponent implements OnInit {
         );
 
         this.clientAbo = false;
-
-        // Delette apres avoir mis la requete
-        this.numStep = 1;
-        this.progressBar(1);
     }
+
+    reqClientAbo(): void {
+        // Générer la requete / URL :
+        this.ConnectionUrl = 'http://localhost:9000/api/vpick/abo/cb/' + this.creditCard + '/code/' + this.secretCode;
+
+        // Faire une requete GET :
+        this.httpClient.get(this.ConnectionUrl).subscribe(
+            data  => { 
+                setClientLS(data as Personne);
+                this.client = (data as Personne);
+                this.numStep = 1;
+                this.progressBar(1);
+                this.getListStation();
+            }
+        );
+
+        // this.dialog.closeAll();
+    }
+
 
     getLocation(): void {
         // Générer la requete / URL :
@@ -82,28 +98,7 @@ export class BringBackComponent implements OnInit {
         this.httpClient.get(this.ConnectionUrl).subscribe(
             data => { this.locations = data as Location[] }
         );
-/*
-        this.locations = [{
-            id: 1,
-            velos: [
-                {
-                    modele: "Decat",
-                    coutHoraire: 4.76,
-                    etat: "OK"
-                }, {
-                    modele: "betouin",
-                    coutHoraire: 7.93,
-                    etat: "OK"
-                }, {
-                    modele: "lalldldld",
-                    coutHoraire: 3.6,
-                    etat: "OK"
-                }
-            ],
-            dateDebut: new Date("March 21, 2022 13:00:00"),
-            dateFin: new Date("March 21, 2022 14:00:00"),
-        }];
-*/
+
         console.log(this.locations);
     }
 
@@ -226,6 +221,21 @@ export class BringBackComponent implements OnInit {
         this.locationSelected.velos.forEach((v:Velo) => prix += v.modele.coutHoraire * roundHeure)
 
         return Math.round(prix*100)/100;
+    }
+
+
+
+  /* AUTRE FONCTION */ 
+    openLoginAbo():void {
+        this.clientAbo = true;
+        document.getElementById("Abo")?.setAttribute('style', "display:block");
+        document.getElementById("noAbo")?.setAttribute('style', "display:none");
+    }
+
+    openLoginNoAbo():void {
+        this.clientAbo = false;
+        document.getElementById("Abo")?.setAttribute('style', "display:none");
+        document.getElementById("noAbo")?.setAttribute('style', "display:block");
     }
 
     dureeLocationString(dateD: Date): string{

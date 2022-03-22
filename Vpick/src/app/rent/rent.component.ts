@@ -19,7 +19,6 @@ export class RentComponent implements OnInit {
     public stations: Array<Station> = [];
     public locations: Array<Location> = [];
     public listBornSelected: Array<Bornette> = [];
-
     public stationsSelected!: Station;
 
     public creditCard:string = "";
@@ -139,7 +138,7 @@ export class RentComponent implements OnInit {
         } else {
             bElem.setAttribute('class', 'bornette OK');
             let index = this.listBornSelected.indexOf(bObj);
-            this.listBornSelected.splice(index,index);
+            this.listBornSelected = this.listBornSelected.splice(index,index);            
         }
     }
 
@@ -151,8 +150,17 @@ export class RentComponent implements OnInit {
     createLocation() {
         // Générer la requete / URL :
         this.ConnectionUrl = 'http://localhost:9000/api/vpick/location/';
-        let objLocation = { cbClient: this.client?.carteBanquaire, codeClient: this.client?.codeSecret, bornettes: this.listBornSelected.map(b => b.id) };
+        let objLocation;
+        
+        if(this.clientAbo) {
+            objLocation = { cbClient: this.client?.carteBanquaire, codeClient: this.client?.codeSecret, bornettes: this.listBornSelected.map(b => b.id) };
+        } else {
+            objLocation = { cbClient: this.creditCard, codeClient: null, bornettes: this.listBornSelected.map(b => b.id) };
+        }
+        
         console.log(objLocation);
+        console.log(this.client);
+        
         
         // Faire une requete POST :
         this.httpClient.post<any>(this.ConnectionUrl, objLocation).subscribe({
@@ -221,6 +229,10 @@ export class RentComponent implements OnInit {
 
     isCreditCardInvalid() {
         return this.creditCard.length === 19 && !this.regex.test(this.creditCard);
+    }
+
+    isListOfBornetteValid(): boolean {        
+        return this.listBornSelected.length > 0 ? true : false;
     }
 
     CB_format(CB: HTMLInputElement) {
