@@ -17,27 +17,7 @@ export class SignInComponent implements OnInit {
 
     constructor(private httpClient: HttpClient, public dialog: MatDialog) { }
 
-    ngOnInit(): void {
-        /*
-        let cl:Personne = {
-            nom: 'GBZ',
-            prenom: 'Jerome',
-            adresse: '25 route de vh',
-            carteBanquaire: '1425 2145 2155 2156',
-            codeSecret: '01234',
-            dateDebut: new Date('01/03/2022'),
-            dateFin: new Date('01/03/2023'),
-            dateNaissance: new Date('01/01/1980'),
-            sexe: Sexe.HOMME,
-            creditTemps: 0
-        }
-        setClientLS(cl);
-        console.log(cl);
-
-
-        //console.log( getClientLS() );
-        */
-    }
+    ngOnInit(): void { }
 
     onSubmit() {
         // Générer la requete / URL :
@@ -45,7 +25,7 @@ export class SignInComponent implements OnInit {
 
         // Faire une requete GET :
         this.httpClient.get(this.ConnectionUrl).subscribe(
-            data  => { setClientLS(data as Personne); }
+            data  => { setClientLS(data as Personne); console.log(data); }
         );
 
         this.dialog.closeAll();

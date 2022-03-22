@@ -58,7 +58,7 @@ export class RentComponent implements OnInit {
   /* GET - Requete */
     reqClientNoAbo(): void {
         // Générer la requete / URL :
-        this.ConnectionUrl += '/connexion/code/' + this.secretCode;
+        this.ConnectionUrl += '/noAbo/code/' + this.secretCode;
 
         // Faire une requete GET :
         this.httpClient.get(this.ConnectionUrl).subscribe(
@@ -68,14 +68,22 @@ export class RentComponent implements OnInit {
                 this.progressBar(1);
             }
         );
-
-        // Delette apres avoir mis la requete
-        // this.numStep = 1;
-        // this.progressBar(1);
     }
 
     reqClientAbo(): void {
-        
+        // Générer la requete / URL :
+        this.ConnectionUrl += '/abo/cb/' + this.creditCard + '/code/' + this.secretCode;
+
+        // Faire une requete GET :
+        this.httpClient.get(this.ConnectionUrl).subscribe(
+            data  => { 
+                setClientLS(data as Personne);
+                this.numStep = 1;
+                this.progressBar(1);
+            }
+        );
+
+        this.dialog.closeAll();
     }
 
     getListStation(): void {
@@ -86,28 +94,6 @@ export class RentComponent implements OnInit {
         this.httpClient.get(this.ConnectionUrl).subscribe(
             data => { this.stations = data as Station[]; }
         );
-        /*
-        this.stations = [{ 
-                            id: 1, 
-                            adresse: 'Victor Hugo', 
-                            bornettes: [
-                              { numero: 1, velo: { modele: 'btwin', coutHoraire: 2.36, etat: 'OK' }, etat: 'OK'}, 
-                              { numero: 2, velo: { modele: 'btwin', coutHoraire: 2.36, etat: 'OK' }, etat: 'HS'},
-                              { numero: 3, velo: { modele: 'btwin', coutHoraire: 2.36, etat: 'OK' }, etat: 'OK'},
-                              { numero: 4, velo: { modele: 'Trek ', coutHoraire: 4.98, etat: 'OK' }, etat: 'OK'},
-                              { numero: 5, velo: { modele: 'Trek ', coutHoraire: 4.98, etat: 'OK' }, etat: 'HS'},
-                              { numero: 6, velo: { modele: 'Trek ', coutHoraire: 4.98, etat: 'OK' }, etat: 'HS'},
-                              { numero: 7, velo: { modele: 'Trek ', coutHoraire: 4.98, etat: 'OK' }, etat: 'OK'},
-                              { numero: 8, velo: { modele: 'Trek ', coutHoraire: 4.98, etat: 'OK' }, etat: 'OK'},
-                              { numero: 9, velo: { modele: 'Trek ', coutHoraire: 4.98, etat: 'OK' }, etat: 'OK'},
-                              { numero: 10, velo: { modele: 'Decathlon', coutHoraire: 3.54, etat: 'OK' }, etat: 'HS'},
-                              { numero: 11, velo: { modele: 'Decathlon', coutHoraire: 3.54, etat: 'OK' }, etat: 'HS'},
-                              { numero: 12, velo: { modele: 'Decathlon', coutHoraire: 3.54, etat: 'OK' }, etat: 'HS'},
-                              { numero: 13, velo: { modele: 'Decathlon', coutHoraire: 3.54, etat: 'OK' }, etat: 'OK'},
-                            ]}, { id: 1, adresse: 'Champ Elysée' , bornettes: []}, { id: 1, adresse: 'Concorde' , bornettes: []}
-                        ];
-        console.log(this.stations);
-        */
     }
     
     getBornettesFromStation(): Array<Bornette> {

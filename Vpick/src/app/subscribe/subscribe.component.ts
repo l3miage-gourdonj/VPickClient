@@ -51,7 +51,7 @@ export class SubscribeComponent implements OnInit {
         console.log(objClient);
 
         // Générer la requete / URL :
-        this.ConnectionUrl += '/POST/subscribe/';
+        this.ConnectionUrl += '/abo/';
 
         // Faire une requete POST :
         this.httpClient.post<any>(this.ConnectionUrl, objClient).subscribe({
