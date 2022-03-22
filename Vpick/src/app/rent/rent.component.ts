@@ -75,6 +75,7 @@ export class RentComponent implements OnInit {
 
         this.numStep = 1;
         this.progressBar(1);
+        this.getListStation();
     }
 
     reqClientAbo(): void {
@@ -88,10 +89,11 @@ export class RentComponent implements OnInit {
                 this.client = (data as Personne);
                 this.numStep = 1;
                 this.progressBar(1);
+                this.getListStation();
             }
         );
 
-        this.dialog.closeAll();
+        // this.dialog.closeAll();
     }
 
     getListStation(): void {
