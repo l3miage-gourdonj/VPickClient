@@ -71,7 +71,7 @@
                     (click)="bornette.etat === 'OK' ? selectBornette(b, bornette) : null" 
                     *ngFor="let bornette of getBornettesFromStation()"
                 >
-                    <span> {{ bornette.numero }}°) {{ bornette.velo?.modele }} - {{ bornette.velo?.coutHoraire }}€/h </span>
+                    <span> {{ bornette.numero }}°) {{ bornette.velo?.modele?.modele }} - {{ bornette.velo?.modele?.coutHoraire }}€/h </span>
                     <img class="arrow" src="../../assets/arrow-right.png" alt="">
                 </li>
             </ul>

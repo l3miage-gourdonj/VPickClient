@@ -42,7 +42,7 @@
                 <div class="locations-container" (click)="setLocation(location)" *ngFor="let location of this.locations">
                     <h3> Location {{ location.id  }} </h3>
                     <ul>
-                        <li class="recap" *ngFor="let velo of this.location.velos"> {{  velo.modele }} - {{ velo.coutHoraire }}€/h </li>
+                        <li class="recap" *ngFor="let velo of this.location.velos"> {{  velo.modele }} - {{ velo.modele.coutHoraire }}€/h </li>
                         <li> Début il y a : {{ dureeLocationString(location.dateDebut) }} </li>
                     </ul>
                 </div>
@@ -92,7 +92,7 @@
         <div id="paiementContent" *ngIf="this.numStep == 5">
             <h2> Paiement : </h2>
             <ul class="paiement">
-                <li *ngFor="let velo of this.locationSelected.velos"> {{  velo.modele }} - {{ velo.coutHoraire }}€/h </li>
+                <li *ngFor="let velo of this.locationSelected.velos"> {{  velo.modele }} - {{ velo.modele.coutHoraire }}€/h </li>
                 <li> Durée : {{ dureeLocationString(this.locationSelected.dateDebut) }} </li>
                 <li> Prix : {{ getPrixLocation(this.locationSelected.dateDebut) }} €</li>
             </ul>

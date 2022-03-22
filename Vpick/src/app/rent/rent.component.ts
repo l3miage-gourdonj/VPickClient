@@ -97,6 +97,7 @@ export class RentComponent implements OnInit {
     }
     
     getBornettesFromStation(): Array<Bornette> {
+        console.log(this.stationsSelected.bornettes[0].velo?.modele);
         return this.stationsSelected.bornettes;
     }
 
@@ -104,7 +105,7 @@ export class RentComponent implements OnInit {
         let prixParH:number = 0.0;
         this.listBornSelected.forEach((b:Bornette) => { 
             let v = b.velo;
-            if(v !== null) { prixParH += v.coutHoraire; }
+            if(v !== null) { prixParH += v.modele.coutHoraire; }
         });
 
         return prixParH;

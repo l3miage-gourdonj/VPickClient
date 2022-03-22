@@ -82,7 +82,7 @@ export class BringBackComponent implements OnInit {
         this.httpClient.get(this.ConnectionUrl).subscribe(
             data => { this.locations = data as Location[] }
         );
-
+/*
         this.locations = [{
             id: 1,
             velos: [
@@ -103,7 +103,7 @@ export class BringBackComponent implements OnInit {
             dateDebut: new Date("March 21, 2022 13:00:00"),
             dateFin: new Date("March 21, 2022 14:00:00"),
         }];
-
+*/
         console.log(this.locations);
     }
 
@@ -223,7 +223,7 @@ export class BringBackComponent implements OnInit {
         console.log("roundHeure " + roundHeure);
         
         let prix = 0;
-        this.locationSelected.velos.forEach((v:Velo) => prix += v.coutHoraire * roundHeure)
+        this.locationSelected.velos.forEach((v:Velo) => prix += v.modele.coutHoraire * roundHeure)
 
         return Math.round(prix*100)/100;
     }

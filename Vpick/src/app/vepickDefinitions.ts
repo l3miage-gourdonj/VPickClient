@@ -34,9 +34,14 @@ export interface Location {
 export type Etat = "OK" | "HS";
 
 export interface Velo {
-    modele: string,
-    coutHoraire: number,
+    modele: Modele,
     etat: Etat
+}
+
+export interface Modele {
+    id: number, 
+    modele: string, 
+    coutHoraire: number
 }
 
 
