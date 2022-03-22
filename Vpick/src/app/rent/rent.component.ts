@@ -21,9 +21,11 @@ export class RentComponent implements OnInit {
     public listBornSelected: Array<Bornette> = [];
 
     public stationsSelected!: Station;
-    
+
+    public creditCard:string = "";
     private secretCode: string = "";
     private ConnectionUrl: string = 'http://localhost:9000/api/vpick';
+    private regex = new RegExp("\\d{4} \\d{4} \\d{4} \\d{4}");
 
 
 
@@ -46,7 +48,7 @@ export class RentComponent implements OnInit {
             this.getListStation();
         } else {
             this.numStep = 0;
-            this.progressBar(0);
+            this.progressBar(0);     
         }
     }
 
@@ -67,11 +69,13 @@ export class RentComponent implements OnInit {
             }
         );
 
-        this.clientAbo = false;
-
         // Delette apres avoir mis la requete
-        this.numStep = 1;
-        this.progressBar(1);
+        // this.numStep = 1;
+        // this.progressBar(1);
+    }
+
+    reqClientAbo(): void {
+        
     }
 
     getListStation(): void {
@@ -186,11 +190,12 @@ export class RentComponent implements OnInit {
         return this.secretCode.replace(/\s+/g, '').length === 5;
     }
 
-    openDialogLogin(){
-        this.dialog.open(SignInComponent, {
-            height: '400px',
-            width: '600px',
-        })
+    openLoginAbo():void {
+        this.clientAbo = false;
+    }
+
+    openLoginNoAbo():void {
+        this.clientAbo = true;
     }
 
     progressBar(stepNum: number) {
@@ -225,5 +230,20 @@ export class RentComponent implements OnInit {
     
     isAlreadyConnected(): boolean {
         return getClientLS() !== null ? true : false;
+    }
+
+    isCreditCardInvalid() {
+        return this.creditCard.length === 19 && !this.regex.test(this.creditCard);
+    }
+
+    CB_format(CB: HTMLInputElement) {
+        this.creditCard = CB.value.replace(/\s+/g, '');
+        if (this.creditCard !== null) {
+            let cpt = 4;
+            while (cpt < this.creditCard.length) {
+                this.creditCard = this.creditCard.slice(0, cpt) + " " + this.creditCard.slice(cpt);
+                cpt += 5;
+            }
+        }
     }
 }

@@ -17,7 +17,7 @@
         <div id="connexionContent" *ngIf="this.numStep == 0">
             <h2> Connexion client : </h2>
 
-            <form (ngSubmit)="reqClientNoAbo()">
+            <form id="noAbo" *ngIf="this.clientAbo == false" (ngSubmit)="reqClientNoAbo()">
                 <div id="secretCodeContent">
                     <p>Votre code secret :</p>
                     <code-input #codeSecret name="secretCodeInput" [isCodeHidden]="false" [codeLength]="5"
@@ -28,7 +28,31 @@
                     <button mat-button type="submit" [disabled]="!isFormValid()">Se connecter</button>
                 </div>
                 
-                <p (click)="openDialogLogin()"> J'ai déjà un compte </p>
+                <p (click)="openLoginAbo()"> J'ai déjà un compte </p>
+            </form>
+
+            <form id="Abo" *ngIf="this.clientAbo == true" (ngSubmit)="reqClientAbo()">
+                <div id="creditCardContent">
+                    <p>Votre numéro cb :</p>
+                    <input #card name="creditCardInput" 
+                        [ngModel]="creditCard" 
+                        (ngModelChange)="CB_format(card)"
+                        placeholder="1234 1234 1234 1234" type="tel" [maxlength]="19">
+                    <div *ngIf="isCreditCardInvalid()" id="cbWrong">Numéro de carte éronnée</div>
+                </div>
+            
+                <div id="secretCodeContent">
+                    <p>Votre code secret :</p>
+                    <code-input #codeSecret name="secretCodeInput" 
+                        [isCodeHidden]="false" 
+                        [codeLength]="5"
+                        (codeChanged)="saveSecretCode($event)">
+                    </code-input>
+                </div>
+                <div id="ValidFormContent">
+                    <button mat-button type="submit" [disabled]="!isFormValid()">Se connecter</button>
+                </div>
+                <p (click)="openLoginNoAbo()"> Je n'ai pas encore de compte </p>
             </form>
         </div>
 
