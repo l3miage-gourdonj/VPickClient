@@ -324,3 +324,12 @@ code-input {
 .selectedBornette {
     border: 2px solid #4B81BD;
 }
+
+.align {
+  text-align: center;
+  text-decoration: underline;
+
+  &:hover {
+    cursor: pointer;
+  }
+}

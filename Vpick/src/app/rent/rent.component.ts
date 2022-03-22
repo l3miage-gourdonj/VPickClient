@@ -191,11 +191,15 @@ export class RentComponent implements OnInit {
     }
 
     openLoginAbo():void {
-        this.clientAbo = false;
+        this.clientAbo = true;
+        document.getElementById("Abo")?.setAttribute('style', "display:block");
+        document.getElementById("noAbo")?.setAttribute('style', "display:none");
     }
 
     openLoginNoAbo():void {
-        this.clientAbo = true;
+        this.clientAbo = false;
+        document.getElementById("Abo")?.setAttribute('style', "display:none");
+        document.getElementById("noAbo")?.setAttribute('style', "display:block");
     }
 
     progressBar(stepNum: number) {

@@ -28,7 +28,7 @@
                     <button mat-button type="submit" [disabled]="!isFormValid()">Se connecter</button>
                 </div>
                 
-                <p (click)="openLoginAbo()"> J'ai déjà un compte </p>
+                <p (click)="openLoginAbo()" class="align"> J'ai déjà un compte </p>
             </form>
 
             <form id="Abo" *ngIf="this.clientAbo == true" (ngSubmit)="reqClientAbo()">
@@ -52,7 +52,7 @@
                 <div id="ValidFormContent">
                     <button mat-button type="submit" [disabled]="!isFormValid()">Se connecter</button>
                 </div>
-                <p (click)="openLoginNoAbo()"> Je n'ai pas encore de compte </p>
+                <p (click)="openLoginNoAbo()" class="align"> Je n'ai pas encore de compte </p>
             </form>
         </div>
 
