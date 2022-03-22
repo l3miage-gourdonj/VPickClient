@@ -151,7 +151,7 @@ export class RentComponent implements OnInit {
     createLocation() {
         // Générer la requete / URL :
         this.ConnectionUrl = 'http://localhost:9000/api/vpick/location/';
-        let objLocation = { client: this.client, bornettes: this.listBornSelected.map(b => b.id) };
+        let objLocation = { cbClient: this.client?.carteBanquaire, codeClient: this.client?.codeSecret, bornettes: this.listBornSelected.map(b => b.id) };
         console.log(objLocation);
         
         // Faire une requete POST :
