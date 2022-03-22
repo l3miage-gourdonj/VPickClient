@@ -27,6 +27,8 @@ export class RentComponent implements OnInit {
     private ConnectionUrl: string = 'http://localhost:9000/api/vpick';
     private regex = new RegExp("\\d{4} \\d{4} \\d{4} \\d{4}");
 
+    private client: Personne|null = getClientLS();
+
 
 
   /* Initialisation */  
@@ -57,6 +59,7 @@ export class RentComponent implements OnInit {
 
   /* GET - Requete */
     reqClientNoAbo(): void {
+        /*
         // Générer la requete / URL :
         this.ConnectionUrl += '/noAbo/code/' + this.secretCode;
 
@@ -67,7 +70,11 @@ export class RentComponent implements OnInit {
                 this.numStep = 1;
                 this.progressBar(1);
             }
-        );
+        ); 
+        */
+
+        this.numStep = 1;
+        this.progressBar(1);
     }
 
     reqClientAbo(): void {
@@ -78,6 +85,7 @@ export class RentComponent implements OnInit {
         this.httpClient.get(this.ConnectionUrl).subscribe(
             data  => { 
                 setClientLS(data as Personne);
+                this.client = (data as Personne);
                 this.numStep = 1;
                 this.progressBar(1);
             }
@@ -97,7 +105,6 @@ export class RentComponent implements OnInit {
     }
     
     getBornettesFromStation(): Array<Bornette> {
-        console.log(this.stationsSelected.bornettes[0].velo?.modele);
         return this.stationsSelected.bornettes;
     }
 
@@ -156,9 +163,9 @@ export class RentComponent implements OnInit {
     createLocation() {
         // Générer la requete / URL :
         this.ConnectionUrl += '/location/';
-
+        let objLocation = { client: this.client, bornettes: this.listBornSelected.map(b => b.id) }
         // Faire une requete POST :
-        this.httpClient.post<any>(this.ConnectionUrl, this.listBornSelected.map(b => b.id)).subscribe({
+        this.httpClient.post<any>(this.ConnectionUrl, objLocation).subscribe({
             next: data => { console.log(data); },
             error: error => { console.error('There was an error!', error); }
         });
