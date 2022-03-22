@@ -59,20 +59,6 @@ export class RentComponent implements OnInit {
 
   /* GET - Requete */
     reqClientNoAbo(): void {
-        /*
-        // Générer la requete / URL :
-        this.ConnectionUrl += '/noAbo/code/' + this.secretCode;
-
-        // Faire une requete GET :
-        this.httpClient.get(this.ConnectionUrl).subscribe(
-            data => {
-                setClientLS(data as Personne);
-                this.numStep = 1;
-                this.progressBar(1);
-            }
-        ); 
-        */
-
         this.numStep = 1;
         this.progressBar(1);
         this.getListStation();
