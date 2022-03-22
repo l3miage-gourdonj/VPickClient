@@ -106,13 +106,7 @@ export class BringBackComponent implements OnInit {
 
         console.log(this.locations);
     }
-/*
-    getListBornette(id: number): void {
-        console.log(this.bornettes);
 
-        this.selectBornette(1);
-    }
-*/
     getListStation(): void {
         // Générer la requete / URL :
         this.ConnectionUrl += '/station/nb/5';
@@ -122,8 +116,8 @@ export class BringBackComponent implements OnInit {
             data => { this.stations = data as Station[]; }
         );
 
-        this.stations = [{ id: 1, adresse: 'Victor Hugo', bornettes: [{ numero: 1, velo: null, etat: 'OK'}]}, { id: 1, adresse: 'Champ Elysée' , bornettes: []}, { id: 1, adresse: 'Concorde' , bornettes: []}];
-        console.log(this.stations);
+        // this.stations = [{ id: 1, adresse: 'Victor Hugo', bornettes: [{ numero: 1, velo: null, etat: 'OK'}]}, { id: 1, adresse: 'Champ Elysée' , bornettes: []}, { id: 1, adresse: 'Concorde' , bornettes: []}];
+        // console.log(this.stations);
     }
 
     getBornettesFromStation(): Array<Bornette> {

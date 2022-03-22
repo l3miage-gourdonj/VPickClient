@@ -82,7 +82,7 @@ export class RentComponent implements OnInit {
         this.httpClient.get(this.ConnectionUrl).subscribe(
             data => { this.stations = data as Station[]; }
         );
-
+        /*
         this.stations = [{ 
                             id: 1, 
                             adresse: 'Victor Hugo', 
@@ -103,10 +103,36 @@ export class RentComponent implements OnInit {
                             ]}, { id: 1, adresse: 'Champ Elysée' , bornettes: []}, { id: 1, adresse: 'Concorde' , bornettes: []}
                         ];
         console.log(this.stations);
+        */
     }
     
     getBornettesFromStation(): Array<Bornette> {
         return this.stationsSelected.bornettes;
+    }
+
+    getPrixLocationParHeure() {
+        let prixParH:number = 0.0;
+        this.listBornSelected.forEach((b:Bornette) => { 
+            let v = b.velo;
+            if(v !== null) { prixParH += v.coutHoraire; }
+        });
+
+        return prixParH;
+    }
+
+    getBornetteSelected(): string {
+        // [<span *ngFor="let i=index; let bornette of this.listBornSelected"> {{ bornette.numero }},  </span> ]
+        let bornettes: string = "[ ";
+        
+        this.listBornSelected.forEach( (b:Bornette, i:number) => { 
+            bornettes += b.numero;
+            if(i+1 !== this.listBornSelected.length) {
+                bornettes += ", ";
+            }
+        });
+
+        bornettes += " ]";
+        return bornettes;
     }
 
 
@@ -133,19 +159,19 @@ export class RentComponent implements OnInit {
     }
 
     validBornette() {
-        console.log( this.listBornSelected );
-        
+        this.numStep = 3;
+        this.progressBar(3);
+    }
+
+    createLocation() {
         // Générer la requete / URL :
         this.ConnectionUrl += '/POST/list/bornette/seleted/';
 
         // Faire une requete POST :
-        this.httpClient.post<any>(this.ConnectionUrl, this.listBornSelected).subscribe({
+        this.httpClient.post<any>(this.ConnectionUrl, this.listBornSelected.map(b => b.id)).subscribe({
             next: data => { console.log(data); },
             error: error => { console.error('There was an error!', error); }
         });
-
-        this.numStep = 3;
-        this.progressBar(3);
     }
 
 

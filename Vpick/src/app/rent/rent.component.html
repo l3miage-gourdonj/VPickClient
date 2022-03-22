@@ -60,6 +60,18 @@
 
             <button mat-button (click)="validBornette()"> Valider </button>
         </div>
+
+
+        <div id="recapContent" *ngIf="this.numStep == 3">
+            <h2> Récapitulatif : </h2>
+            <ul class="recap"> 
+                <li> Bornette : {{ getBornetteSelected() }} </li>
+                <li> Nombre de vélo : {{ this.listBornSelected.length }} </li>
+                <li> Prix par heure : {{ getPrixLocationParHeure() }} €</li>
+            </ul>
+
+            <button mat-button (click)="createLocation()">Louer</button>
+        </div>
 <!--
         <div id="recapContent" *ngIf="this.numStep == 3">
             <h2> Récapitulatif : </h2>

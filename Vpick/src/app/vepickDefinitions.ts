@@ -12,6 +12,7 @@ export interface Personne {
 }
 
 export interface Bornette {
+    id: number,
     numero: number,
     velo: Velo | null,
     etat: Etat

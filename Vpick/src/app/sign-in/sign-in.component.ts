@@ -18,7 +18,7 @@ export class SignInComponent implements OnInit {
     constructor(private httpClient: HttpClient, public dialog: MatDialog) { }
 
     ngOnInit(): void {
-
+        /*
         let cl:Personne = {
             nom: 'GBZ',
             prenom: 'Jerome',
@@ -36,7 +36,7 @@ export class SignInComponent implements OnInit {
 
 
         //console.log( getClientLS() );
-
+        */
     }
 
     onSubmit() {
