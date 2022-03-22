@@ -21,7 +21,7 @@ export class SignInComponent implements OnInit {
 
     onSubmit() {
         // Générer la requete / URL :
-        this.ConnectionUrl += '/abo/cb/' + this.creditCard + '/code/' + this.secretCode;
+        this.ConnectionUrl = 'http://localhost:9000/api/vpick/abo/cb/' + this.creditCard + '/code/' + this.secretCode;
 
         // Faire une requete GET :
         this.httpClient.get(this.ConnectionUrl).subscribe(

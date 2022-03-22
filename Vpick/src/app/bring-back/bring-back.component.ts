@@ -56,7 +56,7 @@ export class BringBackComponent implements OnInit {
 
     reqClientNoAbo(): void {
         // Générer la requete / URL :
-        this.ConnectionUrl += '/connexion/code/' + this.secretCode;
+        this.ConnectionUrl = 'http://localhost:9000/api/vpick/connexion/code/' + this.secretCode;
 
         // Faire une requete GET :
         this.httpClient.get(this.ConnectionUrl).subscribe(
@@ -76,7 +76,7 @@ export class BringBackComponent implements OnInit {
 
     getLocation(): void {
         // Générer la requete / URL :
-        this.ConnectionUrl += "/location/list/";
+        this.ConnectionUrl = 'http://localhost:9000/api/vpick/location/list/';
 
         // Requette GET : liste bornette
         this.httpClient.get(this.ConnectionUrl).subscribe(
@@ -109,7 +109,7 @@ export class BringBackComponent implements OnInit {
 
     getListStation(): void {
         // Générer la requete / URL :
-        this.ConnectionUrl += '/station/nb/5';
+        this.ConnectionUrl = 'http://localhost:9000/api/vpick/station/';
 
         // Requette GET : liste bornette
         this.httpClient.get(this.ConnectionUrl).subscribe(

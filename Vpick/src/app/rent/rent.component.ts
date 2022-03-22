@@ -80,7 +80,7 @@ export class RentComponent implements OnInit {
 
     reqClientAbo(): void {
         // Générer la requete / URL :
-        this.ConnectionUrl += '/abo/cb/' + this.creditCard + '/code/' + this.secretCode;
+        this.ConnectionUrl = 'http://localhost:9000/api/vpick/abo/cb/' + this.creditCard + '/code/' + this.secretCode;
 
         // Faire une requete GET :
         this.httpClient.get(this.ConnectionUrl).subscribe(
@@ -98,7 +98,7 @@ export class RentComponent implements OnInit {
 
     getListStation(): void {
         // Générer la requete / URL :
-        this.ConnectionUrl += '/station/';
+        this.ConnectionUrl = 'http://localhost:9000/api/vpick/station/';
 
         // Requette GET : liste bornette
         this.httpClient.get(this.ConnectionUrl).subscribe(
@@ -164,7 +164,7 @@ export class RentComponent implements OnInit {
 
     createLocation() {
         // Générer la requete / URL :
-        this.ConnectionUrl += '/location/';
+        this.ConnectionUrl = 'http://localhost:9000/api/vpick/location/';
         let objLocation = { client: this.client, bornettes: this.listBornSelected.map(b => b.id) }
         // Faire une requete POST :
         this.httpClient.post<any>(this.ConnectionUrl, objLocation).subscribe({

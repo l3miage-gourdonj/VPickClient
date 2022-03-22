@@ -50,7 +50,7 @@ export class SubscribeComponent implements OnInit {
         console.log(objClient);
 
         // Générer la requete / URL :
-        this.ConnectionUrl += '/abo/';
+        this.ConnectionUrl = 'http://localhost:9000/api/vpick/abo/';
 
         // Faire une requete POST :
         this.httpClient.post<any>(this.ConnectionUrl, objClient).subscribe({
