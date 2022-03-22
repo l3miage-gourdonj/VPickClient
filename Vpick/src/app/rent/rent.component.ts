@@ -112,7 +112,6 @@ export class RentComponent implements OnInit {
     }
 
     getBornetteSelected(): string {
-        // [<span *ngFor="let i=index; let bornette of this.listBornSelected"> {{ bornette.numero }},  </span> ]
         let bornettes: string = "[ ";
         
         this.listBornSelected.forEach( (b:Bornette, i:number) => { 
@@ -143,7 +142,7 @@ export class RentComponent implements OnInit {
             bElem.setAttribute('class', 'bornette OK selectedBornette');
             this.listBornSelected.push(bObj);
         } else {
-            bElem.setAttribute('class', 'bornette OK');            
+            bElem.setAttribute('class', 'bornette OK');
             let index = this.listBornSelected.indexOf(bObj);
             this.listBornSelected.splice(index,index);
         }
@@ -156,7 +155,7 @@ export class RentComponent implements OnInit {
 
     createLocation() {
         // Générer la requete / URL :
-        this.ConnectionUrl += '/POST/list/bornette/seleted/';
+        this.ConnectionUrl += '/location/';
 
         // Faire une requete POST :
         this.httpClient.post<any>(this.ConnectionUrl, this.listBornSelected.map(b => b.id)).subscribe({
