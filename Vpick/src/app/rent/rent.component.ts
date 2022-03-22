@@ -155,7 +155,7 @@ export class RentComponent implements OnInit {
         console.log(objLocation);
         
         // Faire une requete POST :
-        this.httpClient.post<any>(this.ConnectionUrl, this.client).subscribe({
+        this.httpClient.post<any>(this.ConnectionUrl, objLocation).subscribe({
             next: data => { console.log(data); },
             error: error => { console.error('There was an error!', error); }
         });
