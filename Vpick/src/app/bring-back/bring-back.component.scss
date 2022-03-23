@@ -291,16 +291,47 @@ code-input {
   text-align: center;
 }
 
-#cbWrong {
-  color: #db6767;
+
+
+
+
+
+
+
+.bornette {
+  margin-right: 10px;
+  border-radius: 15px;
 }
 
+.OK {
+  background-color: #93dd8a;
+
+  &:hover {
+      cursor: pointer;
+  }
+}
+
+.HS {
+  background-color: #db6767;
+
+  &:hover {
+      cursor: not-allowed;
+  }
+}
+
+.selectedBornette {
+  border: 2px solid #4B81BD;
+}
 
 .align {
-  text-align: center;
-  text-decoration: underline;
+text-align: center;
+text-decoration: underline;
 
   &:hover {
     cursor: pointer;
   }
+}
+
+#cbWrong {
+color: #db6767;
 }

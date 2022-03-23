@@ -22,7 +22,7 @@ export class RentComponent implements OnInit {
     public stationsSelected!: Station;
 
     public carteBancaire:string = "";
-    private secretCode: string = "";
+    public secretCode: string = "";
     private ConnectionUrl: string = 'http://localhost:9000/api/vpick';
     private regex = new RegExp("\\d{4} \\d{4} \\d{4} \\d{4}");
 
@@ -174,7 +174,13 @@ export class RentComponent implements OnInit {
 
         // Faire une requete POST :
         this.httpClient.post<any>(this.ConnectionUrl, objLocation).subscribe({
-            next: data => { console.log(data); },
+            next: data => {
+                console.log(data);
+
+                this.numStep = 4;
+                this.progressBar(4);
+                this.secretCode = data;
+            },
             error: error => { console.error('There was an error!', error); }
         });
     }
@@ -207,7 +213,7 @@ export class RentComponent implements OnInit {
         console.log("num Prec:" + this.numStep + " num Actu:" + stepNum);
 
         if (this.numStep >= stepNum) {
-            let progressStyle = "width:" + String(stepNum * 30) + "%"
+            let progressStyle = "width:" + String(stepNum * 25) + "%"
             let elem = document.getElementsByClassName('percent')[0] as Element;
             elem.setAttribute('style', progressStyle);
 
@@ -231,6 +237,7 @@ export class RentComponent implements OnInit {
         document.getElementById("stationContent")?.setAttribute('style', (stepNum == 1 ? "display:block" : "display:none"));
         document.getElementById("bornetteContent")?.setAttribute('style', (stepNum == 2 ? "display:block" : "display:none"));
         document.getElementById("paiementContent")?.setAttribute('style', (stepNum == 3 ? "display:block" : "display:none"));
+        document.getElementById("finalContent")?.setAttribute('style', (stepNum == 4 ? "display:block" : "display:none"));
     }
 
     isAlreadyConnected(): boolean {

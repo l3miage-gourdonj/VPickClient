@@ -69,7 +69,7 @@
                 <div class="locations-container" (click)="setLocation(location)" *ngFor="let location of this.locations">
                     <h3> Location {{ location.id  }} </h3>
                     <ul>
-                        <li class="recap" *ngFor="let velo of this.location.velos"> {{  velo.modele }} - {{ velo.modele.coutHoraire }}€/h </li>
+                        <li class="recap" *ngFor="let velo of this.location.velos"> {{  velo.modele.modele }} - {{ velo.modele.coutHoraire }}€/h </li>
                         <li> Début il y a : {{ dureeLocationString(location.dateDebut) }} </li>
                     </ul>
                 </div>
@@ -87,12 +87,18 @@
             </ul>
         </div>
 
-
         <div id="bornetteContent" *ngIf="this.numStep == 3">
             <h2> Selectionne une bornette : </h2>
             <ul class="bornettes">
-                <li class="bornette" *ngFor="let bornette of getBornettesFromStation()">
-                    <span> {{ bornette.numero }} </span>
+                <li class="bornette"
+                    #b
+                    [class.OK]="bornette.etat === 'OK' && bornette.velo === null"
+                    [class.HS]="bornette.velo !== null"
+                    *ngFor="let bornette of getBornettesFromStation()"
+                >
+                    <span *ngIf="bornette.etat === 'OK' && bornette.velo !== null && bornette.velo.etat == 'OK'"> {{ bornette.numero }}°) {{ bornette.velo?.modele?.modele }} - {{ bornette.velo?.modele?.coutHoraire }}€/h </span>
+                    <span *ngIf="bornette.etat === 'HS' || bornette.velo?.etat == 'HS'"> {{ bornette.numero }}°) HS </span>
+                    <span *ngIf="bornette.etat === 'OK' && bornette.velo === null"> {{ bornette.numero }}°) Vide </span>
                     <img class="arrow" src="../../assets/arrow-right.png" alt="">
                 </li>
             </ul>

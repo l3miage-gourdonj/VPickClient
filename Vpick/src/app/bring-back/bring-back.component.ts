@@ -21,7 +21,7 @@ export class BringBackComponent implements OnInit {
     public stations: Array<Station> = [];
     public bornettes: Array<Bornette> = [];
     public locations: Array<Location> = [];
-
+    
     public locationSelected!: Location;
     public stationsSelected!: Station;
 
@@ -57,14 +57,17 @@ export class BringBackComponent implements OnInit {
 
     reqClientNoAbo(): void {
         // Générer la requete / URL :
-        this.ConnectionUrl = 'http://localhost:9000/api/vpick/noabo/code/' + this.secretCode;
+        this.ConnectionUrl = 'http://localhost:9000/api/vpick/location/code/' + this.secretCode;
 
         // Faire une requete GET :
         this.httpClient.get(this.ConnectionUrl).subscribe(
             data => {
-                setClientLS(data as Personne);
-                this.numStep = 1;
-                this.progressBar(1);
+                console.log(data);
+                if(data !== null) {
+                    this.locations = [data as Location];
+                    this.numStep = 1;
+                    this.progressBar(1);
+                }
             }
         );
 
@@ -73,13 +76,15 @@ export class BringBackComponent implements OnInit {
 
     reqClientAbo(): void {
         // Générer la requete / URL :
-        this.ConnectionUrl = 'http://localhost:9000/api/vpick/abo/cb/' + this.carteBancaire + '/code/' + this.secretCode;
+        this.ConnectionUrl = 'http://localhost:9000/api/vpick/location/cb/' + this.carteBancaire + '/code/' + this.secretCode;
 
         // Faire une requete GET :
         this.httpClient.get(this.ConnectionUrl).subscribe(
             data  => {
-                setClientLS(data as Personne);
-                this.client = (data as Personne);
+                this.locations = data as Array<Location>;
+                this.numStep = 1;
+                this.progressBar(1);
+
                 this.numStep = 1;
                 this.progressBar(1);
                 this.getListStation();
@@ -104,7 +109,7 @@ export class BringBackComponent implements OnInit {
 
     getListStation(): void {
         // Générer la requete / URL :
-        this.ConnectionUrl = 'http://localhost:9000/api/vpick/station/';
+        this.ConnectionUrl = 'http://localhost:9000/api/vpick/station/nb/'+this.locationSelected.velos.length;
 
         // Requette GET : liste bornette
         this.httpClient.get(this.ConnectionUrl).subscribe(
@@ -149,7 +154,7 @@ export class BringBackComponent implements OnInit {
     async selectBornette(bornette: number) {
         console.log(bornette);
 
-        await new Promise(resolve => { setTimeout(resolve, 3000), this.colorStation() }); // 3 sec
+        await new Promise(resolve => { setTimeout(resolve, 5000), this.colorStation() }); // 3 sec
 
         this.numStep = 4;
         this.progressBar(4);
@@ -211,8 +216,8 @@ export class BringBackComponent implements OnInit {
         }
     }
 
-    getPrixLocation(dateD: Date): number {
-        let difDate = new Date().getTime() - dateD.getTime();
+    getPrixLocation(dateD: string): number {
+        let difDate = new Date().getTime() - new Date(dateD).getTime();
         let minDif = (difDate / (1000 * 3600));
         let roundHeure = Math.ceil(minDif);
         console.log("roundHeure " + roundHeure);
@@ -238,10 +243,10 @@ export class BringBackComponent implements OnInit {
         document.getElementById("noAbo")?.setAttribute('style', "display:block");
     }
 
-    dureeLocationString(dateD: Date): string{
-        let duree = new Date().getTime() - dateD.getTime();
+    dureeLocationString(dateD: string): string{
+        let duree = new Date().getTime() - new Date(dateD).getTime();
         let nbMinutes = (duree / (1000 * 60));
-        return Math.floor(nbMinutes/60) + "h" + Math.floor(nbMinutes%60) + ", facturé " + Math.ceil(nbMinutes/60) + "h";
+        return Math.floor(nbMinutes/60) + "h" + Math.floor(nbMinutes%60) + "min - Facturé " + Math.ceil(nbMinutes/60) + "h";
     }
 
     saveSecretCode(codeS: string) {

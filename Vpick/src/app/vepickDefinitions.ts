@@ -26,9 +26,9 @@ export interface Station {
 
 export interface Location {
     id: number,
+    codeSecret: string,
     velos: Array<Velo>,
-    dateDebut: Date,
-    dateFin: Date,
+    dateDebut: string,
 }
 
 export type Etat = "OK" | "HS";
