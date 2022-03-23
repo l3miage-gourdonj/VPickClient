@@ -294,3 +294,13 @@ code-input {
 #cbWrong {
   color: #db6767;
 }
+
+
+.align {
+  text-align: center;
+  text-decoration: underline;
+
+  &:hover {
+    cursor: pointer;
+  }
+}

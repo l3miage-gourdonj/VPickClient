@@ -177,7 +177,7 @@ export class RentComponent implements OnInit {
         this.secretCode = codeS;
     }
 
-    isFormValid() {
+    isFormValidAbo() {
         return this.regex.test(this.creditCard) && this.secretCode.replace(/\s+/g, '').length === 5;
     }
 

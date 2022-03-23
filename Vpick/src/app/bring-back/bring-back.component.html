@@ -26,31 +26,37 @@
                         (codeChanged)="saveSecretCode($event)">
                     </code-input>
                 </div>
-                
+
+                <div id="ValidFormContent">
+                    <button mat-button type="submit" [disabled]="!isFormValidNoAbo()">Se connecter</button>
+                </div>
+
                 <p (click)="openLoginAbo()" class="align"> J'ai déjà un compte </p>
             </form>
 
             <form id="Abo" *ngIf="this.clientAbo == true" (ngSubmit)="reqClientAbo()">
                 <div id="creditCardContent">
                     <p>Votre numéro cb :</p>
-                    <input #card name="creditCardInput" 
-                        [ngModel]="creditCard" 
+                    <input #card name="creditCardInput"
+                        [ngModel]="creditCard"
                         (ngModelChange)="CB_format(card)"
                         placeholder="1234 1234 1234 1234" type="tel" [maxlength]="19">
                     <div *ngIf="isCreditCardInvalid()" id="cbWrong">Numéro de carte éronnée</div>
                 </div>
-            
+
                 <div id="secretCodeContent">
                     <p>Votre code secret :</p>
-                    <code-input #codeSecret name="secretCodeInput" 
-                        [isCodeHidden]="false" 
+                    <code-input #codeSecret name="secretCodeInput"
+                        [isCodeHidden]="false"
                         [codeLength]="5"
                         (codeChanged)="saveSecretCode($event)">
                     </code-input>
                 </div>
+
                 <div id="ValidFormContent">
-                    <button mat-button type="submit" [disabled]="!isFormValid()">Se connecter</button>
+                    <button mat-button type="submit" [disabled]="!isFormValidAbo()">Se connecter</button>
                 </div>
+
                 <p (click)="openLoginNoAbo()" class="align"> Je n'ai pas encore de compte </p>
             </form>
         </div>
@@ -96,13 +102,13 @@
         <div id="veloContent" *ngIf="this.numStep == 4">
             <h2> Déclarer des vélo cassé : </h2>
             <ul class="velos">
-                <li *ngFor="let i = index; let velo of this.locationSelected.velos"> 
+                <li *ngFor="let i = index; let velo of this.locationSelected.velos">
                     <p> {{  velo.modele }} </p>
 
                     <mat-radio-group id="{{ i }}" class="etat-content" aria-label="Etat du vélo">
                         <mat-radio-button #btnRadio checked value="OK"> OK </mat-radio-button>
                         <mat-radio-button class="second-radio" value="HS"> HS </mat-radio-button>
-                    </mat-radio-group> 
+                    </mat-radio-group>
                 </li>
             </ul>
 

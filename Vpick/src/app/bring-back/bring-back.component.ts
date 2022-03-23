@@ -27,7 +27,7 @@ export class BringBackComponent implements OnInit {
 
     public creditCard: string = "";
     private secretCode: string = "";
-    private regex = new RegExp("\\d{4} \\d{4} \\d{4} \\d{4}"); 
+    private regex = new RegExp("\\d{4} \\d{4} \\d{4} \\d{4}");
 
     public clientAbo:boolean = true;
     private client: Personne|null = getClientLS();
@@ -51,7 +51,7 @@ export class BringBackComponent implements OnInit {
         } else {
             this.numStep = 0;
             this.progressBar(0);
-        }     
+        }
     }
 
 
@@ -77,7 +77,7 @@ export class BringBackComponent implements OnInit {
 
         // Faire une requete GET :
         this.httpClient.get(this.ConnectionUrl).subscribe(
-            data  => { 
+            data  => {
                 setClientLS(data as Personne);
                 this.client = (data as Personne);
                 this.numStep = 1;
@@ -160,7 +160,7 @@ export class BringBackComponent implements OnInit {
     selectEtatVelo() {
         let docVelo = document.getElementsByClassName("etat-content");
         console.log(docVelo);
-        
+
         this.numStep = 5;
         this.progressBar(5);
         this.getPaiement();
@@ -212,11 +212,11 @@ export class BringBackComponent implements OnInit {
     }
 
     getPrixLocation(dateD: Date): number {
-        let difDate = new Date().getTime() - dateD.getTime();        
+        let difDate = new Date().getTime() - dateD.getTime();
         let minDif = (difDate / (1000 * 3600));
-        let roundHeure = Math.ceil(minDif);    
+        let roundHeure = Math.ceil(minDif);
         console.log("roundHeure " + roundHeure);
-        
+
         let prix = 0;
         this.locationSelected.velos.forEach((v:Velo) => prix += v.modele.coutHoraire * roundHeure)
 
@@ -225,7 +225,7 @@ export class BringBackComponent implements OnInit {
 
 
 
-  /* AUTRE FONCTION */ 
+  /* AUTRE FONCTION */
     openLoginAbo():void {
         this.clientAbo = true;
         document.getElementById("Abo")?.setAttribute('style', "display:block");
@@ -239,7 +239,7 @@ export class BringBackComponent implements OnInit {
     }
 
     dureeLocationString(dateD: Date): string{
-        let duree = new Date().getTime() - dateD.getTime();        
+        let duree = new Date().getTime() - dateD.getTime();
         let nbMinutes = (duree / (1000 * 60));
         return Math.floor(nbMinutes/60) + "h" + Math.floor(nbMinutes%60) + ", facturé " + Math.ceil(nbMinutes/60) + "h";
     }
@@ -252,8 +252,12 @@ export class BringBackComponent implements OnInit {
         return this.creditCard.length === 19 && !this.regex.test(this.creditCard);
     }
 
-    isFormValid() {
+    isFormValidNoAbo() {
         return this.secretCode.replace(/\s+/g, '').length === 5;
+    }
+
+    isFormValidAbo() {
+        return this.regex.test(this.creditCard) && this.secretCode.replace(/\s+/g, '').length === 5;
     }
 
     CB_format(CB: HTMLInputElement) {

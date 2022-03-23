@@ -44,7 +44,7 @@
                     </code-input>
                 </div>
                 <div id="ValidFormContent">
-                    <button mat-button type="submit" [disabled]="!isFormValid()">Se connecter</button>
+                    <button mat-button type="submit" [disabled]="!isFormValidAbo()">Se connecter</button>
                 </div>
                 <p (click)="openLoginNoAbo()" class="align"> Je n'ai pas encore de compte </p>
             </form>
@@ -91,7 +91,7 @@
             </ul>
 
             <div id="ValidFormContent">
-                <button mat-button (click)="createLocation()" [disabled]="!isFormValid()">Louer</button>
+                <button mat-button (click)="createLocation()">Louer</button>
             </div>
         </div>
 
