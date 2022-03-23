@@ -43,9 +43,13 @@
                         (codeChanged)="saveSecretCode($event)">
                     </code-input>
                 </div>
+
+                <div *ngIf="isConnexionInvalid()" id="cbWrong">Vos identifiants sont incorrect</div>
+
                 <div id="ValidFormContent">
                     <button mat-button type="submit" [disabled]="!isFormValidAbo()">Se connecter</button>
                 </div>
+
                 <p (click)="openLoginNoAbo()" class="align"> Je n'ai pas encore de compte </p>
             </form>
         </div>

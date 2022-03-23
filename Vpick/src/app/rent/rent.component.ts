@@ -27,7 +27,7 @@ export class RentComponent implements OnInit {
     private regex = new RegExp("\\d{4} \\d{4} \\d{4} \\d{4}");
 
     private client: Personne|null = getClientLS();
-
+    private connexionCorrect: boolean = true;
 
 
   /* Initialisation */
@@ -70,13 +70,16 @@ export class RentComponent implements OnInit {
         // Faire une requete GET :
         this.httpClient.get(this.ConnectionUrl).subscribe(
             data  => {
-                setClientLS(data as Personne);
-                this.client = (data as Personne);
-                console.log(data as Personne);
-                console.log(data);
-                this.numStep = 1;
-                this.progressBar(1);
-                this.getListStation();
+                if(data !== null) {
+                  this.connexionCorrect = true;
+                  setClientLS(data as Personne);
+                  this.client = (data as Personne);
+                  this.numStep = 1;
+                  this.progressBar(1);
+                  this.getListStation();
+                } else {
+                    this.connexionCorrect = false;
+                }
             }
         );
 
@@ -235,6 +238,10 @@ export class RentComponent implements OnInit {
 
     isListOfBornetteValid(): boolean {
         return this.listBornSelected.length > 0 ? true : false;
+    }
+
+    isConnexionInvalid(): boolean {
+        return !this.connexionCorrect;
     }
 
     CB_format(CB: HTMLInputElement) {
