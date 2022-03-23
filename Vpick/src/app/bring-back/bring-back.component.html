@@ -109,12 +109,7 @@
             <h2> Déclarer des vélo cassé : </h2>
             <ul class="velos">
                 <li *ngFor="let i = index; let velo of this.locationSelected.velos">
-                    <p> {{  velo.modele }} </p>
-
-                    <mat-radio-group id="{{ i }}" class="etat-content" aria-label="Etat du vélo">
-                        <mat-radio-button #btnRadio checked value="OK"> OK </mat-radio-button>
-                        <mat-radio-button class="second-radio" value="HS"> HS </mat-radio-button>
-                    </mat-radio-group>
+                    <mat-checkbox (change)="updateVeloHS($event)" value="{{  velo.id }}"> Velo {{  velo.modele.modele }} est HS ? </mat-checkbox>              
                 </li>
             </ul>
 
@@ -125,7 +120,7 @@
         <div id="paiementContent" *ngIf="this.numStep == 5">
             <h2> Paiement : </h2>
             <ul class="paiement">
-                <li *ngFor="let velo of this.locationSelected.velos"> {{  velo.modele }} - {{ velo.modele.coutHoraire }}€/h </li>
+                <li *ngFor="let velo of this.locationSelected.velos"> {{  velo.modele.modele }} - {{ velo.modele.coutHoraire }}€/h <span *ngIf="getVeloHs(velo.id)" id="cbWrong"> (HS) </span> </li>
                 <li> Durée : {{ dureeLocationString(this.locationSelected.dateDebut) }} </li>
                 <li> Prix : {{ getPrixLocation(this.locationSelected.dateDebut) }} €</li>
             </ul>
@@ -137,7 +132,7 @@
                 <div *ngIf="isCreditCardInvalid()" id="cbWrong">Numéro de carte éronnée</div>
             </div>
 
-            <button mat-button (click)="selectPaiement()">Payer</button>
+            <button mat-button (click)="selectPaiement()" [disabled]="isFormPayerValid()">Payer</button>
         </div>
     </div>
 </div>

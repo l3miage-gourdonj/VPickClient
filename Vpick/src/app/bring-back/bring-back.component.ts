@@ -1,10 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
 import { MatDialog } from '@angular/material/dialog';
 import { fromEvent } from 'rxjs';
 import { SignInComponent } from '../sign-in/sign-in.component';
 import { Personne, Sexe, setClientLS, getClientLS } from '../vepickDefinitions'
 import { Bornette, Station, Location, Velo } from "../vepickDefinitions";
+import {  } from '@angular/material/checkbox';
 
 @Component({
     selector: 'app-bring-back',
@@ -24,6 +26,8 @@ export class BringBackComponent implements OnInit {
     
     public locationSelected!: Location;
     public stationsSelected!: Station;
+    public bornettesSelected: Array<number> = [];
+    public veloBroken: Array<number> = [];
 
     public carteBancaire: string = "";
     private secretCode: string = "";
@@ -81,6 +85,7 @@ export class BringBackComponent implements OnInit {
         // Faire une requete GET :
         this.httpClient.get(this.ConnectionUrl).subscribe(
             data  => {
+                /*
                 this.locations = data as Array<Location>;
                 this.numStep = 1;
                 this.progressBar(1);
@@ -88,6 +93,13 @@ export class BringBackComponent implements OnInit {
                 this.numStep = 1;
                 this.progressBar(1);
                 this.getListStation();
+                */
+                console.log(data);
+                if(data !== null) {
+                    this.locations = data as Array<Location>;
+                    this.numStep = 1;
+                    this.progressBar(1);
+                }
             }
         );
 
@@ -104,7 +116,7 @@ export class BringBackComponent implements OnInit {
             data => { this.locations = data as Location[] }
         );
 
-        console.log(this.locations);
+        // console.log(this.locations);
     }
 
     getListStation(): void {
@@ -121,13 +133,9 @@ export class BringBackComponent implements OnInit {
     }
 
     getBornettesFromStation(): Array<Bornette> {
-        console.log(this.stationsSelected);
+        // console.log(this.stationsSelected);
 
         return this.stationsSelected.bornettes;
-    }
-
-    getPaiement(): void {
-
     }
 
 
@@ -148,31 +156,43 @@ export class BringBackComponent implements OnInit {
 
         this.selectBornette(1);
 
-        console.log("Station ", station.id, " - Selectionné !");
+        // console.log("Station ", station.id, " - Selectionné !");
     }
 
     async selectBornette(bornette: number) {
-        console.log(bornette);
+        // console.log(bornette);
 
-        await new Promise(resolve => { setTimeout(resolve, 5000), this.colorStation() }); // 3 sec
+        await new Promise(resolve => { 
+            setTimeout(resolve, 5000), 
+            this.colorStationSeleted() 
+        }); // 5 sec
 
         this.numStep = 4;
         this.progressBar(4);
         // this.getPaiement();
-
     }
 
     selectEtatVelo() {
-        let docVelo = document.getElementsByClassName("etat-content");
-        console.log(docVelo);
+        console.log(this.veloBroken);
 
         this.numStep = 5;
         this.progressBar(5);
-        this.getPaiement();
+        // this.getPaiement();
     }
 
     selectPaiement() {
+        let retourObj = { idlocation: this.locationSelected.id, listeveloHS: this.veloBroken, bornettes: this.bornettesSelected };
 
+        // Générer la requete / URL :
+        this.ConnectionUrl = 'http://localhost:9000/api/vpick/retour/';
+
+        // Faire une requete POST :
+        this.httpClient.post<any>(this.ConnectionUrl, retourObj).subscribe({
+            next: data => {
+                console.log(data);
+            },
+            error: error => { console.error('There was an error!', error); }
+        });
     }
 
     isAlreadyConnected(): boolean {
@@ -187,14 +207,32 @@ export class BringBackComponent implements OnInit {
         document.getElementById("paiementContent")?.setAttribute('style', (stepNum == 4 ? "display:block" : "display:none"));
     }
 
-    colorStation(): void {
+    colorStationSeleted(): void {
         setTimeout(() => {
-            document.getElementsByClassName("bornette")[0].setAttribute('id', "bornetteSelected");
+            let nbVeloARendre:number = this.locationSelected.velos.length;
+            let nbVeloDepose:number = 0;
+            let i:number = 0;
+            let listBornette = this.stationsSelected.bornettes;
+            let nbBornetteTotal = listBornette.length;
+            
+            console.log(this.stationsSelected);
+            
+            while(nbVeloDepose < nbVeloARendre || i < nbBornetteTotal) {
+                if(listBornette[i].etat === "OK" && listBornette[i].velo === null) {
+                    nbVeloDepose++;
+                    this.bornettesSelected.push(listBornette[i].id);
+                    document.getElementsByClassName("bornette")[i].setAttribute('class', "bornette OK selectedBornette");
+                }
+                
+                i++;
+            }
+
+            console.log(this.bornettesSelected);
         }, 1000);
     }
 
     progressBar(stepNum: number) {
-        console.log("num Prec:" + this.numStep + " num Actu:" + stepNum);
+        // console.log("num Prec:" + this.numStep + " num Actu:" + stepNum);
 
         if (this.numStep >= stepNum) {
             let progressStyle = "width:" + String(stepNum * 20) + "%"
@@ -220,13 +258,40 @@ export class BringBackComponent implements OnInit {
         let difDate = new Date().getTime() - new Date(dateD).getTime();
         let minDif = (difDate / (1000 * 3600));
         let roundHeure = Math.ceil(minDif);
-        console.log("roundHeure " + roundHeure);
+        // console.log("roundHeure " + roundHeure);
 
         let prix = 0;
         this.locationSelected.velos.forEach((v:Velo) => prix += v.modele.coutHoraire * roundHeure)
 
         return Math.round(prix*100)/100;
     }
+
+    updateVeloHS(checkBox: MatCheckboxChange) {
+        console.log(checkBox.source.value +" - "+ checkBox.checked);
+
+        let index:number = this.veloBroken.indexOf(parseInt(checkBox.source.value));
+        console.log(index);
+        
+        if(index !== -1 && checkBox.checked === false) {
+            console.log("Supprimer obj");
+            this.veloBroken = this.veloBroken.splice(index,index);
+        }
+        
+        if(index === -1 && checkBox.checked === true) {
+            console.log("ajout");
+            
+            this.veloBroken.push(parseInt(checkBox.source.value))
+        }
+
+        
+        console.log(this.veloBroken);   
+    }
+
+    getVeloHs(id:number) {
+        return this.veloBroken.indexOf(id) === -1 ? false : true;
+    }
+
+    
 
 
 
@@ -263,6 +328,10 @@ export class BringBackComponent implements OnInit {
 
     isFormValidAbo() {
         return this.regex.test(this.carteBancaire) && this.secretCode.replace(/\s+/g, '').length === 5;
+    }
+
+    isFormPayerValid() {
+        return this.clientAbo === true || (this.clientAbo === false && this.carteBancaire.length === 19 && !this.regex.test(this.carteBancaire));
     }
 
     CB_format(CB: HTMLInputElement) {
