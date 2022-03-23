@@ -72,6 +72,8 @@ export class RentComponent implements OnInit {
             data  => {
                 setClientLS(data as Personne);
                 this.client = (data as Personne);
+                console.log(data as Personne);
+                console.log(data);
                 this.numStep = 1;
                 this.progressBar(1);
                 this.getListStation();
