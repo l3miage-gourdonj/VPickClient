@@ -10,7 +10,7 @@ import { MatDialog } from '@angular/material/dialog';
     styleUrls: ['./sign-in.component.scss']
 })
 export class SignInComponent implements OnInit {
-    public creditCard:string = "";
+    public carteBancaire:string = "";
     private secretCode:string = "";
     private ConnectionUrl:string = 'http://localhost:9000/api/vpick';
     private regex = new RegExp("\\d{4} \\d{4} \\d{4} \\d{4}");
@@ -21,11 +21,17 @@ export class SignInComponent implements OnInit {
 
     onSubmit() {
         // Générer la requete / URL :
-        this.ConnectionUrl = 'http://localhost:9000/api/vpick/abo/cb/' + this.creditCard + '/code/' + this.secretCode;
+        this.ConnectionUrl = 'http://localhost:9000/api/vpick/abo/cb/' + this.carteBancaire + '/code/' + this.secretCode;
 
         // Faire une requete GET :
         this.httpClient.get(this.ConnectionUrl).subscribe(
-            data  => { setClientLS(data as Personne); console.log(data); }
+            data  => { 
+                let client:Personne = data as Personne;
+                client.carteBancaire = this.carteBancaire
+
+                setClientLS(client); 
+                console.log(data); 
+            }
         );
 
         this.dialog.closeAll();
@@ -36,19 +42,19 @@ export class SignInComponent implements OnInit {
     }
 
     isCreditCardInvalid() {
-        return this.creditCard.length === 19 && !this.regex.test(this.creditCard);
+        return this.carteBancaire.length === 19 && !this.regex.test(this.carteBancaire);
     }
 
     isFormValid() {
-        return this.regex.test(this.creditCard) && this.secretCode.replace(/\s+/g, '').length === 5;
+        return this.regex.test(this.carteBancaire) && this.secretCode.replace(/\s+/g, '').length === 5;
     }
 
     CB_format(CB: HTMLInputElement) {
-        this.creditCard = CB.value.replace(/\s+/g, '');
-        if (this.creditCard !== null) {
+        this.carteBancaire = CB.value.replace(/\s+/g, '');
+        if (this.carteBancaire !== null) {
             let cpt = 4;
-            while (cpt < this.creditCard.length) {
-                this.creditCard = this.creditCard.slice(0, cpt) + " " + this.creditCard.slice(cpt);
+            while (cpt < this.carteBancaire.length) {
+                this.carteBancaire = this.carteBancaire.slice(0, cpt) + " " + this.carteBancaire.slice(cpt);
                 cpt += 5;
             }
         }

@@ -21,7 +21,7 @@ export class RentComponent implements OnInit {
     public listBornSelected: Array<Bornette> = [];
     public stationsSelected!: Station;
 
-    public creditCard:string = "";
+    public carteBancaire:string = "";
     private secretCode: string = "";
     private ConnectionUrl: string = 'http://localhost:9000/api/vpick';
     private regex = new RegExp("\\d{4} \\d{4} \\d{4} \\d{4}");
@@ -65,15 +65,20 @@ export class RentComponent implements OnInit {
 
     reqClientAbo(): void {
         // Générer la requete / URL :
-        this.ConnectionUrl = 'http://localhost:9000/api/vpick/abo/cb/' + this.creditCard + '/code/' + this.secretCode;
+        this.ConnectionUrl = 'http://localhost:9000/api/vpick/abo/cb/' + this.carteBancaire + '/code/' + this.secretCode;
 
         // Faire une requete GET :
         this.httpClient.get(this.ConnectionUrl).subscribe(
             data  => {
                 if(data !== null) {
                   this.connexionCorrect = true;
-                  setClientLS(data as Personne);
-                  this.client = (data as Personne);
+                  
+                  let client:Personne = data as Personne;
+                  client.carteBancaire = this.carteBancaire
+
+                  setClientLS(client);
+                  this.client = (client);
+
                   this.numStep = 1;
                   this.progressBar(1);
                   this.getListStation();
@@ -160,7 +165,7 @@ export class RentComponent implements OnInit {
         if(this.clientAbo) {
             objLocation = { cbClient: this.client?.carteBancaire, codeClient: this.client?.codeSecret, bornettes: this.listBornSelected.map(b => b.id) };
         } else {
-            objLocation = { cbClient: null, codeClient: null, bornettes: this.listBornSelected.map(b => b.id) };
+            objLocation = { bornettes: this.listBornSelected.map(b => b.id) };
         }
 
         console.log(objLocation);
@@ -183,7 +188,7 @@ export class RentComponent implements OnInit {
     }
 
     isFormValidAbo() {
-        return this.regex.test(this.creditCard) && this.secretCode.replace(/\s+/g, '').length === 5;
+        return this.regex.test(this.carteBancaire) && this.secretCode.replace(/\s+/g, '').length === 5;
     }
 
     openLoginAbo():void {
@@ -233,7 +238,7 @@ export class RentComponent implements OnInit {
     }
 
     isCreditCardInvalid() {
-        return this.creditCard.length === 19 && !this.regex.test(this.creditCard);
+        return this.carteBancaire.length === 19 && !this.regex.test(this.carteBancaire);
     }
 
     isListOfBornetteValid(): boolean {
@@ -245,11 +250,11 @@ export class RentComponent implements OnInit {
     }
 
     CB_format(CB: HTMLInputElement) {
-        this.creditCard = CB.value.replace(/\s+/g, '');
-        if (this.creditCard !== null) {
+        this.carteBancaire = CB.value.replace(/\s+/g, '');
+        if (this.carteBancaire !== null) {
             let cpt = 4;
-            while (cpt < this.creditCard.length) {
-                this.creditCard = this.creditCard.slice(0, cpt) + " " + this.creditCard.slice(cpt);
+            while (cpt < this.carteBancaire.length) {
+                this.carteBancaire = this.carteBancaire.slice(0, cpt) + " " + this.carteBancaire.slice(cpt);
                 cpt += 5;
             }
         }

@@ -25,7 +25,7 @@ export class BringBackComponent implements OnInit {
     public locationSelected!: Location;
     public stationsSelected!: Station;
 
-    public creditCard: string = "";
+    public carteBancaire: string = "";
     private secretCode: string = "";
     private regex = new RegExp("\\d{4} \\d{4} \\d{4} \\d{4}");
 
@@ -73,7 +73,7 @@ export class BringBackComponent implements OnInit {
 
     reqClientAbo(): void {
         // Générer la requete / URL :
-        this.ConnectionUrl = 'http://localhost:9000/api/vpick/abo/cb/' + this.creditCard + '/code/' + this.secretCode;
+        this.ConnectionUrl = 'http://localhost:9000/api/vpick/abo/cb/' + this.carteBancaire + '/code/' + this.secretCode;
 
         // Faire une requete GET :
         this.httpClient.get(this.ConnectionUrl).subscribe(
@@ -249,7 +249,7 @@ export class BringBackComponent implements OnInit {
     }
 
     isCreditCardInvalid() {
-        return this.creditCard.length === 19 && !this.regex.test(this.creditCard);
+        return this.carteBancaire.length === 19 && !this.regex.test(this.carteBancaire);
     }
 
     isFormValidNoAbo() {
@@ -257,15 +257,15 @@ export class BringBackComponent implements OnInit {
     }
 
     isFormValidAbo() {
-        return this.regex.test(this.creditCard) && this.secretCode.replace(/\s+/g, '').length === 5;
+        return this.regex.test(this.carteBancaire) && this.secretCode.replace(/\s+/g, '').length === 5;
     }
 
     CB_format(CB: HTMLInputElement) {
-        this.creditCard = CB.value.replace(/\s+/g, '');
-        if (this.creditCard !== null) {
+        this.carteBancaire = CB.value.replace(/\s+/g, '');
+        if (this.carteBancaire !== null) {
             let cpt = 4;
-            while (cpt < this.creditCard.length) {
-                this.creditCard = this.creditCard.slice(0, cpt) + " " + this.creditCard.slice(cpt);
+            while (cpt < this.carteBancaire.length) {
+                this.carteBancaire = this.carteBancaire.slice(0, cpt) + " " + this.carteBancaire.slice(cpt);
                 cpt += 5;
             }
         }
