@@ -30,7 +30,7 @@ export class RentComponent implements OnInit {
 
 
 
-  /* Initialisation */  
+  /* Initialisation */
     constructor(private httpClient: HttpClient, public dialog: MatDialog) { }
 
     ngOnInit(): void {
@@ -49,7 +49,7 @@ export class RentComponent implements OnInit {
             this.getListStation();
         } else {
             this.numStep = 0;
-            this.progressBar(0);     
+            this.progressBar(0);
         }
     }
 
@@ -69,7 +69,7 @@ export class RentComponent implements OnInit {
 
         // Faire une requete GET :
         this.httpClient.get(this.ConnectionUrl).subscribe(
-            data  => { 
+            data  => {
                 setClientLS(data as Personne);
                 this.client = (data as Personne);
                 this.numStep = 1;
@@ -90,14 +90,14 @@ export class RentComponent implements OnInit {
             data => { this.stations = data as Station[]; }
         );
     }
-    
+
     getBornettesFromStation(): Array<Bornette> {
         return this.stationsSelected.bornettes;
     }
 
     getPrixLocationParHeure() {
         let prixParH:number = 0.0;
-        this.listBornSelected.forEach((b:Bornette) => { 
+        this.listBornSelected.forEach((b:Bornette) => {
             let v = b.velo;
             if(v !== null) { prixParH += v.modele.coutHoraire; }
         });
@@ -107,8 +107,8 @@ export class RentComponent implements OnInit {
 
     getBornetteSelected(): string {
         let bornettes: string = "[ ";
-        
-        this.listBornSelected.forEach( (b:Bornette, i:number) => { 
+
+        this.listBornSelected.forEach( (b:Bornette, i:number) => {
             bornettes += b.numero;
             if(i+1 !== this.listBornSelected.length) {
                 bornettes += ", ";
@@ -138,7 +138,7 @@ export class RentComponent implements OnInit {
         } else {
             bElem.setAttribute('class', 'bornette OK');
             let index = this.listBornSelected.indexOf(bObj);
-            this.listBornSelected = this.listBornSelected.splice(index,index);            
+            this.listBornSelected = this.listBornSelected.splice(index,index);
         }
     }
 
@@ -151,17 +151,17 @@ export class RentComponent implements OnInit {
         // Générer la requete / URL :
         this.ConnectionUrl = 'http://localhost:9000/api/vpick/location/';
         let objLocation;
-        
+
         if(this.clientAbo) {
-            objLocation = { cbClient: this.client?.carteBanquaire, codeClient: this.client?.codeSecret, bornettes: this.listBornSelected.map(b => b.id) };
+            objLocation = { cbClient: this.client?.carteBancaire, codeClient: this.client?.codeSecret, bornettes: this.listBornSelected.map(b => b.id) };
         } else {
-            objLocation = { cbClient: this.creditCard, codeClient: null, bornettes: this.listBornSelected.map(b => b.id) };
+            objLocation = { cbClient: null, codeClient: null, bornettes: this.listBornSelected.map(b => b.id) };
         }
-        
+
         console.log(objLocation);
         console.log(this.client);
-        
-        
+
+
         // Faire une requete POST :
         this.httpClient.post<any>(this.ConnectionUrl, objLocation).subscribe({
             next: data => { console.log(data); },
@@ -170,9 +170,9 @@ export class RentComponent implements OnInit {
     }
 
 
-    
 
-  /* AUTRE FONCTION */  
+
+  /* AUTRE FONCTION */
     saveSecretCode(codeS: string) {
         this.secretCode = codeS;
     }
@@ -222,7 +222,7 @@ export class RentComponent implements OnInit {
         document.getElementById("bornetteContent")?.setAttribute('style', (stepNum == 2 ? "display:block" : "display:none"));
         document.getElementById("paiementContent")?.setAttribute('style', (stepNum == 3 ? "display:block" : "display:none"));
     }
-    
+
     isAlreadyConnected(): boolean {
         return getClientLS() !== null ? true : false;
     }
@@ -231,7 +231,7 @@ export class RentComponent implements OnInit {
         return this.creditCard.length === 19 && !this.regex.test(this.creditCard);
     }
 
-    isListOfBornetteValid(): boolean {        
+    isListOfBornetteValid(): boolean {
         return this.listBornSelected.length > 0 ? true : false;
     }
 

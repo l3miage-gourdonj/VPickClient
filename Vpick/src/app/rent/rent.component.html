@@ -21,24 +21,24 @@
                 <div id="ValidFormContent">
                     <button mat-button type="submit">Commencer</button>
                 </div>
-                
+
                 <p (click)="openLoginAbo()" class="align"> J'ai déjà un compte </p>
             </form>
 
             <form id="Abo" *ngIf="this.clientAbo == true" (ngSubmit)="reqClientAbo()">
                 <div id="creditCardContent">
                     <p>Votre numéro cb :</p>
-                    <input #card name="creditCardInput" 
-                        [ngModel]="creditCard" 
+                    <input #card name="creditCardInput"
+                        [ngModel]="creditCard"
                         (ngModelChange)="CB_format(card)"
                         placeholder="1234 1234 1234 1234" type="tel" [maxlength]="19">
                     <div *ngIf="isCreditCardInvalid()" id="cbWrong">Numéro de carte éronnée</div>
                 </div>
-            
+
                 <div id="secretCodeContent">
                     <p>Votre code secret :</p>
-                    <code-input #codeSecret name="secretCodeInput" 
-                        [isCodeHidden]="false" 
+                    <code-input #codeSecret name="secretCodeInput"
+                        [isCodeHidden]="false"
                         [codeLength]="5"
                         (codeChanged)="saveSecretCode($event)">
                     </code-input>
@@ -65,10 +65,10 @@
         <div id="bornetteContent" *ngIf="this.numStep == 2">
             <h2> Selectionne une bornette : </h2>
             <ul class="bornettes">
-                <li class="bornette" 
+                <li class="bornette"
                     #b
-                    [ngClass]="bornette.etat" 
-                    (click)="bornette.etat === 'OK' ? selectBornette(b, bornette) : null" 
+                    [ngClass]="bornette.etat"
+                    (click)="bornette.etat === 'OK' ? selectBornette(b, bornette) : null"
                     *ngFor="let bornette of getBornettesFromStation()"
                 >
                     <span> {{ bornette.numero }}°) {{ bornette.velo?.modele?.modele }} - {{ bornette.velo?.modele?.coutHoraire }}€/h </span>
@@ -84,20 +84,11 @@
 
         <div id="recapContent" *ngIf="this.numStep == 3">
             <h2> Récapitulatif : </h2>
-            <ul class="recap"> 
+            <ul class="recap">
                 <li> Bornette : {{ getBornetteSelected() }} </li>
                 <li> Nombre de vélo : {{ this.listBornSelected.length }} </li>
                 <li> Prix par heure : {{ getPrixLocationParHeure() }} €</li>
             </ul>
-
-            <div id="creditCardContent" *ngIf="this.clientAbo === false">
-                <p>Votre numéro cb :</p>
-                <input #card name="creditCardInput" 
-                    [ngModel]="creditCard" 
-                    (ngModelChange)="CB_format(card)"
-                    placeholder="1234 1234 1234 1234" type="tel" [maxlength]="19">
-                <div *ngIf="isCreditCardInvalid()" id="cbWrong">Numéro de carte éronnée</div>
-            </div>
 
             <div id="ValidFormContent">
                 <button mat-button (click)="createLocation()" [disabled]="!isFormValid()">Louer</button>

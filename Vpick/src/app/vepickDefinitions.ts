@@ -5,7 +5,7 @@ export interface Personne {
     adresse: string,
     sexe: Sexe,
     codeSecret: string,
-    carteBanquaire: string,
+    carteBancaire: string,
     dateDebut: Date,
     dateFin: Date,
     creditTemps: number
@@ -39,8 +39,8 @@ export interface Velo {
 }
 
 export interface Modele {
-    id: number, 
-    modele: string, 
+    id: number,
+    modele: string,
     coutHoraire: number
 }
 

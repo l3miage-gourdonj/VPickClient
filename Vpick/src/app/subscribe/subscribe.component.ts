@@ -32,17 +32,17 @@ export class SubscribeComponent implements OnInit {
         this.dateN = new Date(dateN.value);
         let dateDebut = new Date();
         let dateFin = new Date();
-        dateFin.setFullYear(dateDebut.getFullYear() + 1);        
-        
+        dateFin.setFullYear(dateDebut.getFullYear() + 1);
+
         // Générer l'objet de type Personne
         const objClient:Personne = {
-            nom: nom.value.toLowerCase(), 
-            prenom: prenom.value.toLowerCase(), 
-            dateNaissance: this.dateN, 
-            adresse: adresse.value.toLowerCase(), 
+            nom: nom.value.toLowerCase(),
+            prenom: prenom.value.toLowerCase(),
+            dateNaissance: this.dateN,
+            adresse: adresse.value.toLowerCase(),
             sexe: this.sexe,
             codeSecret: this.secretCode,
-            carteBanquaire: CB.value,
+            carteBancaire: CB.value,
             dateDebut: dateDebut,
             dateFin: dateFin,
             creditTemps: 0
@@ -68,12 +68,12 @@ export class SubscribeComponent implements OnInit {
     }
 
     isFormValid(firstN:string, lastN:string, dateB:string, adresse:string) {
-        return this.regex.test(this.creditCard) && 
+        return this.regex.test(this.creditCard) &&
                this.secretCode.replace(/\s+/g, '').length === 5 &&
                firstN.length > 0 &&
                lastN.length > 0 &&
                dateB.length >= "1/1/2022".length && dateB.length <= "12/12/2022".length && // compris entre 8 et 10 inclus
-               adresse.length > 0; 
+               adresse.length > 0;
     }
 
     CB_format(CB: HTMLInputElement) {
