@@ -107,7 +107,7 @@ export class RentComponent implements OnInit {
             if(v !== null) { prixParH += v.modele.coutHoraire; }
         });
 
-        return prixParH;
+        return Math.floor(prixParH);
     }
 
     getBornetteSelected(): string {
