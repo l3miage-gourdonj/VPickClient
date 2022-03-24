@@ -16,6 +16,8 @@ export class SignInComponent implements OnInit {
     private ConnectionUrl:string = 'http://localhost:9000/api/vpick';
     private regex = new RegExp("\\d{4} \\d{4} \\d{4} \\d{4}");
 
+    private connexionCorrect:boolean = true;
+
     constructor(private router: Router, private httpClient: HttpClient, public dialog: MatDialog) { }
 
     ngOnInit(): void { }
@@ -27,17 +29,28 @@ export class SignInComponent implements OnInit {
         // Faire une requete GET :
         this.httpClient.get(this.ConnectionUrl).subscribe(
             data  => { 
-                let client:Personne = data as Personne;
-                client.carteBancaire = this.carteBancaire
+                if(data != null) {
+                    let client:Personne = data as Personne;
+                    console.log(client);                
+                    console.log(this.carteBancaire);
+                    
+                    client.carteBancaire = this.carteBancaire;
 
-                setClientLS(client); 
-                console.log(data); 
+                    setClientLS(client); 
+                    console.log(data); 
 
-                this.router.navigate(['/']);
+                    this.connexionCorrect = true;
+                    this.dialog.closeAll();
+                    this.router.navigate(['/']);
+                } else {
+                    this.connexionCorrect = false;
+                }
             }
         );
+    }
 
-        this.dialog.closeAll();
+    isConnexionInvalid(): boolean {
+        return !this.connexionCorrect;
     }
 
     saveSecretCode(codeS: string) {

@@ -21,4 +21,6 @@
     <div id="ValidFormContent">
         <button mat-button type="submit" [disabled]="!isFormValid()">Se connecter</button>
     </div>
+
+    <div *ngIf="isConnexionInvalid()" id="cbWrong">Vos identifiants sont incorrect</div>
 </form>

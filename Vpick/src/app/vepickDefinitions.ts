@@ -21,7 +21,8 @@ export interface Bornette {
 export interface Station {
     id: number,
     adresse: string,
-    bornettes: Array<Bornette>
+    bornettes: Array<Bornette>,
+    plagesHoraires: Array<PlagesHorraires>
 }
 
 export interface Location {
@@ -45,6 +46,17 @@ export interface Modele {
     coutHoraire: number
 }
 
+export interface PlagesHorraires {
+    heureDebut: string,
+    heureFin: string,
+    statusCourant: StatusCourrant
+}
+
+export enum StatusCourrant {
+    VPLUS = "VPlus",
+    VMOINS = "VMoins",
+    VNUL = "VNul"
+}
 
 export enum Sexe {
     HOMME = "HOMME",
@@ -67,3 +79,6 @@ export function getClientLS(): Personne | null {
 }
 
 
+export function getCurrentPlage():number {
+    return 0;
+}

@@ -349,3 +349,23 @@ color: #db6767;
   padding: 5px;
   height: fit-content;
 }
+
+.VMOINS {
+  border: 2px solid #4B81BD;
+  background-color: #db6767;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.VPLUS {
+  border: 2px solid #4B81BD;
+  background-color: #93dd8a;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+p.reduction {
+  text-align: center;
+  font-weight: bold;
+  color: #93dd8a;
+}

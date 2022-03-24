@@ -2,9 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
 import { MatDialog } from '@angular/material/dialog';
-import { fromEvent } from 'rxjs';
+import { fromEvent, timestamp } from 'rxjs';
 import { SignInComponent } from '../sign-in/sign-in.component';
-import { Personne, Sexe, setClientLS, getClientLS } from '../vepickDefinitions'
+import { Personne, getClientLS, PlagesHorraires, StatusCourrant } from '../vepickDefinitions'
 import { Bornette, Station, Location, Velo } from "../vepickDefinitions";
 import {  } from '@angular/material/checkbox';
 import { Router } from '@angular/router';
@@ -35,6 +35,7 @@ export class BringBackComponent implements OnInit {
     private secretCode: string = "";
     private regex = new RegExp("\\d{4} \\d{4} \\d{4} \\d{4}");
 
+    private useCreditTemps:boolean = false;
     public clientAbo:boolean = true;
     private client: Personne|null = getClientLS();
 
@@ -118,6 +119,23 @@ export class BringBackComponent implements OnInit {
         return this.stationSelected.bornettes;
     }
 
+    getCurrentPlage(station: Station) {
+        // console.log(station.plagesHoraires[0].statusCourant);
+        
+        let currentPlageHorraire!:PlagesHorraires;
+        let currentHours = new Date().getHours(); 
+        let currentMin = new Date().getMinutes(); 
+
+        station.plagesHoraires.forEach(plage => {
+            if((new Date(plage.heureDebut).getHours() <= currentHours && new Date(plage.heureDebut).getMinutes() <= currentMin) && 
+               (new Date(plage.heureFin).getHours() >= currentHours && new Date(plage.heureFin).getMinutes() >= currentMin)) {
+                currentPlageHorraire = plage;
+            }
+        });
+
+        return (currentPlageHorraire.statusCourant != null && currentPlageHorraire.statusCourant != undefined) ? currentPlageHorraire.statusCourant : StatusCourrant.VNUL;
+    }
+
 
 
 
@@ -166,10 +184,47 @@ export class BringBackComponent implements OnInit {
             },
             error: error => { console.error('There was an error!', error); }
         });
-    }
 
-    isAlreadyConnected(): boolean {
-        return getClientLS() !== null ? true : false;
+        if(this.clientAbo) {
+            let creditTempsObj;
+
+            console.log(this.useCreditTemps);
+            
+
+            if(this.useCreditTemps) {
+                creditTempsObj = { creditsTemps: (-this.getNbCredit()+15), cb: this.client?.carteBancaire, code: this.client?.codeSecret };
+            } else {
+                console.log(this.getCurrentPlage(this.stationSelected));
+                console.log(this.getCurrentPlage(this.stationSelected).valueOf());
+                
+                if(this.getCurrentPlage(this.stationSelected) as StatusCourrant == StatusCourrant.VPLUS) {
+                    console.log("Bonus credit");
+                    console.log(this.client);
+                    console.log(this.client?.carteBancaire);
+                    console.log(this.client?.codeSecret);
+                    
+                    creditTempsObj = { creditsTemps: 15, cb: this.client?.carteBancaire, code: this.client?.codeSecret };
+                }
+                
+                creditTempsObj = { creditsTemps: 15, cb: this.client?.carteBancaire, code: this.client?.codeSecret };
+            }
+
+            console.log(creditTempsObj);
+            
+
+            if(creditTempsObj?.creditsTemps !== 0) {
+                // Générer la requete / URL :
+                this.ConnectionUrl = 'http://localhost:9000/api/vpick/abo/credit';
+
+                // Faire une requete POST :
+                this.httpClient.post<any>(this.ConnectionUrl, creditTempsObj).subscribe({
+                    next: data => {
+                        this.router.navigate(['/']);
+                    },
+                    error: error => { console.error('There was an error!', error); }
+                });
+            }
+        }
     }
 
     displayContent(stepNum: number): void {
@@ -239,6 +294,10 @@ export class BringBackComponent implements OnInit {
         let prix = 0;
         this.locationSelected.velos.forEach((v:Velo) => prix += v.modele.coutHoraire * roundHeure)
 
+        if(this.clientAbo) {
+            prix = prix * 70 / 100; // 70% du prix pour un abo
+        }
+
         return Math.round(prix*100)/100;
     }
 
@@ -246,7 +305,6 @@ export class BringBackComponent implements OnInit {
         // console.log(checkBox.source.value +" - "+ checkBox.checked);
 
         let index:number = this.veloBroken.indexOf(parseInt(checkBox.source.value));
-        // console.log(index);
         
         if(index !== -1 && checkBox.checked === false) {
             this.veloBroken.splice(index,1);
@@ -254,10 +312,15 @@ export class BringBackComponent implements OnInit {
         
         if(index === -1 && checkBox.checked === true) {
             this.veloBroken.push(parseInt(checkBox.source.value))
-        }
+        } 
+    }
 
-        
-        // console.log(this.veloBroken);   
+    updateCreditTemps(checkBox: MatCheckboxChange) {
+        if(checkBox.checked === true) {
+            this.useCreditTemps = true;
+        } else {
+            this.useCreditTemps = false;
+        }
     }
 
     getVeloHs(id:number) {
@@ -276,6 +339,18 @@ export class BringBackComponent implements OnInit {
 
         bornettes += " ]";
         return bornettes;
+    }
+
+    returnToHome() {
+        this.router.navigate(['/']);
+    }
+
+    returnToLocation() {
+        this.router.navigate(['/rent']);
+    }
+
+    getNbCredit() {
+        return this.client?.creditTemps != undefined ? this.client?.creditTemps : 0;
     }
 
     
@@ -324,6 +399,10 @@ export class BringBackComponent implements OnInit {
         
         
         return (this.clientAbo === true) || (this.clientAbo === false && this.carteBancaire.length === 19 && !this.regex.test(this.carteBancaire));
+    }
+
+    isAlreadyConnected(): boolean {
+        return getClientLS() !== null ? true : false;
     }
 
     CB_format(CB: HTMLInputElement) {

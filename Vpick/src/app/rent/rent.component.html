@@ -64,6 +64,14 @@
                     <img class="arrow" src="../../assets/arrow-right.png" alt="">
                 </li>
             </ul>
+
+            <div style="text-align: center;" *ngIf="this.stations.length === 0">
+                <span id="cbWrong"> Il n'y a pas de station disponible </span>
+                
+                <div id="ValidFormContent">
+                    <button mat-button (click)="returnToHome()">Page d'accueil</button>
+                </div>
+            </div>
         </div>
 
 

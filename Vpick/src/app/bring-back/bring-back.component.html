@@ -73,6 +73,14 @@
                         <li> Début il y a : {{ dureeLocationString(location.dateDebut) }} </li>
                     </ul>
                 </div>
+
+                <div style="text-align: center;" *ngIf="this.locations.length === 0">
+                    <span id="cbWrong"> Vous n'avez pas de location en cours </span>
+
+                    <div id="ValidFormContent">
+                        <button mat-button (click)="returnToLocation()">Loué un velo</button>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -82,9 +90,18 @@
             <ul class="stations">
                 <li *ngFor="let station of this.stations" class="station" (click)="selectStation(station)">
                     <span> {{ station.adresse }} </span>
+                    <span class="plage" [ngClass]="getCurrentPlage(station)" > {{ getCurrentPlage(station) }} </span>
                     <img class="arrow" src="../../assets/arrow-right.png" alt="">
                 </li>
             </ul>
+
+            <div style="text-align: center;" *ngIf="this.stations.length === 0">
+                <span id="cbWrong"> Il n'y a pas de station disponible </span>
+
+                <div id="ValidFormContent">
+                    <button mat-button (click)="returnToHome()">Page d'accueil</button>
+                </div>
+            </div>
         </div>
 
         <div id="bornetteContent" *ngIf="this.numStep == 3">
@@ -122,12 +139,17 @@
 
 
         <div id="paiementContent" *ngIf="this.numStep == 5">
+            <p *ngIf="this.clientAbo" class="reduction"> 30% de réduction est appliqué </p>
             <h2> Paiement : </h2>
             <ul class="paiement">
                 <li *ngFor="let velo of this.locationSelected.velos"> {{  velo.modele.modele }} - {{ velo.modele.coutHoraire }}€/h <span *ngIf="getVeloHs(velo.id)" id="cbWrong"> (HS) </span> </li>
                 <li> <b> Deposer vélo au bornette : </b> {{ getBornetteSelected() }} </li>
                 <li> <b> Durée : </b> {{ dureeLocationString(this.locationSelected.dateDebut) }} </li>
-                <li> <b> Prix : </b> {{ getPrixLocation(this.locationSelected.dateDebut) }} €</li>
+                <li> <b> Prix : </b> {{ getPrixLocation(this.locationSelected.dateDebut) }} € </li>
+                <li *ngIf="this.clientAbo"> 
+                    <b> Vous avez {{ getNbCredit() }} : </b> 
+                    <mat-checkbox (change)="updateCreditTemps($event)" value="{{  getNbCredit() }}"> Vous voulez les utiliser ? </mat-checkbox>
+                </li>
             </ul>
 
             <div *ngIf="!this.clientAbo" id="creditCardContent">
@@ -136,6 +158,8 @@
                     placeholder="1234 1234 1234 1234" type="tel" [maxlength]="19">
                 <div *ngIf="isCreditCardInvalid()" id="cbWrong">Numéro de carte éronnée</div>
             </div>
+
+            
 
             <div id="ValidFormContent">
                 <button mat-button (click)="selectPaiement()" [disabled]="!isFormPayerValid()">Payer</button>

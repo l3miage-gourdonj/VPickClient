@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { SignInComponent } from '../sign-in/sign-in.component';
-import { Bornette, getClientLS, Personne, setClientLS, Station } from '../vepickDefinitions';
+import { Bornette, getClientLS, Personne, PlagesHorraires, setClientLS, Station, StatusCourrant } from '../vepickDefinitions';
 
 
 @Component({
@@ -184,6 +184,42 @@ export class RentComponent implements OnInit {
             },
             error: error => { console.error('There was an error!', error); }
         });
+
+
+        if(this.clientAbo) {
+            let creditTempsObj;
+
+            console.log(this.getCurrentPlage(this.stationSelected));
+            console.log(this.getCurrentPlage(this.stationSelected).valueOf());
+            
+            if(this.getCurrentPlage(this.stationSelected) as StatusCourrant == StatusCourrant.VMOINS) {
+                console.log("Bonus credit");
+                console.log(this.client);
+                console.log(this.client?.carteBancaire);
+                console.log(this.client?.codeSecret);
+                
+                creditTempsObj = { creditsTemps: 15, cb: this.client?.carteBancaire, code: this.client?.codeSecret };
+            }
+            
+            creditTempsObj = { creditsTemps: 15, cb: this.client?.carteBancaire, code: this.client?.codeSecret };
+            
+
+            console.log(creditTempsObj);
+            
+
+            if(creditTempsObj?.creditsTemps !== 0) {
+                // Générer la requete / URL :
+                this.ConnectionUrl = 'http://localhost:9000/api/vpick/abo/credit';
+
+                // Faire une requete POST :
+                this.httpClient.post<any>(this.ConnectionUrl, creditTempsObj).subscribe({
+                    next: data => {
+                        this.router.navigate(['/']);
+                    },
+                    error: error => { console.error('There was an error!', error); }
+                });
+            }
+        }
     }   
 
     backToStation() {
@@ -195,6 +231,23 @@ export class RentComponent implements OnInit {
 
     returnToHome() {
         this.router.navigate(['/']);
+    }
+
+    getCurrentPlage(station: Station) {
+        // console.log(station.plagesHoraires[0].statusCourant);
+        
+        let currentPlageHorraire!:PlagesHorraires;
+        let currentHours = new Date().getHours(); 
+        let currentMin = new Date().getMinutes(); 
+
+        station.plagesHoraires.forEach(plage => {
+            if((new Date(plage.heureDebut).getHours() <= currentHours && new Date(plage.heureDebut).getMinutes() <= currentMin) && 
+               (new Date(plage.heureFin).getHours() >= currentHours && new Date(plage.heureFin).getMinutes() >= currentMin)) {
+                currentPlageHorraire = plage;
+            }
+        });
+
+        return (currentPlageHorraire.statusCourant != null && currentPlageHorraire.statusCourant != undefined) ? currentPlageHorraire.statusCourant : StatusCourrant.VNUL;
     }
 
 
