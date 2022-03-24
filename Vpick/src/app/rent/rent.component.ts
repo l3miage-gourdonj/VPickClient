@@ -19,7 +19,7 @@ export class RentComponent implements OnInit {
     public stations: Array<Station> = [];
     public locations: Array<Location> = [];
     public listBornSelected: Array<Bornette> = [];
-    public stationsSelected!: Station;
+    public stationSelected!: Station;
 
     public carteBancaire:string = "";
     public secretCode: string = "";
@@ -102,7 +102,7 @@ export class RentComponent implements OnInit {
     }
 
     getBornettesFromStation(): Array<Bornette> {
-        return this.stationsSelected.bornettes;
+        return this.stationSelected.bornettes;
     }
 
     getPrixLocationParHeure() {
@@ -134,7 +134,7 @@ export class RentComponent implements OnInit {
 
   /* ACTION - CHANGEMENT CONTENUE */
     selectStation(station: Station) {
-        this.stationsSelected = station;
+        this.stationSelected = station;
         this.numStep = 2;
         this.progressBar(2);
 
@@ -183,6 +183,13 @@ export class RentComponent implements OnInit {
             },
             error: error => { console.error('There was an error!', error); }
         });
+    }   
+
+    backToStation() {
+        this.listBornSelected = [];
+        this.numStep = 1;
+        this.progressBar(1);
+        this.getListStation();
     }
 
 

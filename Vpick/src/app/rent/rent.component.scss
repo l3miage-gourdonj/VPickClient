@@ -337,3 +337,22 @@ code-input {
 #cbWrong {
   color: #db6767;
 }
+
+
+img#back {
+  width: 40px;
+  height: auto;
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+div#topBornette {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#stationAdresse { 
+  font-weight: bold;
+}

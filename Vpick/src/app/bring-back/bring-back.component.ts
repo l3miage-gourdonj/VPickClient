@@ -184,7 +184,7 @@ export class BringBackComponent implements OnInit {
         let retourObj = { idlocation: this.locationSelected.id, listeveloHS: this.veloBroken, bornettes: this.bornettesSelected };
 
         // Générer la requete / URL :
-        this.ConnectionUrl = 'http://localhost:9000/api/vpick/retour/';
+        this.ConnectionUrl = 'http://localhost:9000/api/vpick/retour';
 
         // Faire une requete POST :
         this.httpClient.post<any>(this.ConnectionUrl, retourObj).subscribe({

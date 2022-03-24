@@ -68,6 +68,7 @@
 
 
         <div id="bornetteContent" *ngIf="this.numStep == 2">
+            <div id="topBornette"> <img id="back" src="../../assets/arrow-back.png" alt="" (click)="backToStation()"> <p id="stationAdresse"> {{ this.stationSelected.adresse }} </p> </div>
             <h2> Selectionne une bornette : </h2>
             <ul class="bornettes">
                 <li class="bornette"
