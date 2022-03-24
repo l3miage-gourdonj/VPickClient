@@ -109,7 +109,7 @@ export class BringBackComponent implements OnInit {
 
     getLocation(): void {
         // Générer la requete / URL :
-        this.ConnectionUrl = 'http://localhost:9000/api/vpick/location/list/';
+        this.ConnectionUrl = 'http://localhost:9000/api/vpick/location/';
 
         // Requette GET : liste bornette
         this.httpClient.get(this.ConnectionUrl).subscribe(
