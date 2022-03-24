@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { MatRadioButton } from '@angular/material/radio';
 import { Personne, Sexe, setClientLS } from '../vepickDefinitions'
-import {Router, ActivatedRoute } from '@angular/router';
+import {Router } from '@angular/router';
 
 @Component({
   selector: 'app-subscribe',
@@ -54,7 +54,7 @@ export class SubscribeComponent implements OnInit {
 
         // Faire une requete POST :
         this.httpClient.post<any>(this.ConnectionUrl, objClient).subscribe({
-            next: data => { if(data as Boolean === true) { setClientLS(objClient); this.router.navigate(['/']) } },
+            next: data => { if(data as Boolean === true) { setClientLS(objClient); this.router.navigate(['/']); } },
             error: error => { console.error('There was an error!', error); }
         });
     }

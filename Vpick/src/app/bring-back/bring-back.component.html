@@ -88,6 +88,7 @@
         </div>
 
         <div id="bornetteContent" *ngIf="this.numStep == 3">
+            <div id="topBornette"> <p id="stationAdresse"> {{ this.stationSelected.adresse }} </p> </div>
             <h2> Selectionne une bornette : </h2>
             <ul class="bornettes">
                 <li class="bornette"
@@ -113,7 +114,10 @@
                 </li>
             </ul>
 
-            <button mat-button (click)="selectEtatVelo()">Déclarer</button>
+            
+            <div id="ValidFormContent">
+                <button mat-button (click)="selectEtatVelo()">Déclarer</button>
+            </div>
         </div>
 
 
@@ -121,8 +125,9 @@
             <h2> Paiement : </h2>
             <ul class="paiement">
                 <li *ngFor="let velo of this.locationSelected.velos"> {{  velo.modele.modele }} - {{ velo.modele.coutHoraire }}€/h <span *ngIf="getVeloHs(velo.id)" id="cbWrong"> (HS) </span> </li>
-                <li> Durée : {{ dureeLocationString(this.locationSelected.dateDebut) }} </li>
-                <li> Prix : {{ getPrixLocation(this.locationSelected.dateDebut) }} €</li>
+                <li> <b> Deposer vélo au bornette : </b> {{ getBornetteSelected() }} </li>
+                <li> <b> Durée : </b> {{ dureeLocationString(this.locationSelected.dateDebut) }} </li>
+                <li> <b> Prix : </b> {{ getPrixLocation(this.locationSelected.dateDebut) }} €</li>
             </ul>
 
             <div *ngIf="!this.clientAbo" id="creditCardContent">
@@ -132,7 +137,9 @@
                 <div *ngIf="isCreditCardInvalid()" id="cbWrong">Numéro de carte éronnée</div>
             </div>
 
-            <button mat-button (click)="selectPaiement()" [disabled]="isFormPayerValid()">Payer</button>
+            <div id="ValidFormContent">
+                <button mat-button (click)="selectPaiement()" [disabled]="!isFormPayerValid()">Payer</button>
+            </div>
         </div>
     </div>
 </div>

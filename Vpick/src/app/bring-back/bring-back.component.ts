@@ -7,6 +7,7 @@ import { SignInComponent } from '../sign-in/sign-in.component';
 import { Personne, Sexe, setClientLS, getClientLS } from '../vepickDefinitions'
 import { Bornette, Station, Location, Velo } from "../vepickDefinitions";
 import {  } from '@angular/material/checkbox';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-bring-back',
@@ -25,8 +26,9 @@ export class BringBackComponent implements OnInit {
     public locations: Array<Location> = [];
     
     public locationSelected!: Location;
-    public stationsSelected!: Station;
+    public stationSelected!: Station;
     public bornettesSelected: Array<number> = [];
+    public bornettesNumeoSelected: Array<number> = [];
     public veloBroken: Array<number> = [];
 
     public carteBancaire: string = "";
@@ -36,12 +38,12 @@ export class BringBackComponent implements OnInit {
     public clientAbo:boolean = true;
     private client: Personne|null = getClientLS();
 
-    constructor(private httpClient: HttpClient, public dialog: MatDialog) { }
+    constructor(private router: Router, private httpClient: HttpClient, public dialog: MatDialog) { }
 
     ngOnInit(): void {
         this.stepsElem = document.getElementsByClassName('step');
         let len = document.getElementsByClassName('step').length;
-        console.log(len);
+        // console.log(len);
 
         for (let i = 0; i < len; i++) {
             let stepElem: Element = this.stepsElem[i];
@@ -49,7 +51,11 @@ export class BringBackComponent implements OnInit {
         }
 
         if (this.isAlreadyConnected()) {
-            this.getLocation();
+            let client = getClientLS();
+            client?.carteBancaire != null ? this.carteBancaire = client.carteBancaire : this.carteBancaire = "";
+            client?.codeSecret != null ? this.secretCode = client.codeSecret : this.secretCode = "";
+            this.reqClientAbo();
+
             this.numStep = 1;
             this.progressBar(1);
         } else {
@@ -66,7 +72,7 @@ export class BringBackComponent implements OnInit {
         // Faire une requete GET :
         this.httpClient.get(this.ConnectionUrl).subscribe(
             data => {
-                console.log(data);
+                // console.log(data);
                 if(data !== null) {
                     this.locations = [data as Location];
                     this.numStep = 1;
@@ -85,16 +91,6 @@ export class BringBackComponent implements OnInit {
         // Faire une requete GET :
         this.httpClient.get(this.ConnectionUrl).subscribe(
             data  => {
-                /*
-                this.locations = data as Array<Location>;
-                this.numStep = 1;
-                this.progressBar(1);
-
-                this.numStep = 1;
-                this.progressBar(1);
-                this.getListStation();
-                */
-                console.log(data);
                 if(data !== null) {
                     this.locations = data as Array<Location>;
                     this.numStep = 1;
@@ -103,20 +99,9 @@ export class BringBackComponent implements OnInit {
             }
         );
 
+        this.clientAbo = true;
+
         // this.dialog.closeAll();
-    }
-
-
-    getLocation(): void {
-        // Générer la requete / URL :
-        this.ConnectionUrl = 'http://localhost:9000/api/vpick/location/';
-
-        // Requette GET : liste bornette
-        this.httpClient.get(this.ConnectionUrl).subscribe(
-            data => { this.locations = data as Location[] }
-        );
-
-        // console.log(this.locations);
     }
 
     getListStation(): void {
@@ -125,17 +110,12 @@ export class BringBackComponent implements OnInit {
 
         // Requette GET : liste bornette
         this.httpClient.get(this.ConnectionUrl).subscribe(
-            data => { this.stations = data as Station[]; }
+            data => { this.stations = data as Station[]; console.log( this.stations ); }
         );
-
-        // this.stations = [{ id: 1, adresse: 'Victor Hugo', bornettes: [{ numero: 1, velo: null, etat: 'OK'}]}, { id: 1, adresse: 'Champ Elysée' , bornettes: []}, { id: 1, adresse: 'Concorde' , bornettes: []}];
-        // console.log(this.stations);
     }
 
     getBornettesFromStation(): Array<Bornette> {
-        // console.log(this.stationsSelected);
-
-        return this.stationsSelected.bornettes;
+        return this.stationSelected.bornettes;
     }
 
 
@@ -150,13 +130,11 @@ export class BringBackComponent implements OnInit {
     }
 
     selectStation(station: Station) {
-        this.stationsSelected = station;
+        this.stationSelected = station;
         this.numStep = 3;
         this.progressBar(3);
 
         this.selectBornette(1);
-
-        // console.log("Station ", station.id, " - Selectionné !");
     }
 
     async selectBornette(bornette: number) {
@@ -169,27 +147,22 @@ export class BringBackComponent implements OnInit {
 
         this.numStep = 4;
         this.progressBar(4);
-        // this.getPaiement();
     }
-
+    
     selectEtatVelo() {
-        console.log(this.veloBroken);
-
         this.numStep = 5;
         this.progressBar(5);
-        // this.getPaiement();
     }
 
     selectPaiement() {
-        let retourObj = { idlocation: this.locationSelected.id, listeveloHS: this.veloBroken, bornettes: this.bornettesSelected };
-
+        let retourObj = { idlocation: this.locationSelected.id, listeveloHS: this.veloBroken, bornettes: this.bornettesSelected };        
         // Générer la requete / URL :
-        this.ConnectionUrl = 'http://localhost:9000/api/vpick/retour';
+        this.ConnectionUrl = 'http://localhost:9000/api/vpick/location/retour';
 
         // Faire une requete POST :
         this.httpClient.post<any>(this.ConnectionUrl, retourObj).subscribe({
             next: data => {
-                console.log(data);
+                this.router.navigate(['/']);
             },
             error: error => { console.error('There was an error!', error); }
         });
@@ -212,15 +185,18 @@ export class BringBackComponent implements OnInit {
             let nbVeloARendre:number = this.locationSelected.velos.length;
             let nbVeloDepose:number = 0;
             let i:number = 0;
-            let listBornette = this.stationsSelected.bornettes;
+            let listBornette = this.stationSelected.bornettes;
             let nbBornetteTotal = listBornette.length;
             
-            console.log(this.stationsSelected);
+            // console.log(this.stationSelected);
+            // console.log("nbVeloARendre: "+nbVeloARendre);
             
-            while(nbVeloDepose < nbVeloARendre || i < nbBornetteTotal) {
+            
+            while(nbVeloDepose < nbVeloARendre) {
                 if(listBornette[i].etat === "OK" && listBornette[i].velo === null) {
                     nbVeloDepose++;
                     this.bornettesSelected.push(listBornette[i].id);
+                    this.bornettesNumeoSelected.push(listBornette[i].numero);
                     document.getElementsByClassName("bornette")[i].setAttribute('class', "bornette OK selectedBornette");
                 }
                 
@@ -267,28 +243,39 @@ export class BringBackComponent implements OnInit {
     }
 
     updateVeloHS(checkBox: MatCheckboxChange) {
-        console.log(checkBox.source.value +" - "+ checkBox.checked);
+        // console.log(checkBox.source.value +" - "+ checkBox.checked);
 
         let index:number = this.veloBroken.indexOf(parseInt(checkBox.source.value));
-        console.log(index);
+        // console.log(index);
         
         if(index !== -1 && checkBox.checked === false) {
-            console.log("Supprimer obj");
-            this.veloBroken = this.veloBroken.splice(index,index);
+            this.veloBroken.splice(index,1);
         }
         
         if(index === -1 && checkBox.checked === true) {
-            console.log("ajout");
-            
             this.veloBroken.push(parseInt(checkBox.source.value))
         }
 
         
-        console.log(this.veloBroken);   
+        // console.log(this.veloBroken);   
     }
 
     getVeloHs(id:number) {
         return this.veloBroken.indexOf(id) === -1 ? false : true;
+    }
+
+    getBornetteSelected(): string {
+        let bornettes: string = "[ ";
+
+        this.bornettesNumeoSelected.forEach( (b:number, i:number) => {
+            bornettes += b;
+            if(i+1 !== this.bornettesNumeoSelected.length) {
+                bornettes += ", ";
+            }
+        });
+
+        bornettes += " ]";
+        return bornettes;
     }
 
     
@@ -331,7 +318,12 @@ export class BringBackComponent implements OnInit {
     }
 
     isFormPayerValid() {
-        return this.clientAbo === true || (this.clientAbo === false && this.carteBancaire.length === 19 && !this.regex.test(this.carteBancaire));
+        // console.log(this.clientAbo);
+        // console.log("Verif: "+(this.clientAbo === true));
+        // console.log("Verif Tot: "+(this.clientAbo === true) || (this.clientAbo === false && this.carteBancaire.length === 19 && !this.regex.test(this.carteBancaire)));
+        
+        
+        return (this.clientAbo === true) || (this.clientAbo === false && this.carteBancaire.length === 19 && !this.regex.test(this.carteBancaire));
     }
 
     CB_format(CB: HTMLInputElement) {

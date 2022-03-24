@@ -321,6 +321,7 @@ code-input {
 
 .selectedBornette {
   border: 2px solid #4B81BD;
+  background-color: #91d6f1d7;
 }
 
 .align {
@@ -334,4 +335,17 @@ text-decoration: underline;
 
 #cbWrong {
 color: #db6767;
+}
+
+#topBornette {
+  margin-left: 60%;
+}
+#stationAdresse {
+  text-align: end;
+  font-weight: bold;
+}
+
+.paiement > li {
+  padding: 5px;
+  height: fit-content;
 }

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Personne, Sexe, setClientLS } from '../vepickDefinitions'
 import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -15,7 +16,7 @@ export class SignInComponent implements OnInit {
     private ConnectionUrl:string = 'http://localhost:9000/api/vpick';
     private regex = new RegExp("\\d{4} \\d{4} \\d{4} \\d{4}");
 
-    constructor(private httpClient: HttpClient, public dialog: MatDialog) { }
+    constructor(private router: Router, private httpClient: HttpClient, public dialog: MatDialog) { }
 
     ngOnInit(): void { }
 
@@ -31,6 +32,8 @@ export class SignInComponent implements OnInit {
 
                 setClientLS(client); 
                 console.log(data); 
+
+                this.router.navigate(['/']);
             }
         );
 

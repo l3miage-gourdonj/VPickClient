@@ -94,9 +94,9 @@
         <div id="recapContent" *ngIf="this.numStep == 3">
             <h2> Récapitulatif : </h2>
             <ul class="recap">
-                <li> Bornette : {{ getBornetteSelected() }} </li>
-                <li> Nombre de vélo : {{ this.listBornSelected.length }} </li>
-                <li> Prix par heure : {{ getPrixLocationParHeure() }} €</li>
+                <li> <b> Bornette : </b> {{ getBornetteSelected() }} </li>
+                <li> <b> Nombre de vélo : </b> {{ this.listBornSelected.length }} </li>
+                <li> <b> Prix par heure : </b> {{ getPrixLocationParHeure() }} €</li>
             </ul>
 
             <div id="ValidFormContent">
@@ -109,6 +109,10 @@
             <div *ngIf="this.secretCode !== null" > 
                 <h2 *ngIf="this.clientAbo === false"> Votre code secret : {{ this.secretCode }} </h2>
                 <h2>Bonne route !</h2> 
+
+                <div id="ValidFormContent">
+                    <button mat-button (click)="returnToHome()" [disabled]="!isListOfBornetteValid()">Page d'accueil</button>
+                </div>
             </div>
             
         </div>

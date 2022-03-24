@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { SignInComponent } from '../sign-in/sign-in.component';
 import { Bornette, getClientLS, Personne, setClientLS, Station } from '../vepickDefinitions';
 
@@ -31,7 +32,7 @@ export class RentComponent implements OnInit {
 
 
   /* Initialisation */
-    constructor(private httpClient: HttpClient, public dialog: MatDialog) { }
+    constructor(private router: Router, private httpClient: HttpClient, public dialog: MatDialog) { }
 
     ngOnInit(): void {
         this.stepsElem = document.getElementsByClassName('step');
@@ -190,6 +191,10 @@ export class RentComponent implements OnInit {
         this.numStep = 1;
         this.progressBar(1);
         this.getListStation();
+    }
+
+    returnToHome() {
+        this.router.navigate(['/']);
     }
 
 
