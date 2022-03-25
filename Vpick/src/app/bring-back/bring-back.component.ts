@@ -4,7 +4,7 @@ import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
 import { MatDialog } from '@angular/material/dialog';
 import { fromEvent, timestamp } from 'rxjs';
 import { SignInComponent } from '../sign-in/sign-in.component';
-import { Personne, getClientLS, PlagesHorraires, StatusCourrant } from '../vepickDefinitions'
+import { Personne, getClientLS, PlagesHorraires, StatusCourrant, setClientLS } from '../vepickDefinitions'
 import { Bornette, Station, Location, Velo } from "../vepickDefinitions";
 import {  } from '@angular/material/checkbox';
 import { Router } from '@angular/router';
@@ -111,7 +111,9 @@ export class BringBackComponent implements OnInit {
 
         // Requette GET : liste bornette
         this.httpClient.get(this.ConnectionUrl).subscribe(
-            data => { this.stations = data as Station[]; console.log( this.stations ); }
+            data => { 
+                this.stations = data as Station[]; console.log( this.stations ); 
+            }
         );
     }
 
@@ -119,7 +121,7 @@ export class BringBackComponent implements OnInit {
         return this.stationSelected.bornettes;
     }
 
-    getCurrentPlage(station: Station) {
+    getCurrentPlage(station: Station) :StatusCourrant {
         // console.log(station.plagesHoraires[0].statusCourant);
         
         let currentPlageHorraire!:PlagesHorraires;
@@ -190,24 +192,27 @@ export class BringBackComponent implements OnInit {
 
             console.log(this.useCreditTemps);
             
+            this.client = getClientLS();
 
             if(this.useCreditTemps) {
-                creditTempsObj = { creditsTemps: (-this.getNbCredit()+15), cb: this.client?.carteBancaire, code: this.client?.codeSecret };
+                creditTempsObj = { creditsTemps: ((-this.getNbCredit())+15), cb: this.client?.carteBancaire, code: this.client?.codeSecret };
+                if(this.client != null) { this.client.creditTemps = (-this.getNbCredit())+ 15; setClientLS(this.client); }
             } else {
                 console.log(this.getCurrentPlage(this.stationSelected));
                 console.log(this.getCurrentPlage(this.stationSelected).valueOf());
-                
-                if(this.getCurrentPlage(this.stationSelected) as StatusCourrant == StatusCourrant.VPLUS) {
+
+                if(this.getCurrentPlage(this.stationSelected) === StatusCourrant.VPLUS) {
                     console.log("Bonus credit");
                     console.log(this.client);
                     console.log(this.client?.carteBancaire);
                     console.log(this.client?.codeSecret);
                     
                     creditTempsObj = { creditsTemps: 15, cb: this.client?.carteBancaire, code: this.client?.codeSecret };
+                    if(this.client != null) { this.client.creditTemps += 15; setClientLS(this.client); }
                 }
-                
-                creditTempsObj = { creditsTemps: 15, cb: this.client?.carteBancaire, code: this.client?.codeSecret };
             }
+
+            
 
             console.log(creditTempsObj);
             
@@ -287,9 +292,18 @@ export class BringBackComponent implements OnInit {
 
     getPrixLocation(dateD: string): number {
         let difDate = new Date().getTime() - new Date(dateD).getTime();
-        let minDif = (difDate / (1000 * 3600));
-        let roundHeure = Math.ceil(minDif);
-        // console.log("roundHeure " + roundHeure);
+        let minDif = Math.round( (difDate / (1000 * 3600))*100 )/100;
+        let roundHeure = 0;
+
+        if(this.useCreditTemps) {
+            console.log(minDif);            
+            console.log("crdit :"+(this.getNbCredit()*100/60)/100);
+            
+            roundHeure = Math.ceil(minDif - (this.getNbCredit()*100/60)/100);                                                                        
+        } else {
+            roundHeure = Math.ceil(minDif);
+        }
+        console.log("roundHeure " + roundHeure);
 
         let prix = 0;
         this.locationSelected.velos.forEach((v:Velo) => prix += v.modele.coutHoraire * roundHeure)

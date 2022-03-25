@@ -61,6 +61,7 @@
             <ul class="stations">
                 <li *ngFor="let station of this.stations" class="station" (click)="selectStation(station)">
                     <span> {{ station.adresse }} </span>
+                    <span class="plage" [ngClass]="getCurrentPlage(station)" > {{ getCurrentPlage(station) }} </span>
                     <img class="arrow" src="../../assets/arrow-right.png" alt="">
                 </li>
             </ul>

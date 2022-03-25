@@ -53,9 +53,9 @@ export interface PlagesHorraires {
 }
 
 export enum StatusCourrant {
-    VPLUS = "VPlus",
-    VMOINS = "VMoins",
-    VNUL = "VNul"
+    VPLUS = "VPLUS",
+    VMOINS = "VMOINS",
+    VNUL = "VNUL"
 }
 
 export enum Sexe {
