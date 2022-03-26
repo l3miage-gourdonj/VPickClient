@@ -188,27 +188,37 @@ export class BringBackComponent implements OnInit {
         });
 
         if(this.clientAbo) {
-            let creditTempsObj;
-
-            console.log(this.useCreditTemps);
-            
+            let creditTempsObj;            
             this.client = getClientLS();
 
+            console.log(this.useCreditTemps);
+
             if(this.useCreditTemps) {
-                creditTempsObj = { creditsTemps: ((-this.getNbCredit())+15), cb: this.client?.carteBancaire, code: this.client?.codeSecret };
-                if(this.client != null) { this.client.creditTemps = (-this.getNbCredit())+ 15; setClientLS(this.client); }
+                if(this.getCurrentPlage(this.stationSelected) === StatusCourrant.VPLUS) {
+                    creditTempsObj = { creditsTemps: ( (-1*this.getNbCredit()) + 15), cb: this.client?.carteBancaire, code: this.client?.codeSecret };
+
+                    if(this.client != null) { 
+                        this.client.creditTemps = 15; 
+                        setClientLS(this.client);
+                    }
+                } else {
+                    creditTempsObj = { creditsTemps: (-1*this.getNbCredit()), cb: this.client?.carteBancaire, code: this.client?.codeSecret };
+
+                    if(this.client != null) { 
+                        this.client.creditTemps = 0; 
+                        setClientLS(this.client);
+                    }
+                }                
             } else {
                 console.log(this.getCurrentPlage(this.stationSelected));
-                console.log(this.getCurrentPlage(this.stationSelected).valueOf());
 
                 if(this.getCurrentPlage(this.stationSelected) === StatusCourrant.VPLUS) {
-                    console.log("Bonus credit");
-                    console.log(this.client);
-                    console.log(this.client?.carteBancaire);
-                    console.log(this.client?.codeSecret);
-                    
                     creditTempsObj = { creditsTemps: 15, cb: this.client?.carteBancaire, code: this.client?.codeSecret };
-                    if(this.client != null) { this.client.creditTemps += 15; setClientLS(this.client); }
+
+                    if(this.client != null) { 
+                        this.client.creditTemps += 15; 
+                        setClientLS(this.client); 
+                    }
                 }
             }
 

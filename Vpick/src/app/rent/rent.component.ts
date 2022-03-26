@@ -199,15 +199,20 @@ export class RentComponent implements OnInit {
                 console.log(this.client?.codeSecret);
                 
                 creditTempsObj = { creditsTemps: 15, cb: this.client?.carteBancaire, code: this.client?.codeSecret };
+
+                this.client = getClientLS();
+                if(this.client != null) { 
+                    this.client.creditTemps += 15;
+                    setClientLS(this.client);
+                }
+            } else {
+                creditTempsObj = { creditsTemps: 0, cb: null, code: null };
             }
-            
-            creditTempsObj = { creditsTemps: 15, cb: this.client?.carteBancaire, code: this.client?.codeSecret };
-            
 
             console.log(creditTempsObj);
             
 
-            if(creditTempsObj?.creditsTemps !== 0) {
+            if( creditTempsObj?.creditsTemps !== 0) {
                 // Générer la requete / URL :
                 this.ConnectionUrl = 'http://localhost:9000/api/vpick/abo/credit';
 
