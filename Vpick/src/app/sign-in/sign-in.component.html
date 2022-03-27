@@ -7,7 +7,7 @@
             [ngModel]="carteBancaire" 
             (ngModelChange)="CB_format(card)"
             placeholder="1234 1234 1234 1234" type="tel" [maxlength]="19">
-        <div *ngIf="isCreditCardInvalid()" id="cbWrong">Numéro de carte bleue est éronnée</div>
+        <div *ngIf="isCreditCardInvalid()" id="cbWrong">Numéro de carte bleue est eronnée</div>
     </div>
 
     <div id="secretCodeContent">
