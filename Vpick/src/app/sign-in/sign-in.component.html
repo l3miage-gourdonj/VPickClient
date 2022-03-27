@@ -1,6 +1,6 @@
 <h1>Connexion Abonné</h1>
 
-<form id="Content" (ngSubmit)="onSubmit()">
+<form id="Content" (ngSubmit)="requeteClientAbo()">
     <div id="creditCardContent">
         <p>Votre numéro cb :</p>
         <input #card name="creditCardInput" 
@@ -15,7 +15,7 @@
         <code-input #codeSecret name="secretCodeInput" 
             [isCodeHidden]="false" 
             [codeLength]="5"
-            (codeChanged)="saveSecretCode($event)">
+            (codeChanged)="updateSecretCode($event)">
         </code-input>
     </div>
     <div id="ValidFormContent">

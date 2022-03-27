@@ -13,7 +13,6 @@ import { Router } from '@angular/router';
 export class SignInComponent implements OnInit {
     public carteBancaire:string = "";
     private secretCode:string = "";
-    private ConnectionUrl:string = 'http://localhost:9000/api/vpick';
     private regex = new RegExp("\\d{4} \\d{4} \\d{4} \\d{4}");
 
     private connexionCorrect:boolean = true;
@@ -22,22 +21,22 @@ export class SignInComponent implements OnInit {
 
     ngOnInit(): void { }
 
-    onSubmit() {
+
+  /* Requete HTTP */
+    // Return un objet client abonné
+    requeteClientAbo() {
         // Générer la requete / URL :
-        this.ConnectionUrl = 'http://localhost:9000/api/vpick/abo/cb/' + this.carteBancaire + '/code/' + this.secretCode;
+        let ConnectionUrl = 'http://localhost:9000/api/vpick/abo/cb/' + this.carteBancaire + '/code/' + this.secretCode;
 
         // Faire une requete GET :
-        this.httpClient.get(this.ConnectionUrl).subscribe(
+        this.httpClient.get(ConnectionUrl).subscribe(
             data  => { 
                 if(data != null) {
                     let client:Personne = data as Personne;
-                    console.log(client);                
-                    console.log(this.carteBancaire);
-                    
                     client.carteBancaire = this.carteBancaire;
 
+                    // sauvegarde du client dans le local storage
                     setClientLS(client); 
-                    console.log(data); 
 
                     this.connexionCorrect = true;
                     this.dialog.closeAll();
@@ -49,12 +48,28 @@ export class SignInComponent implements OnInit {
         );
     }
 
-    isConnexionInvalid(): boolean {
-        return !this.connexionCorrect;
+
+
+
+
+
+
+
+  /* UPDATE FUNCTION */
+    // update du code secret
+    updateSecretCode(codeS: string) {
+        this.secretCode = codeS;
     }
 
-    saveSecretCode(codeS: string) {
-        this.secretCode = codeS;
+
+
+
+
+
+
+  /* AUTRE FONCTION */  
+    isConnexionInvalid(): boolean {
+        return !this.connexionCorrect;
     }
 
     isCreditCardInvalid() {

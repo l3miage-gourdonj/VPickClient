@@ -19,11 +19,11 @@
         <div id="connexionContent" *ngIf="this.numStep == 0">
             <h2> Connexion client : </h2>
 
-            <form id="noAbo" *ngIf="this.clientAbo == false" (ngSubmit)="reqClientNoAbo()">
+            <form id="noAbo" *ngIf="this.clientAbo == false" (ngSubmit)="requeteClientNoAbo()">
                 <div id="secretCodeContent">
                     <p>Votre code secret :</p>
                     <code-input #codeSecret name="secretCodeInput" [isCodeHidden]="false" [codeLength]="5"
-                        (codeChanged)="saveSecretCode($event)">
+                        (codeChanged)="updateSecretCode($event)">
                     </code-input>
                 </div>
 
@@ -34,7 +34,7 @@
                 <p (click)="openLoginAbo()" class="align"> J'ai déjà un compte </p>
             </form>
 
-            <form id="Abo" *ngIf="this.clientAbo == true" (ngSubmit)="reqClientAbo()">
+            <form id="Abo" *ngIf="this.clientAbo == true" (ngSubmit)="requeteGetLocationAbo()">
                 <div id="creditCardContent">
                     <p>Votre numéro cb :</p>
                     <input #card name="creditCardInput"
@@ -49,7 +49,7 @@
                     <code-input #codeSecret name="secretCodeInput"
                         [isCodeHidden]="false"
                         [codeLength]="5"
-                        (codeChanged)="saveSecretCode($event)">
+                        (codeChanged)="updateSecretCode($event)">
                     </code-input>
                 </div>
 
@@ -66,11 +66,11 @@
             <h2> Location : </h2>
 
             <div id="locations">
-                <div class="locations-container" (click)="setLocation(location)" *ngFor="let location of this.locations">
+                <div class="locations-container" (click)="selectLocation(location)" *ngFor="let location of this.locations">
                     <h3> Location {{ location.id  }} </h3>
                     <ul>
                         <li class="recap" *ngFor="let velo of this.location.velos"> {{  velo.modele.modele }} - {{ velo.modele.coutHoraire }}€/h </li>
-                        <li> Début il y a : {{ dureeLocationString(location.dateDebut) }} </li>
+                        <li> Début il y a : {{ getDureeLocationString(location.dateDebut) }} </li>
                     </ul>
                 </div>
 
@@ -105,7 +105,7 @@
         </div>
 
         <div id="bornetteContent" *ngIf="this.numStep == 3">
-            <div id="topBornette"> <div id="loaderContent"> <img id="loader" src="../../assets/loader.gif" alt=""> <span> pose des vélo en cours </span> </div> <p id="stationAdresse"> {{ this.stationSelected.adresse }} </p> </div>
+            <div id="topBornette"> <div id="loaderContent"> <img id="loader" src="../../assets/loader.gif" alt=""> <span> pose des vélos en cours </span> </div> <p id="stationAdresse"> {{ this.stationSelected.adresse }} </p> </div>
             <h2> Selectionne une bornette : </h2>
             <ul class="bornettes">
                 <li class="bornette"
@@ -144,7 +144,7 @@
             <ul class="paiement">
                 <li *ngFor="let velo of this.locationSelected.velos"> {{  velo.modele.modele }} - {{ velo.modele.coutHoraire }}€/h <span *ngIf="getVeloHs(velo.id)" id="cbWrong"> (HS) </span> </li>
                 <li> <b> Deposer vélo au bornette : </b> {{ getBornetteSelected() }} </li>
-                <li> <b> Durée : </b> {{ dureeLocationString(this.locationSelected.dateDebut) }} </li>
+                <li> <b> Durée : </b> {{ getDureeLocationString(this.locationSelected.dateDebut) }} </li>
                 <li> <b> Prix : </b> {{ getPrixLocation(this.locationSelected.dateDebut) }} € </li>
                 <li *ngIf="this.clientAbo"> 
                     <b> Vous avez {{ getNbCredit() }} : </b> 
@@ -162,42 +162,8 @@
             
 
             <div id="ValidFormContent">
-                <button mat-button (click)="selectPaiement()" [disabled]="!isFormPayerValid()">Payer</button>
+                <button mat-button (click)="requetePaiement()" [disabled]="!isFormPayerValid()">Payer</button>
             </div>
         </div>
     </div>
 </div>
-
-<!--
-    1.1 - Si connecter client connecter :
-        Va etape 2
-    1.2 - Sinon :
-        Afficher formulaire connexion
-        Va etape 2
-
-    2.1 - Si abo
-        Affihce les locations à rendre
-        (Requette location en cours pour un abo)
-        Va etape 3
-    2.2 - Si non abo
-        Va etape 3
-
-    3.1 - Si location à rendre :
-        (Requette location en cours pour un non abo)
-        (Requette liste bornette dispo)
-        Selectione une bornnete
-        Va etape 4
-    3.2 - pas de loccaton à rendre :
-        Afficher mesage
-
-    4.1 - Afficher liste station
-        (Requette liste station dispo pour une bornnette donnee)
-        Annimation chargement pour deposer le velo automatique à la premiere station
-        2 à 5 seconnde
-        Va etape 5
-
-    5.1 - Paiement :
-        (Requette prix /h pour la location)
-        Reccap du prix à payer (à calculer en typeescript)
-        Boutton payer + message de remerciment
--->

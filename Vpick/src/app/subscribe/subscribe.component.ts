@@ -14,15 +14,14 @@ export class SubscribeComponent implements OnInit {
     private dateN!: Date;
     public creditCard: string = "";
     private secretCode: string = "";
-    private ConnectionUrl = 'http://localhost:9000/api/vpick';
     private regex = new RegExp("\\d{4} \\d{4} \\d{4} \\d{4}");
 
     ngOnInit(): void { }
     constructor(private router: Router, private httpClient: HttpClient) { }
-
+  
+  /* Requete HTTP */
     creationClient(nom:HTMLInputElement, prenom:HTMLInputElement, dateN:HTMLInputElement, adresse:HTMLInputElement, sexe: MatRadioButton,CB:HTMLInputElement) {
-        // Envoie une requete POST pour générer un abonné en BD
-
+        // Envoie une requete POST pour générer un abonné en Base de Données
         if(sexe.checked) {
             this.sexe = Sexe.HOMME;
         } else {
@@ -47,22 +46,40 @@ export class SubscribeComponent implements OnInit {
             dateFin: dateFin,
             creditTemps: 0
         }
-        console.log(objClient);
 
         // Générer la requete / URL :
-        this.ConnectionUrl = 'http://localhost:9000/api/vpick/abo/';
+        let ConnectionUrl = 'http://localhost:9000/api/vpick/abo/';
 
         // Faire une requete POST :
-        this.httpClient.post<any>(this.ConnectionUrl, objClient).subscribe({
-            next: data => { if(data as Boolean === true) { setClientLS(objClient); this.router.navigate(['/']); } },
+        this.httpClient.post<any>(ConnectionUrl, objClient).subscribe({
+            next: data => { 
+                if(data as Boolean === true) { 
+                    setClientLS(objClient); 
+                    this.router.navigate(['/']); 
+                } 
+            },
             error: error => { console.error('There was an error!', error); }
         });
     }
 
-    saveSecretCode(codeS: string) {
+
+
+
+
+
+  /* UPDATE FUNCTION */
+    // update du code secret
+    updateSecretCode(codeS: string) {
         this.secretCode = codeS;
     }
 
+
+
+
+
+
+
+  /* AUTRE FONCTION */ 
     isCreditCardInvalid() {
         return this.creditCard.length === 19 && !this.regex.test(this.creditCard);
     }

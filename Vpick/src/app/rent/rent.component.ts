@@ -24,7 +24,6 @@ export class RentComponent implements OnInit {
 
     public carteBancaire:string = "";
     public secretCode: string = "";
-    private ConnectionUrl: string = 'http://localhost:9000/api/vpick';
     private regex = new RegExp("\\d{4} \\d{4} \\d{4} \\d{4}");
 
     private client: Personne|null = getClientLS();
@@ -45,9 +44,7 @@ export class RentComponent implements OnInit {
         }
 
         if (this.isAlreadyConnected()) {
-            this.numStep = 1;
-            this.progressBar(1);
-            this.getListStation();
+            this.selectClientNoAbo();
         } else {
             this.numStep = 0;
             this.progressBar(0);
@@ -57,19 +54,54 @@ export class RentComponent implements OnInit {
 
 
 
-  /* GET - Requete */
-    reqClientNoAbo(): void {
+
+
+
+    selectClientNoAbo(): void {
         this.numStep = 1;
         this.progressBar(1);
-        this.getListStation();
+        this.requeteListStation();
     }
 
-    reqClientAbo(): void {
+    selectStation(station: Station) {
+        this.stationSelected = station;
+        this.numStep = 2;
+        this.progressBar(2);
+    }
+
+    // Ajouter une class sur les bornettes choisit par le client
+    selectBornette(bElem: HTMLLIElement, bObj: Bornette) {
+        if(!bElem.getAttribute('class')?.includes("selectedBornette")) {
+            bElem.setAttribute('class', 'bornette OK selectedBornette');
+            this.listBornSelected.push(bObj);
+        } else {
+            bElem.setAttribute('class', 'bornette OK');
+            
+            this.listBornSelected.forEach( (item, index) => {
+                if(item === bObj) this.listBornSelected.splice(index,1);
+              });
+        }        
+    }
+
+    selectValidBornette() {
+        this.numStep = 3;
+        this.progressBar(3);
+    }
+
+
+
+
+
+
+
+  /* Requete HTTP */
+    // Return un objet client abonné
+    requeteClientAbo(): void {
         // Générer la requete / URL :
-        this.ConnectionUrl = 'http://localhost:9000/api/vpick/abo/cb/' + this.carteBancaire + '/code/' + this.secretCode;
+        let ConnectionUrl = 'http://localhost:9000/api/vpick/abo/cb/' + this.carteBancaire + '/code/' + this.secretCode;
 
         // Faire une requete GET :
-        this.httpClient.get(this.ConnectionUrl).subscribe(
+        this.httpClient.get(ConnectionUrl).subscribe(
             data  => {
                 if(data !== null) {
                   this.connexionCorrect = true;
@@ -82,30 +114,88 @@ export class RentComponent implements OnInit {
 
                   this.numStep = 1;
                   this.progressBar(1);
-                  this.getListStation();
+                  this.requeteListStation();
                 } else {
                     this.connexionCorrect = false;
                 }
             }
         );
-
-        // this.dialog.closeAll();
     }
 
-    getListStation(): void {
+    // Return la liste des stations disponibles pour louer x vélo(s)
+    requeteListStation(): void {
         // Générer la requete / URL :
-        this.ConnectionUrl = 'http://localhost:9000/api/vpick/station/';
+        let ConnectionUrl = 'http://localhost:9000/api/vpick/station/';
 
         // Requette GET : liste bornette
-        this.httpClient.get(this.ConnectionUrl).subscribe(
+        this.httpClient.get(ConnectionUrl).subscribe(
             data => { this.stations = data as Station[]; }
         );
     }
 
+    createLocation() {
+        // Générer la requete / URL :
+        let ConnectionUrl = 'http://localhost:9000/api/vpick/location/';
+        let objLocation;
+
+        if(this.clientAbo) {
+            objLocation = { cbClient: this.client?.carteBancaire, codeClient: this.client?.codeSecret, bornettes: this.listBornSelected.map(b => b.id) };
+        } else {
+            objLocation = { bornettes: this.listBornSelected.map(b => b.id) };
+        }
+
+        // Faire une requete POST :
+        this.httpClient.post<any>(ConnectionUrl, objLocation).subscribe({
+            next: data => {
+                this.numStep = 4;
+                this.progressBar(4);
+                this.secretCode = data;
+            },
+            error: error => { console.error('There was an error!', error); }
+        });
+
+
+        if(this.clientAbo) {
+            let creditTempsObj;
+
+            if(this.getCurrentPlage(this.stationSelected) as StatusCourrant == StatusCourrant.VMOINS) {               
+                creditTempsObj = { creditsTemps: 15, cb: this.client?.carteBancaire, code: this.client?.codeSecret };
+                this.client = getClientLS();
+
+                if(this.client != null) { 
+                    this.client.creditTemps += 15;
+                    setClientLS(this.client);
+                }
+            } else {
+                creditTempsObj = { creditsTemps: 0, cb: null, code: null };
+            }
+
+            if( creditTempsObj?.creditsTemps !== 0) {
+                // Générer la requete / URL :
+                let ConnectionUrl = 'http://localhost:9000/api/vpick/abo/credit';
+
+                // Faire une requete POST :
+                this.httpClient.post<any>(ConnectionUrl, creditTempsObj).subscribe({
+                    next: data => { this.router.navigate(['/']); },
+                    error: error => { console.error('There was an error!', error); }
+                });
+            }
+        }
+    }   
+
+
+
+
+
+
+
+  /* GETTER */
+    // Renvoie la liste des bornettes pour une station choisit
     getBornettesFromStation(): Array<Bornette> {
         return this.stationSelected.bornettes;
     }
 
+    // Return le prix de la location lors du rendu des vélos
     getPrixLocationParHeure() {
         let prixParH:number = 0.0;
         this.listBornSelected.forEach((b:Bornette) => {
@@ -116,6 +206,7 @@ export class RentComponent implements OnInit {
         return Math.floor(prixParH);
     }
 
+    // Return une liste des bornettes ou le client doit déposer ces vélo de la forme '[ ... ]'
     getBornetteSelected(): string {
         let bornettes: string = "[ ";
 
@@ -128,119 +219,6 @@ export class RentComponent implements OnInit {
 
         bornettes += " ]";
         return bornettes;
-    }
-
-
-
-
-  /* ACTION - CHANGEMENT CONTENUE */
-    selectStation(station: Station) {
-        this.stationSelected = station;
-        this.numStep = 2;
-        this.progressBar(2);
-
-        console.log("Station ", station.id, " - Selectionné !");
-    }
-
-    selectBornette(bElem: HTMLLIElement, bObj: Bornette) {
-        if(!bElem.getAttribute('class')?.includes("selectedBornette")) {
-            bElem.setAttribute('class', 'bornette OK selectedBornette');
-            this.listBornSelected.push(bObj);
-        } else {
-            bElem.setAttribute('class', 'bornette OK');
-            
-            this.listBornSelected.forEach( (item, index) => {
-                if(item === bObj) this.listBornSelected.splice(index,1);
-              });
-        }
-
-        console.log(this.listBornSelected);
-        
-    }
-
-    validBornette() {
-        this.numStep = 3;
-        this.progressBar(3);
-    }
-
-    createLocation() {
-        // Générer la requete / URL :
-        this.ConnectionUrl = 'http://localhost:9000/api/vpick/location/';
-        let objLocation;
-
-        if(this.clientAbo) {
-            objLocation = { cbClient: this.client?.carteBancaire, codeClient: this.client?.codeSecret, bornettes: this.listBornSelected.map(b => b.id) };
-        } else {
-            objLocation = { bornettes: this.listBornSelected.map(b => b.id) };
-        }
-
-        console.log(objLocation);
-        console.log(this.client);
-
-
-        // Faire une requete POST :
-        this.httpClient.post<any>(this.ConnectionUrl, objLocation).subscribe({
-            next: data => {
-                console.log(data);
-
-                this.numStep = 4;
-                this.progressBar(4);
-                this.secretCode = data;
-            },
-            error: error => { console.error('There was an error!', error); }
-        });
-
-
-        if(this.clientAbo) {
-            let creditTempsObj;
-
-            console.log(this.getCurrentPlage(this.stationSelected));
-            console.log(this.getCurrentPlage(this.stationSelected).valueOf());
-            
-            if(this.getCurrentPlage(this.stationSelected) as StatusCourrant == StatusCourrant.VMOINS) {
-                console.log("Bonus credit");
-                console.log(this.client);
-                console.log(this.client?.carteBancaire);
-                console.log(this.client?.codeSecret);
-                
-                creditTempsObj = { creditsTemps: 15, cb: this.client?.carteBancaire, code: this.client?.codeSecret };
-
-                this.client = getClientLS();
-                if(this.client != null) { 
-                    this.client.creditTemps += 15;
-                    setClientLS(this.client);
-                }
-            } else {
-                creditTempsObj = { creditsTemps: 0, cb: null, code: null };
-            }
-
-            console.log(creditTempsObj);
-            
-
-            if( creditTempsObj?.creditsTemps !== 0) {
-                // Générer la requete / URL :
-                this.ConnectionUrl = 'http://localhost:9000/api/vpick/abo/credit';
-
-                // Faire une requete POST :
-                this.httpClient.post<any>(this.ConnectionUrl, creditTempsObj).subscribe({
-                    next: data => {
-                        this.router.navigate(['/']);
-                    },
-                    error: error => { console.error('There was an error!', error); }
-                });
-            }
-        }
-    }   
-
-    backToStation() {
-        this.listBornSelected = [];
-        this.numStep = 1;
-        this.progressBar(1);
-        this.getListStation();
-    }
-
-    returnToHome() {
-        this.router.navigate(['/']);
     }
 
     getCurrentPlage(station: Station) {
@@ -263,11 +241,22 @@ export class RentComponent implements OnInit {
 
 
 
-  /* AUTRE FONCTION */
-    saveSecretCode(codeS: string) {
+
+
+
+  /* UPDATE FUNCTION */
+    // update du code secret
+    updateSecretCode(codeS: string) {
         this.secretCode = codeS;
     }
 
+
+
+
+
+
+
+  /* AUTRE FONCTION */
     isFormValidAbo() {
         return this.regex.test(this.carteBancaire) && this.secretCode.replace(/\s+/g, '').length === 5;
     }
@@ -307,6 +296,7 @@ export class RentComponent implements OnInit {
         }
     }
 
+    // Change les div à afficher en fonction de l'état d'avancer
     displayContent(stepNum: number): void {
         document.getElementById("connexionContent")?.setAttribute('style', (stepNum == 0 ? "display:block" : "display:none"));
         document.getElementById("stationContent")?.setAttribute('style', (stepNum == 1 ? "display:block" : "display:none"));
@@ -315,10 +305,12 @@ export class RentComponent implements OnInit {
         document.getElementById("finalContent")?.setAttribute('style', (stepNum == 4 ? "display:block" : "display:none"));
     }
 
+    // Est ce que le client est déjà connecté : on va voir dans le local storage
     isAlreadyConnected(): boolean {
         return getClientLS() !== null ? true : false;
     }
 
+    // Est ce que la carte bancaire est mal formé
     isCreditCardInvalid() {
         return this.carteBancaire.length === 19 && !this.regex.test(this.carteBancaire);
     }
@@ -331,6 +323,7 @@ export class RentComponent implements OnInit {
         return !this.connexionCorrect;
     }
 
+    // Ajouter des espaces tous les 4 chiffres du carte bancaire
     CB_format(CB: HTMLInputElement) {
         this.carteBancaire = CB.value.replace(/\s+/g, '');
         if (this.carteBancaire !== null) {
@@ -340,5 +333,14 @@ export class RentComponent implements OnInit {
                 cpt += 5;
             }
         }
+    }
+
+    backToStation() {
+        this.listBornSelected = [];
+        this.selectClientNoAbo();
+    }
+
+    returnToHome() {
+        this.router.navigate(['/']);
     }
 }

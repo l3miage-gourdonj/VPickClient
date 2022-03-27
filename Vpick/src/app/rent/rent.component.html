@@ -12,13 +12,13 @@
 </div>
 
 <div class="body">
-    <h1> Loué un/des vélo(s) </h1>
+    <h1> Louer un/des vélo(s) </h1>
 
     <div id="Content">
         <div id="connexionContent" *ngIf="this.numStep == 0">
             <h2> Connexion client : </h2>
 
-            <form id="noAbo" *ngIf="this.clientAbo == false" (ngSubmit)="reqClientNoAbo()">
+            <form id="noAbo" *ngIf="this.clientAbo == false" (ngSubmit)="selectClientNoAbo()">
                 <div id="ValidFormContent">
                     <button mat-button type="submit">Commencer</button>
                 </div>
@@ -26,7 +26,7 @@
                 <p (click)="openLoginAbo()" class="align"> J'ai déjà un compte </p>
             </form>
 
-            <form id="Abo" *ngIf="this.clientAbo == true" (ngSubmit)="reqClientAbo()">
+            <form id="Abo" *ngIf="this.clientAbo == true" (ngSubmit)="requeteClientAbo()">
                 <div id="creditCardContent">
                     <p> Votre numéro cb : </p>
                     <input #card name="creditCardInput"
@@ -41,7 +41,7 @@
                     <code-input #codeSecret name="secretCodeInput"
                         [isCodeHidden]="false"
                         [codeLength]="5"
-                        (codeChanged)="saveSecretCode($event)">
+                        (codeChanged)="updateSecretCode($event)">
                     </code-input>
                 </div>
 
@@ -96,7 +96,7 @@
             </ul>
 
             <div id="ValidFormContent">
-                <button mat-button (click)="validBornette()" [disabled]="!isListOfBornetteValid()">Valider</button>
+                <button mat-button (click)="selectValidBornette()" [disabled]="!isListOfBornetteValid()">Valider</button>
             </div>
         </div>
 
