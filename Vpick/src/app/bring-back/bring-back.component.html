@@ -78,7 +78,7 @@
                     <span id="cbWrong"> Vous n'avez pas de location en cours </span>
 
                     <div id="ValidFormContent">
-                        <button mat-button (click)="returnToLocation()">Loué un velo</button>
+                        <button mat-button (click)="returnToLocation()">Louer un velo</button>
                     </div>
                 </div>
             </div>
@@ -86,7 +86,7 @@
 
 
         <div id="stationContent" *ngIf="this.numStep == 2">
-            <h2> Selectionne une station : </h2>
+            <h2> Selectionner une station : </h2>
             <ul class="stations">
                 <li *ngFor="let station of this.stations" class="station" (click)="selectStation(station)">
                     <span> {{ station.adresse }} </span>
@@ -106,7 +106,7 @@
 
         <div id="bornetteContent" *ngIf="this.numStep == 3">
             <div id="topBornette"> <div id="loaderContent"> <img id="loader" src="../../assets/loader.gif" alt=""> <span> pose des vélo en cours </span> </div> <p id="stationAdresse"> {{ this.stationSelected.adresse }} </p> </div>
-            <h2> Selectionne une bornette : </h2>
+            <h2> Selectionner une/des bornette(s) : </h2>
             <ul class="bornettes">
                 <li class="bornette"
                     #b
@@ -124,7 +124,7 @@
 
 
         <div id="veloContent" *ngIf="this.numStep == 4">
-            <h2> Déclarer des vélo cassé : </h2>
+            <h2> Déclarer des vélo cassés : </h2>
             <ul class="velos">
                 <li *ngFor="let i = index; let velo of this.locationSelected.velos">
                     <mat-checkbox (change)="updateVeloHS($event)" value="{{  velo.id }}"> Velo {{  velo.modele.modele }} est HS ? </mat-checkbox>              
@@ -139,16 +139,16 @@
 
 
         <div id="paiementContent" *ngIf="this.numStep == 5">
-            <p *ngIf="this.clientAbo" class="reduction"> 30% de réduction est appliqué </p>
+            <p *ngIf="this.clientAbo" class="reduction"> Vous bénéficiez de 30% de réduction </p>
             <h2> Paiement : </h2>
             <ul class="paiement">
                 <li *ngFor="let velo of this.locationSelected.velos"> {{  velo.modele.modele }} - {{ velo.modele.coutHoraire }}€/h <span *ngIf="getVeloHs(velo.id)" id="cbWrong"> (HS) </span> </li>
-                <li> <b> Deposer vélo au bornette : </b> {{ getBornetteSelected() }} </li>
+                <li> <b> Déposer vélo aux bornettes : </b> {{ getBornetteSelected() }} </li>
                 <li> <b> Durée : </b> {{ dureeLocationString(this.locationSelected.dateDebut) }} </li>
                 <li> <b> Prix : </b> {{ getPrixLocation(this.locationSelected.dateDebut) }} € </li>
                 <li *ngIf="this.clientAbo"> 
                     <b> Vous avez {{ getNbCredit() }} : </b> 
-                    <mat-checkbox (change)="updateCreditTemps($event)" value="{{  getNbCredit() }}"> Vous voulez les utiliser ? </mat-checkbox>
+                    <mat-checkbox (change)="updateCreditTemps($event)" value="{{  getNbCredit() }}"> Voulez-vous utiliser vos crédits ? </mat-checkbox>
                 </li>
             </ul>
 
