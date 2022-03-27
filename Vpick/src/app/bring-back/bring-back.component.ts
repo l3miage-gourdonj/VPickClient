@@ -304,30 +304,31 @@ export class BringBackComponent implements OnInit {
         let difDate = new Date().getTime() - new Date(dateD).getTime();
         let minDif = Math.round( (difDate / (1000 * 3600))*100 )/100;
         let roundHeure = 0;
-
-        if(this.useCreditTemps) {
-            console.log(minDif);            
-            console.log("crdit :"+(this.getNbCredit()*100/60)/100);
-            
-            roundHeure = Math.ceil(minDif - (this.getNbCredit()*100/60)/100);                                                                        
-        } else {
-            roundHeure = Math.ceil(minDif);
-        }
-        console.log("roundHeure " + roundHeure);
-
         let prix = 0;
-        this.locationSelected.velos.forEach((v:Velo) => prix += v.modele.coutHoraire * roundHeure)
 
-        if(this.clientAbo) {
-            prix = prix * 70 / 100; // 70% du prix pour un abo
+        console.log(minDif);
+        
+
+        if(this.veloBroken.length > 0 && minDif <= 0.05) {
+            prix = 0.00;
+        } else {
+            if(this.useCreditTemps) {                
+                roundHeure = Math.ceil(minDif - (this.getNbCredit()*100/60)/100);                                                                        
+            } else {
+                roundHeure = Math.ceil(minDif);
+            }
+
+            this.locationSelected.velos.forEach((v:Velo) => prix += v.modele.coutHoraire * roundHeure)
+
+            if(this.clientAbo) {
+                prix = prix * 70 / 100; // 70% du prix pour un abo
+            }
         }
 
         return Math.round(prix*100)/100;
     }
 
     updateVeloHS(checkBox: MatCheckboxChange) {
-        // console.log(checkBox.source.value +" - "+ checkBox.checked);
-
         let index:number = this.veloBroken.indexOf(parseInt(checkBox.source.value));
         
         if(index !== -1 && checkBox.checked === false) {
@@ -417,12 +418,13 @@ export class BringBackComponent implements OnInit {
     }
 
     isFormPayerValid() {
-        // console.log(this.clientAbo);
+        console.log(this.clientAbo);
         // console.log("Verif: "+(this.clientAbo === true));
-        // console.log("Verif Tot: "+(this.clientAbo === true) || (this.clientAbo === false && this.carteBancaire.length === 19 && !this.regex.test(this.carteBancaire)));
+        console.log("Verif Tot: "+(this.clientAbo === true) || (this.clientAbo === false && this.carteBancaire.length === 19 && this.regex.test(this.carteBancaire)));
+        console.log("Verif Tot: "+(this.carteBancaire.length === 19 && this.regex.test(this.carteBancaire)));
         
         
-        return (this.clientAbo === true) || (this.clientAbo === false && this.carteBancaire.length === 19 && !this.regex.test(this.carteBancaire));
+        return (this.clientAbo === true) || (this.clientAbo === false && this.carteBancaire.length === 19 && this.regex.test(this.carteBancaire));
     }
 
     isAlreadyConnected(): boolean {

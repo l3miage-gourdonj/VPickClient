@@ -105,7 +105,7 @@
         </div>
 
         <div id="bornetteContent" *ngIf="this.numStep == 3">
-            <div id="topBornette"> <p id="stationAdresse"> {{ this.stationSelected.adresse }} </p> </div>
+            <div id="topBornette"> <div id="loaderContent"> <img id="loader" src="../../assets/loader.gif" alt=""> <span> pose des vélo en cours </span> </div> <p id="stationAdresse"> {{ this.stationSelected.adresse }} </p> </div>
             <h2> Selectionne une bornette : </h2>
             <ul class="bornettes">
                 <li class="bornette"
@@ -153,7 +153,7 @@
             </ul>
 
             <div *ngIf="!this.clientAbo" id="creditCardContent">
-                <p>Votre numéro cb :</p>
+                <p> <b> Votre numéro cb : </b> </p>
                 <input #card name="creditCardInput" [ngModel]="carteBancaire" (ngModelChange)="CB_format(card)"
                     placeholder="1234 1234 1234 1234" type="tel" [maxlength]="19">
                 <div *ngIf="isCreditCardInvalid()" id="cbWrong">Numéro de carte éronnée</div>

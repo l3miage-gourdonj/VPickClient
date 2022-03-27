@@ -337,9 +337,6 @@ text-decoration: underline;
 color: #db6767;
 }
 
-#topBornette {
-  margin-left: 60%;
-}
 #stationAdresse {
   text-align: end;
   font-weight: bold;
@@ -368,4 +365,23 @@ p.reduction {
   text-align: center;
   font-weight: bold;
   color: #93dd8a;
+}
+
+#creditCardContent {
+  padding-left: 40px;
+}
+
+img#loader {
+  width: 80px;
+}
+
+div#topBornette {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+div#loaderContent {
+  display: flex;
+  align-items: center;
 }
