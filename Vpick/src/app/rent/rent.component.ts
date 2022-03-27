@@ -148,9 +148,14 @@ export class RentComponent implements OnInit {
             this.listBornSelected.push(bObj);
         } else {
             bElem.setAttribute('class', 'bornette OK');
-            let index = this.listBornSelected.indexOf(bObj);
-            this.listBornSelected = this.listBornSelected.splice(index,index);
+            
+            this.listBornSelected.forEach( (item, index) => {
+                if(item === bObj) this.listBornSelected.splice(index,1);
+              });
         }
+
+        console.log(this.listBornSelected);
+        
     }
 
     validBornette() {

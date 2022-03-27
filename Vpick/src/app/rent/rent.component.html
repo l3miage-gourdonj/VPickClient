@@ -28,16 +28,16 @@
 
             <form id="Abo" *ngIf="this.clientAbo == true" (ngSubmit)="reqClientAbo()">
                 <div id="creditCardContent">
-                    <p>Votre numéro cb :</p>
+                    <p> Votre numéro cb : </p>
                     <input #card name="creditCardInput"
                         [ngModel]="carteBancaire"
                         (ngModelChange)="CB_format(card)"
                         placeholder="1234 1234 1234 1234" type="tel" [maxlength]="19">
-                    <div *ngIf="isCreditCardInvalid()" id="cbWrong">Numéro de carte bleue est eronnée</div>
+                    <div *ngIf="isCreditCardInvalid()" id="cbWrong"> Numéro de carte bleue est eronnée </div>
                 </div>
 
                 <div id="secretCodeContent">
-                    <p>Votre code secret :</p>
+                    <p> Votre code secret : </p>
                     <code-input #codeSecret name="secretCodeInput"
                         [isCodeHidden]="false"
                         [codeLength]="5"
@@ -45,10 +45,10 @@
                     </code-input>
                 </div>
 
-                <div *ngIf="isConnexionInvalid()" id="cbWrong">Vos identifiants sont incorrect</div>
+                <div *ngIf="isConnexionInvalid()" id="cbWrong"> Vos identifiants sont incorrect </div>
 
                 <div id="ValidFormContent">
-                    <button mat-button type="submit" [disabled]="!isFormValidAbo()">Se connecter</button>
+                    <button mat-button type="submit" [disabled]="!isFormValidAbo()"> Se connecter </button>
                 </div>
 
                 <p (click)="openLoginNoAbo()" class="align"> Je n'ai pas encore de compte </p>
