@@ -12,7 +12,7 @@
 </div>
 
 <div class="body">
-    <h1> Loué un vélo(s) </h1>
+    <h1> Loué un/des vélo(s) </h1>
 
     <div id="Content">
         <div id="connexionContent" *ngIf="this.numStep == 0">
@@ -78,12 +78,13 @@
 
         <div id="bornetteContent" *ngIf="this.numStep == 2">
             <div id="topBornette"> <img id="back" src="../../assets/arrow-back.png" alt="" (click)="backToStation()"> <p id="stationAdresse"> {{ this.stationSelected.adresse }} </p> </div>
-            <h2> Selectionne une bornette : </h2>
+            <h2> Selectionne une/des bornette(s) : </h2>
             <ul class="bornettes">
                 <li class="bornette"
                     #b
                     [class.OK]="bornette.etat === 'OK' && bornette.velo !== null && bornette.velo.etat == 'OK'"
-                    [class.HS]="bornette.etat === 'HS' || bornette.velo === null || bornette.velo?.etat == 'HS'"
+                    [class.HS]="bornette.etat === 'HS' || bornette.velo?.etat == 'HS'"
+                    [class.VIDE]="bornette.etat === 'OK' && bornette.velo === null"
                     (click)="(bornette.etat === 'OK' && bornette.velo !== null && bornette.velo.etat == 'OK') ? selectBornette(b, bornette) : null"
                     *ngFor="let bornette of getBornettesFromStation()"
                 >
@@ -103,7 +104,7 @@
         <div id="recapContent" *ngIf="this.numStep == 3">
             <h2> Récapitulatif : </h2>
             <ul class="recap">
-                <li> <b> Bornette : </b> {{ getBornetteSelected() }} </li>
+                <li> <b> Bornette(s) : </b> {{ getBornetteSelected() }} </li>
                 <li> <b> Nombre de vélo : </b> {{ this.listBornSelected.length }} </li>
                 <li> <b> Prix par heure : </b> {{ getPrixLocationParHeure() }} €</li>
             </ul>

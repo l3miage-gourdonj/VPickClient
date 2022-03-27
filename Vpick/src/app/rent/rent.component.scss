@@ -321,6 +321,13 @@ code-input {
     }
 }
 
+.VIDE {
+  background-color: #91d6f1;
+  &:hover {
+    cursor: not-allowed;
+  }
+}
+
 .selectedBornette {
     border: 2px solid #4B81BD;
 }
@@ -376,4 +383,10 @@ div#topBornette {
 form#Abo {
   width: 60%;
   margin: auto;
+}
+
+.recap > li {
+  padding: 0px;
+  margin: 0px;
+  height: 35px;
 }

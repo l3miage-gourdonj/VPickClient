@@ -73,7 +73,6 @@ hr {
 #Content {
     width: 600px;
     margin-left: 0px 10%;
-    text-align: center;
 }
 
 #content-date-input {
@@ -146,6 +145,18 @@ mat-radio-group{
 
 #cbWrong {
     color: #db6767;
+}
+
+div#secretCodeContent {
+    margin-left: 25%;
+}
+
+div#ValidFormContent {
+    text-align: center;
+}
+
+#SexeContent {
+    margin-left: 20px;
 }
 
 
