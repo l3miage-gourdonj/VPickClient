@@ -6,7 +6,7 @@ import { fromEvent, timestamp } from 'rxjs';
 import { SignInComponent } from '../sign-in/sign-in.component';
 import { Personne, getClientLS, PlagesHorraires, StatusCourrant, setClientLS } from '../vepickDefinitions'
 import { Bornette, Station, Location, Velo } from "../vepickDefinitions";
-import {  } from '@angular/material/checkbox';
+import { } from '@angular/material/checkbox';
 import { Router } from '@angular/router';
 
 @Component({
@@ -24,7 +24,7 @@ export class BringBackComponent implements OnInit {
     public stations: Array<Station> = [];
     public bornettes: Array<Bornette> = [];
     public locations: Array<Location> = [];
-    
+
     public locationSelected!: Location;
     public stationSelected!: Station;
     public bornettesSelected: Array<number> = [];
@@ -35,9 +35,9 @@ export class BringBackComponent implements OnInit {
     private secretCode: string = "";
     private regex = new RegExp("\\d{4} \\d{4} \\d{4} \\d{4}");
 
-    private useCreditTemps:boolean = false;
-    public clientAbo:boolean = true;
-    private client: Personne|null = getClientLS();
+    private useCreditTemps: boolean = false;
+    public clientAbo: boolean = true;
+    private client: Personne | null = getClientLS();
 
     constructor(private router: Router, private httpClient: HttpClient, public dialog: MatDialog) { }
 
@@ -74,7 +74,7 @@ export class BringBackComponent implements OnInit {
         this.httpClient.get(this.ConnectionUrl).subscribe(
             data => {
                 // console.log(data);
-                if(data !== null) {
+                if (data !== null) {
                     this.locations = [data as Location];
                     this.numStep = 1;
                     this.progressBar(1);
@@ -91,8 +91,8 @@ export class BringBackComponent implements OnInit {
 
         // Faire une requete GET :
         this.httpClient.get(this.ConnectionUrl).subscribe(
-            data  => {
-                if(data !== null) {
+            data => {
+                if (data !== null) {
                     this.locations = data as Array<Location>;
                     this.numStep = 1;
                     this.progressBar(1);
@@ -107,12 +107,12 @@ export class BringBackComponent implements OnInit {
 
     getListStation(): void {
         // Générer la requete / URL :
-        this.ConnectionUrl = 'http://localhost:9000/api/vpick/station/nb/'+this.locationSelected.velos.length;
+        this.ConnectionUrl = 'http://localhost:9000/api/vpick/station/nb/' + this.locationSelected.velos.length;
 
         // Requette GET : liste bornette
         this.httpClient.get(this.ConnectionUrl).subscribe(
-            data => { 
-                this.stations = data as Station[]; console.log( this.stations ); 
+            data => {
+                this.stations = data as Station[]; console.log(this.stations);
             }
         );
     }
@@ -121,16 +121,16 @@ export class BringBackComponent implements OnInit {
         return this.stationSelected.bornettes;
     }
 
-    getCurrentPlage(station: Station) :StatusCourrant {
+    getCurrentPlage(station: Station): StatusCourrant {
         // console.log(station.plagesHoraires[0].statusCourant);
-        
-        let currentPlageHorraire!:PlagesHorraires;
-        let currentHours = new Date().getHours(); 
-        let currentMin = new Date().getMinutes(); 
+
+        let currentPlageHorraire!: PlagesHorraires;
+        let currentHours = new Date().getHours();
+        let currentMin = new Date().getMinutes();
 
         station.plagesHoraires.forEach(plage => {
-            if((new Date(plage.heureDebut).getHours() <= currentHours && new Date(plage.heureDebut).getMinutes() <= currentMin) && 
-               (new Date(plage.heureFin).getHours() >= currentHours && new Date(plage.heureFin).getMinutes() >= currentMin)) {
+            if ((new Date(plage.heureDebut).getHours() <= currentHours && new Date(plage.heureDebut).getMinutes() <= currentMin) &&
+                (new Date(plage.heureFin).getHours() >= currentHours && new Date(plage.heureFin).getMinutes() >= currentMin)) {
                 currentPlageHorraire = plage;
             }
         });
@@ -160,22 +160,22 @@ export class BringBackComponent implements OnInit {
     async selectBornette(bornette: number) {
         // console.log(bornette);
 
-        await new Promise(resolve => { 
-            setTimeout(resolve, 5000), 
-            this.colorStationSeleted() 
+        await new Promise(resolve => {
+            setTimeout(resolve, 5000),
+                this.colorStationSeleted()
         }); // 5 sec
 
         this.numStep = 4;
         this.progressBar(4);
     }
-    
+
     selectEtatVelo() {
         this.numStep = 5;
         this.progressBar(5);
     }
 
     selectPaiement() {
-        let retourObj = { idlocation: this.locationSelected.id, listeveloHS: this.veloBroken, bornettes: this.bornettesSelected };        
+        let retourObj = { idlocation: this.locationSelected.id, listeveloHS: this.veloBroken, bornettes: this.bornettesSelected };
         // Générer la requete / URL :
         this.ConnectionUrl = 'http://localhost:9000/api/vpick/location/retour';
 
@@ -187,47 +187,67 @@ export class BringBackComponent implements OnInit {
             error: error => { console.error('There was an error!', error); }
         });
 
-        if(this.clientAbo) {
-            let creditTempsObj;            
+        if (this.clientAbo) {
+            let creditTempsObj;
             this.client = getClientLS();
-
+            let dureeLocation = this.dureeLocation(this.locationSelected.dateDebut);
+            console.log("duree loc : " + dureeLocation);
             console.log(this.useCreditTemps);
 
-            if(this.useCreditTemps) {
-                if(this.getCurrentPlage(this.stationSelected) === StatusCourrant.VPLUS) {
-                    creditTempsObj = { creditsTemps: ( (-1*this.getNbCredit()) + 15), cb: this.client?.carteBancaire, code: this.client?.codeSecret };
+            if (this.useCreditTemps) {
+                let usedCredit = 0;
+                let creditClient = this.client?.creditTemps ?? 0;
+                let minCreditForDiscount = dureeLocation % 60;
+                console.log("minCreditForDiscount : " + minCreditForDiscount);
 
-                    if(this.client != null) { 
-                        this.client.creditTemps = 15; 
+                if (creditClient >= minCreditForDiscount) {
+                    usedCredit = minCreditForDiscount;
+                    creditClient -= usedCredit;
+                    let restantDureeLocation = dureeLocation - usedCredit;
+                    while (restantDureeLocation / 60 >= 1 && creditClient / 60 >= 1) {
+                        restantDureeLocation -= 60
+                        creditClient -= 60
+                        usedCredit += 60
+                    }
+                }
+                if (this.getCurrentPlage(this.stationSelected) === StatusCourrant.VPLUS) {
+
+
+                    //creditTempsObj = { creditsTemps: ( (-1*this.getNbCredit()) + 15), cb: this.client?.carteBancaire, code: this.client?.codeSecret };
+                    creditTempsObj = { creditsTemps: ((-1 * usedCredit) + 15), cb: this.client?.carteBancaire, code: this.client?.codeSecret };
+
+                    if (this.client != null) {
+                        this.client.creditTemps = 15;
                         setClientLS(this.client);
                     }
                 } else {
-                    creditTempsObj = { creditsTemps: (-1*this.getNbCredit()), cb: this.client?.carteBancaire, code: this.client?.codeSecret };
-
-                    if(this.client != null) { 
-                        this.client.creditTemps = 0; 
+                    //creditTempsObj = { creditsTemps: (-1*this.getNbCredit()), cb: this.client?.carteBancaire, code: this.client?.codeSecret };
+                    creditTempsObj = { creditsTemps: (-1 * usedCredit), cb: this.client?.carteBancaire, code: this.client?.codeSecret };
+                    if (this.client != null) {
+                        //this.client.creditTemps = 0;
+                        this.client.creditTemps = creditClient - usedCredit;
                         setClientLS(this.client);
                     }
-                }                
+                }
             } else {
                 console.log(this.getCurrentPlage(this.stationSelected));
 
-                if(this.getCurrentPlage(this.stationSelected) === StatusCourrant.VPLUS) {
+                if (this.getCurrentPlage(this.stationSelected) === StatusCourrant.VPLUS) {
                     creditTempsObj = { creditsTemps: 15, cb: this.client?.carteBancaire, code: this.client?.codeSecret };
 
-                    if(this.client != null) { 
-                        this.client.creditTemps += 15; 
-                        setClientLS(this.client); 
+                    if (this.client != null) {
+                        this.client.creditTemps += 15;
+                        setClientLS(this.client);
                     }
                 }
             }
 
-            
+
 
             console.log(creditTempsObj);
-            
 
-            if(creditTempsObj?.creditsTemps !== 0) {
+
+            if (creditTempsObj?.creditsTemps !== 0) {
                 // Générer la requete / URL :
                 this.ConnectionUrl = 'http://localhost:9000/api/vpick/abo/credit';
 
@@ -252,24 +272,24 @@ export class BringBackComponent implements OnInit {
 
     colorStationSeleted(): void {
         setTimeout(() => {
-            let nbVeloARendre:number = this.locationSelected.velos.length;
-            let nbVeloDepose:number = 0;
-            let i:number = 0;
+            let nbVeloARendre: number = this.locationSelected.velos.length;
+            let nbVeloDepose: number = 0;
+            let i: number = 0;
             let listBornette = this.stationSelected.bornettes;
             let nbBornetteTotal = listBornette.length;
-            
+
             // console.log(this.stationSelected);
             // console.log("nbVeloARendre: "+nbVeloARendre);
-            
-            
-            while(nbVeloDepose < nbVeloARendre) {
-                if(listBornette[i].etat === "OK" && listBornette[i].velo === null) {
+
+
+            while (nbVeloDepose < nbVeloARendre) {
+                if (listBornette[i].etat === "OK" && listBornette[i].velo === null) {
                     nbVeloDepose++;
                     this.bornettesSelected.push(listBornette[i].id);
                     this.bornettesNumeoSelected.push(listBornette[i].numero);
                     document.getElementsByClassName("bornette")[i].setAttribute('class', "bornette OK selectedBornette");
                 }
-                
+
                 i++;
             }
 
@@ -302,62 +322,62 @@ export class BringBackComponent implements OnInit {
 
     getPrixLocation(dateD: string): number {
         let difDate = new Date().getTime() - new Date(dateD).getTime();
-        let minDif = Math.round( (difDate / (1000 * 3600))*100 )/100;
+        let minDif = Math.round((difDate / (1000 * 3600)) * 100) / 100;
         let roundHeure = 0;
         let prix = 0;
 
         console.log(minDif);
-        
 
-        if(this.veloBroken.length > 0 && minDif <= 0.05) {
+
+        if (this.veloBroken.length > 0 && minDif <= 0.05) {
             prix = 0.00;
         } else {
-            if(this.useCreditTemps) {                
-                roundHeure = Math.ceil(minDif - (this.getNbCredit()*100/60)/100);                                                                        
+            if (this.useCreditTemps) {
+                roundHeure = Math.ceil(minDif - (this.getNbCredit() * 100 / 60) / 100);
             } else {
                 roundHeure = Math.ceil(minDif);
             }
 
-            this.locationSelected.velos.forEach((v:Velo) => prix += v.modele.coutHoraire * roundHeure)
+            this.locationSelected.velos.forEach((v: Velo) => prix += v.modele.coutHoraire * roundHeure)
 
-            if(this.clientAbo) {
+            if (this.clientAbo) {
                 prix = prix * 70 / 100; // 70% du prix pour un abo
             }
         }
 
-        return Math.round(prix*100)/100;
+        return Math.round(prix * 100) / 100;
     }
 
     updateVeloHS(checkBox: MatCheckboxChange) {
-        let index:number = this.veloBroken.indexOf(parseInt(checkBox.source.value));
-        
-        if(index !== -1 && checkBox.checked === false) {
-            this.veloBroken.splice(index,1);
+        let index: number = this.veloBroken.indexOf(parseInt(checkBox.source.value));
+
+        if (index !== -1 && checkBox.checked === false) {
+            this.veloBroken.splice(index, 1);
         }
-        
-        if(index === -1 && checkBox.checked === true) {
+
+        if (index === -1 && checkBox.checked === true) {
             this.veloBroken.push(parseInt(checkBox.source.value))
-        } 
+        }
     }
 
     updateCreditTemps(checkBox: MatCheckboxChange) {
-        if(checkBox.checked === true) {
+        if (checkBox.checked === true) {
             this.useCreditTemps = true;
         } else {
             this.useCreditTemps = false;
         }
     }
 
-    getVeloHs(id:number) {
+    getVeloHs(id: number) {
         return this.veloBroken.indexOf(id) === -1 ? false : true;
     }
 
     getBornetteSelected(): string {
         let bornettes: string = "[ ";
 
-        this.bornettesNumeoSelected.forEach( (b:number, i:number) => {
+        this.bornettesNumeoSelected.forEach((b: number, i: number) => {
             bornettes += b;
-            if(i+1 !== this.bornettesNumeoSelected.length) {
+            if (i + 1 !== this.bornettesNumeoSelected.length) {
                 bornettes += ", ";
             }
         });
@@ -378,27 +398,32 @@ export class BringBackComponent implements OnInit {
         return this.client?.creditTemps != undefined ? this.client?.creditTemps : 0;
     }
 
-    
 
 
 
-  /* AUTRE FONCTION */
-    openLoginAbo():void {
+
+    /* AUTRE FONCTION */
+    openLoginAbo(): void {
         this.clientAbo = true;
         document.getElementById("Abo")?.setAttribute('style', "display:block");
         document.getElementById("noAbo")?.setAttribute('style', "display:none");
     }
 
-    openLoginNoAbo():void {
+    openLoginNoAbo(): void {
         this.clientAbo = false;
         document.getElementById("Abo")?.setAttribute('style', "display:none");
         document.getElementById("noAbo")?.setAttribute('style', "display:block");
     }
 
-    dureeLocationString(dateD: string): string{
+    dureeLocationString(dateD: string): string {
         let duree = new Date().getTime() - new Date(dateD).getTime();
         let nbMinutes = (duree / (1000 * 60));
-        return Math.floor(nbMinutes/60) + "h" + Math.floor(nbMinutes%60) + "min - Facturé " + Math.ceil(nbMinutes/60) + "h";
+        return Math.floor(nbMinutes / 60) + "h" + Math.floor(nbMinutes % 60) + "min - Facturé " + Math.ceil(nbMinutes / 60) + "h";
+    }
+
+    dureeLocation(dateD: string): number {
+        let duree = new Date().getTime() - new Date(dateD).getTime();
+        return (duree / (1000 * 60));
     }
 
     saveSecretCode(codeS: string) {
@@ -420,10 +445,10 @@ export class BringBackComponent implements OnInit {
     isFormPayerValid() {
         console.log(this.clientAbo);
         // console.log("Verif: "+(this.clientAbo === true));
-        console.log("Verif Tot: "+(this.clientAbo === true) || (this.clientAbo === false && this.carteBancaire.length === 19 && this.regex.test(this.carteBancaire)));
-        console.log("Verif Tot: "+(this.carteBancaire.length === 19 && this.regex.test(this.carteBancaire)));
-        
-        
+        console.log("Verif Tot: " + (this.clientAbo === true) || (this.clientAbo === false && this.carteBancaire.length === 19 && this.regex.test(this.carteBancaire)));
+        console.log("Verif Tot: " + (this.carteBancaire.length === 19 && this.regex.test(this.carteBancaire)));
+
+
         return (this.clientAbo === true) || (this.clientAbo === false && this.carteBancaire.length === 19 && this.regex.test(this.carteBancaire));
     }
 
@@ -442,7 +467,7 @@ export class BringBackComponent implements OnInit {
         }
     }
 
-    openDialogLogin(){
+    openDialogLogin() {
         this.dialog.open(SignInComponent, {
             height: '400px',
             width: '600px',
